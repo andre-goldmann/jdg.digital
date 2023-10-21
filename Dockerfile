@@ -1,8 +1,7 @@
-#FROM node:latest as node
 FROM node:18 as node
 WORKDIR /
 COPY . .
-RUN npm install -g npm@9.6.7
+RUN npm install -g npm@10.2.1
 RUN npm install
 RUN npm run build --prod
 
