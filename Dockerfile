@@ -1,5 +1,5 @@
 FROM node:18 as node
-WORKDIR /
+WORKDIR /data
 COPY . .
 RUN ls -l
 RUN npm install -g npm@10.2.1
