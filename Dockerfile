@@ -1,4 +1,5 @@
-FROM node:latest as node
+#FROM node:latest as node
+FROM alpine:3.18 as node
 WORKDIR /
 COPY . .
 RUN npm install -g npm@9.6.7
