@@ -14,7 +14,7 @@ services:
     restart: unless-stopped
     ports:
       # Public HTTP Port:
-      - '80:80'
+      #- '80:80'
       # Public HTTPS Port:
       - '443:443'
       # Admin Web Port:
@@ -53,6 +53,16 @@ services:
     #secrets:
     #  - DB_ROOT_PWD
     #  - MYSQL_PWD
+
+  app:
+    container_name: app
+    build: ./
+    ports:
+      - "80:80"
+    #env_file:
+    #  - variables.env
+    #depends_on:
+    #  - "api"
 
 volumes:
   db:
