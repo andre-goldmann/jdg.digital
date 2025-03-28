@@ -1,4 +1,89 @@
+@use '@angular/material' as mat;
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import "tailwindcss";
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+html {
+
+}
+
+.darkMode {
+  @include mat.theme-overrides((
+    "background": #24292e
+  ))
+}
+
+.accent {
+  @include mat.theme(
+      (
+        color: mat.$magenta-palette,
+      )
+  );
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
+
+
+.mdc-notched-outline__notch {
+  border-style: none;
+}
+
+.mat-mdc-icon-button {
+  line-height: normal;
+}
+
+mat-toolbar {
+  display: flex;
+  align-items: center;
+
+  @include mat.toolbar-overrides(
+      (
+        container-background-color: var(--mat-sys-primary),
+        container-text-color: var(--mat-sys-on-primary),
+      )
+  );
+}
+
+.flex-stretch {
+  flex: 1 0 auto;
+}
+
+.content {
+  padding: 32px;
+  min-height: 100vh;
+
+  background-color: var(--mat-sys-background);
+  color: var(--mat-sys-on-background);
+}
+
+.responsive-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-gap: 1rem;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}
+
+mat-card {
+  max-width: 400px;
+}
+
+h3 {
+  font-weight: 400;
+}
