@@ -1,0 +1,9 @@
+https://github.com/Coding-Crashkurse/GraphRAG-with-Llama-3.1
+https://python.langchain.com/docs/integrations/graphs/nebula_graph/
+https://github.com/whitew1994WW/GraphRAG
+https://www.youtube.com/watch?v=dI_TmTW9S4c&ab_channel=Databricks
+https://www.youtube.com/watch?v=NA9tJU3kL-c&ab_channel=W.W.AIAdventures
+https://www.youtube.com/watch?v=nkbyD4joa0A&ab_channel=CodingCrashCourses
+https://obot.ai/
+https://github.com/obot-platform/obot
+https://smol.ai/
