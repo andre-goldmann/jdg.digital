@@ -1,0 +1,38 @@
+mat-nav-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  height: 100%;
+
+  .logo {
+    margin-bottom: 32px;
+    mat-icon {
+      color: #1A237E;
+      font-size: 40px;
+    }
+  }
+
+  a[mat-list-item] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+    border-radius: 8px;
+
+    mat-icon {
+      color: #6C757D;
+    }
+
+    &[activated] {
+      background-color: rgba(26, 35, 126, 0.1);
+      mat-icon {
+        color: #1A237E;
+      }
+    }
+
+    &:hover:not([activated]) {
+      background-color: rgba(108, 117, 125, 0.1);
+    }
+  }
+}

@@ -1,0 +1,38 @@
+<div class="exchange-card">
+  <h2 class="exchange-title">Exchange</h2>
+  
+  <div class="exchange-input">
+    <label for="spendAmount" class="input-label">You spend</label>
+    <div class="input-container">
+      <input id="spendAmount" type="number" class="amount-input" [(ngModel)]="spendAmount" placeholder="0.00">
+      <div class="currency-selector" tabindex="0">
+        <span>{{spendCurrency}}</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M7 10L12 15L17 10H7Z" fill="#6C757D"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="exchange-input">
+    <label for="getAmount" class="input-label">You get</label>
+    <div class="input-container">
+      <input id="getAmount" type="number" class="amount-input" [(ngModel)]="getAmount" placeholder="0.00">
+      <div class="currency-selector" tabindex="0">
+        <span>{{getCurrency}}</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M7 10L12 15L17 10H7Z" fill="#6C757D"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="exchange-rate">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20ZM13 7H11V13H17V11H13V7Z" fill="#6C757D"/>
+    </svg>
+    <span>1 {{getCurrency}} = {{exchangeRate}} {{spendCurrency}}</span>
+  </div>
+
+  <button class="exchange-btn">Exchange</button>
+</div>

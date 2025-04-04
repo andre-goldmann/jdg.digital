@@ -1,0 +1,79 @@
+.balance-card {
+  mat-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+
+    .time-selector {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #6C757D;
+      font-size: 14px;
+
+      mat-icon {
+        color: inherit;
+      }
+    }
+  }
+
+  .balance-amount {
+    margin-bottom: 24px;
+
+    .balance-label {
+      display: block;
+      font-size: 14px;
+      color: #6C757D;
+      margin-bottom: 8px;
+    }
+
+    .amount {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+      margin-bottom: 8px;
+
+      .dollar {
+        font-size: 24px;
+        font-weight: 500;
+        color: #212529;
+      }
+
+      .whole {
+        font-size: 36px;
+        font-weight: 600;
+        color: #212529;
+      }
+
+      .decimal {
+        font-size: 24px;
+        font-weight: 500;
+        color: #6C757D;
+      }
+    }
+
+    .change {
+      font-size: 14px;
+      font-weight: 500;
+
+      &.positive {
+        color: #4CAF50;
+      }
+    }
+  }
+
+  .balance-chart {
+    height: 200px;
+    background-color: #F8F9FA;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6C757D;
+
+    .chart-placeholder {
+      text-align: center;
+    }
+  }
+}

@@ -1,0 +1,32 @@
+<mat-card>
+  <mat-card-content>
+    <h2>Result..: {{result()}}</h2>
+    <section class="example-section">
+      <div>
+        <label id="sliderOneLbl" class="example-name-label">First:</label>
+        <label>{{sliderOne.value}}</label>
+      </div>
+      <mat-slider
+        [max]="max()"
+        [min]="min()"
+        [step]="step()"
+        [discrete]="thumbLabel"
+        >
+        <input matSliderThumb [(ngModel)]="value" #sliderOne>
+      </mat-slider>
+
+      <div>
+        <label id="sliderTwoLbl" class="example-name-label">Second:</label>
+        <label>{{sliderTwo.value}}</label>
+      </div>
+      <mat-slider
+        [max]="max()"
+        [min]="min()"
+        [step]="step()"
+        [discrete]="thumbLabel"
+      >
+        <input matSliderThumb [(ngModel)]="value2" #sliderTwo>
+      </mat-slider>
+    </section>
+  </mat-card-content>
+</mat-card>

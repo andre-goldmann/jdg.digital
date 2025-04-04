@@ -1,0 +1,38 @@
+<div class="accounts-card">
+  <div class="accounts-header">
+    <h2 class="accounts-title">Accounts</h2>
+    <button class="add-funds-btn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 6V18M18 12H6" stroke="#212529" stroke-width="2"/>
+      </svg>
+      Add funds
+    </button>
+  </div>
+
+  <div class="accounts-list">
+    <div *ngFor="let account of accounts" class="account-item">
+      <div class="account-logo" [style.background-color]="account.logoColor">
+        {{account.symbol.charAt(0)}}
+      </div>
+      <div class="account-info">
+        <div class="account-name">{{account.name}}</div>
+        <div class="account-amount">{{account.amount}} {{account.symbol}}</div>
+      </div>
+      <button class="account-action">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 6V18M18 12H6" stroke="#6C757D" stroke-width="2"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="accounts-pagination">
+    <button class="pagination-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M15 18L9 12L15 6" stroke="#6C757D" stroke-width="2"/>
+    </svg></button>
+    <span class="pagination-page">1 / 5</span>
+    <button class="pagination-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M9 18L15 12L9 6" stroke="#6C757D" stroke-width="2"/>
+    </svg></button>
+  </div>
+</div>

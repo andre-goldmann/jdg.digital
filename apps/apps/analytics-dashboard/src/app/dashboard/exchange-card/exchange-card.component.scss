@@ -1,0 +1,80 @@
+.exchange-card {
+  background-color: #FFFFFF;
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+  .exchange-title {
+    font-size: 18px;
+    font-weight: 500;
+    color: #212529;
+    margin: 0 0 16px 0;
+  }
+
+  .exchange-input {
+    margin-bottom: 16px;
+
+    .input-label {
+      display: block;
+      font-size: 14px;
+      color: #6C757D;
+      margin-bottom: 8px;
+    }
+
+    .input-container {
+      display: flex;
+      border: 1px solid #E0E0E0;
+      border-radius: 4px;
+      overflow: hidden;
+
+      .amount-input {
+        flex: 1;
+        border: none;
+        padding: 12px;
+        font-size: 16px;
+        color: #212529;
+
+        &:focus {
+          outline: none;
+        }
+      }
+
+      .currency-selector {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 0 12px;
+        background-color: #F8F9FA;
+        cursor: pointer;
+
+        &:hover {
+          background-color: #E9ECEF;
+        }
+      }
+    }
+  }
+
+  .exchange-rate {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #6C757D;
+    margin-bottom: 16px;
+  }
+
+  .exchange-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: #FFFFFF;
+    border: 1px solid #E0E0E0;
+    border-radius: 4px;
+    font-weight: 500;
+    color: #212529;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #F8F9FA;
+    }
+  }
+}

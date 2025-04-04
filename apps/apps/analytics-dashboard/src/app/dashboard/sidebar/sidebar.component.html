@@ -1,0 +1,35 @@
+<mat-nav-list>
+  <div class="logo">
+
+    <!-- Tailwind works >
+    <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Default</button>
+    <div class="mb-10">
+      <div class="w-8 h-8 bg-blue-700 rounded-md flex items-center justify-center">
+        <lucide-icon [img]="Home"></lucide-icon>
+      </div>
+    </div-->
+
+    <!-- lucide-icon with angular button -->
+    <!--button mat-button>
+      <lucide-icon [img]="Home"></lucide-icon>
+    </button-->
+    <!-- watch this https://www.youtube.com/watch?v=oMs4qcmbgRs -->
+    <a mat-list-item>
+      <lucide-icon [img]="Home"></lucide-icon>
+    </a>
+
+  </div>
+
+  <a mat-list-item [activated]="true">
+    <mat-icon svgIcon="dashboard-icon"></mat-icon>
+  </a>
+  <a mat-list-item>
+    <mat-icon svgIcon="equalizer-icon"></mat-icon>
+  </a>
+  <a mat-list-item>
+    <mat-icon svgIcon="tune-icon"></mat-icon>
+  </a>
+  <a mat-list-item>
+    <lucide-angular [img]="Settings"></lucide-angular>
+  </a>
+</mat-nav-list>
