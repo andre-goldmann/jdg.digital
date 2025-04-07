@@ -51,4 +51,8 @@ storybook-static
 /python-backend/graph-rag/data
 /python-backend/graph-rag/graph-rag.iml
 
+/chat/backend/.idea
+/chat/backend/target
+/chat/backend/src/main/resources/application-prod.properties
+
 /spring-backend/.idea

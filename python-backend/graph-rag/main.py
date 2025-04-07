@@ -29,7 +29,8 @@ docs = loader.load()
 text_splitter = RecursiveCharacterTextSplitter(chunk_size=250, chunk_overlap=24)
 documents = text_splitter.split_documents(documents=docs)
 
-llm = OllamaFunctions(model="llama3.1", temperature=0, format="json")
+model = "gemma2:2b" #"llama3.1"
+llm = OllamaFunctions(model=model, temperature=0, format="json")
 
 llm_transformer = LLMGraphTransformer(llm=llm)
 

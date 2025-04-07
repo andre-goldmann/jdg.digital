@@ -6,9 +6,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { SidebarComponent } from './sidebar/sidebar.component';
-import { BalanceCardComponent } from './balance-card/balance-card.component';
 import { AccountsCardComponent } from './accounts-card/accounts-card.component';
-import { ExchangeCardComponent } from './exchange-card/exchange-card.component';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -21,11 +20,10 @@ import { ExchangeCardComponent } from './exchange-card/exchange-card.component';
     MatIconModule,
     MatMenuModule,
     SidebarComponent,
-    BalanceCardComponent,
     AccountsCardComponent,
-    ExchangeCardComponent
+    RouterOutlet,
   ],
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss']
+  styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent {}

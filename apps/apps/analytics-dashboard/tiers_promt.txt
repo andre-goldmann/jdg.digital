@@ -1,0 +1,6 @@
+Lets introduce tiers. Create three tiers, free, pro and pro plus. For a free tier,
+users can upload up to 2 images, pro tier users can upload up to 4 images
+and pro plus users can upload unlimited number of images.
+
+Create a button in the main page that opens up a dialog to change the tier. For now,
+it´s okay that the users choos whatever tier the want.

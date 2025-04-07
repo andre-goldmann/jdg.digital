@@ -1,0 +1,43 @@
+<mat-card class="chat-container">
+  <mat-list class="messages">
+    <mat-list-item *ngFor="let msg of messages">
+      <div class="message-item">
+        <mat-card class="user-message">
+          <mat-card-content>
+            Watch again: https://www.youtube.com/watch?v=IqWfKj4mUIo&ab_channel=Lovable
+            <strong>You:</strong> {{ msg.message }}
+          </mat-card-content>
+        </mat-card>
+        <mat-card class="ai-message" *ngIf="msg.response">
+          <mat-card-content>
+            <strong>AI:</strong> {{ msg.response }}
+          </mat-card-content>
+        </mat-card>
+        <div *ngIf="!msg.response && isLoading" class="loading">
+          <mat-progress-spinner diameter="20" mode="indeterminate"></mat-progress-spinner>
+          <span>Thinking...</span>
+        </div>
+      </div>
+    </mat-list-item>
+  </mat-list>
+  
+  <div class="input-container">
+    <mat-form-field appearance="outline" class="message-input">
+      <mat-label>Type your message...</mat-label>
+      <input
+        matInput
+        [(ngModel)]="currentMessage"
+        (keyup.enter)="sendMessage()"
+        [disabled]="isLoading"
+      >
+    </mat-form-field>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="sendMessage()"
+      [disabled]="isLoading || !currentMessage.trim()"
+    >
+      Send
+    </button>
+  </div>
+</mat-card>

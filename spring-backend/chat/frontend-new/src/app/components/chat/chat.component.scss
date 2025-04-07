@@ -1,0 +1,109 @@
+.chat-container {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', sans-serif;
+  color: #333;
+}
+
+.messages {
+  height: 400px;
+  overflow-y: auto;
+  margin-bottom: 20px;
+  scrollbar-color: #888 #f1f1f1;
+  scrollbar-width: thin;
+}
+
+.message-item {
+  margin-bottom: 15px;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.user-message {
+  background-color: #e3f2fd;
+  margin-bottom: 8px;
+  margin-left: auto;
+  padding: 12px;
+  border-radius: 8px;
+  word-wrap: break-word; /* Ensures long words break */
+  overflow-wrap: break-word; /* Ensures text wraps properly */
+  white-space: normal; /* Allows text to wrap to the next line */
+  color: #1a237e;
+  max-width: 96%; /* Prevents the card from being too wide */
+}
+
+.ai-message {
+  background-color: #f9f9f9;
+  margin-bottom: 8px;
+  padding: 12px;
+  border-radius: 8px;
+  word-wrap: break-word;
+  color: #333;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+  max-width: 96%;
+}
+
+.loading {
+  color: #444;
+  font-style: italic;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+}
+
+.input-container {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.message-input {
+  flex: 1;
+  width: 100%;
+  
+  .mat-form-field-wrapper {
+    padding-bottom: 0;
+    width: 100%;
+  }
+  
+  .mat-form-field-infix {
+    width: 100%;
+    padding: 0.5em 0;
+    border-top: 0;
+  }
+  
+  input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.5em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  &:focus-within {
+    .mat-form-field-outline {
+      color: #1976d2;
+    }
+  }
+}
+
+mat-list {
+  padding: 0;
+}
+
+mat-list-item {
+  height: auto !important;
+  margin-bottom: 8px;
+}
+
+button {
+  &:focus {
+    outline: 2px solid #1976d2;
+    outline-offset: 2px;
+  }
+}
