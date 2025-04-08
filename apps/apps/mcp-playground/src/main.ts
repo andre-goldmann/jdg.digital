@@ -4,11 +4,21 @@ import { z } from "zod";
 const NWS_API_BASE = "https://api.weather.gov";
 const USER_AGENT = "weather-app/1.0";
 
+interface Coordinates {
+  longitude: number;
+  latitude: number;
+}
+
+interface State {
+  state: string;
+}
+
 // Create an MCP server
 const server = new McpServer({
   name: "Weather",
   version: "1.0.0"
 });
+
 
 // Helper function for making NWS API requests
 async function makeNWSRequest<T>(url: string): Promise<T | null> {
@@ -85,7 +95,7 @@ server.tool(
   {
     state: z.string().length(2).describe("Two-letter state code (e.g. CA, NY)"),
   },
-  async ({ state }) => {
+  async ({ state }:State) => {
     const stateCode = state.toUpperCase();
     const alertsUrl = `${NWS_API_BASE}/alerts?area=${stateCode}`;
     const alertsData = await makeNWSRequest<AlertsResponse>(alertsUrl);
@@ -134,7 +144,7 @@ server.tool(
     latitude: z.number().min(-90).max(90).describe("Latitude of the location"),
     longitude: z.number().min(-180).max(180).describe("Longitude of the location"),
   },
-  async ({ latitude, longitude }) => {
+  async ({ longitude, latitude }: Coordinates) => {
     // Get grid point data
     const pointsUrl = `${NWS_API_BASE}/points/${latitude.toFixed(4)},${longitude.toFixed(4)}`;
     const pointsData = await makeNWSRequest<PointsResponse>(pointsUrl);
