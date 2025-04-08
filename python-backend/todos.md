@@ -18,3 +18,4 @@ CRM: 1. You need to build a crm system and you need to have: Deals, Contacts and
 	 5. introduct the modal view from contact to companies as well
 	 6. Remove call company from Companies and replace with "enrich company"
 
+https://github.com/HKUDS/LightRAG
