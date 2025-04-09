@@ -1,0 +1,37 @@
+<mat-toolbar color="primary" class="toolbar">
+  <!-- Logo -->
+  <div class="logo">
+    <mat-icon>home</mat-icon>
+  </div>
+
+  <!-- Spacer -->
+  <span class="spacer"></span>
+
+  <!-- Menu Button -->
+  <button mat-icon-button (click)="toggleSidenav()" aria-label="Toggle navigation menu" aria-controls="main-nav" aria-expanded="false">
+    <mat-icon>menu</mat-icon>
+  </button>
+
+  <!-- Logout Button -->
+  <button mat-button color="accent" (click)="logout()">
+    <mat-icon>logout</mat-icon>
+  </button>
+</mat-toolbar>
+
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #sidenav mode="side" position="end" class="sidenav">
+    <mat-nav-list id="main-nav" role="navigation" aria-label="Main navigation">
+      <a mat-list-item [routerLink]="['/mobileapp/profile']" routerLinkActive="active" ariaCurrentWhenActive="page" tabindex="0" (keyup.enter)="sidenav.close()">Profile</a>
+      <a mat-list-item [routerLink]="['/mobileapp/tickets']" ariaCurrentWhenActive="page" tabindex="0" (keyup.enter)="sidenav.close()">Tickets</a>
+      <a mat-list-item [routerLink]="['/mobileapp/orders']"  ariaCurrentWhenActive="page" tabindex="0" (keyup.enter)="sidenav.close()">Bestellübersicht</a>
+      <a mat-list-item [routerLink]="['/mobileapp/travels']" ariaCurrentWhenActive="page" tabindex="0" (keyup.enter)="sidenav.close()">Reisen</a>
+      <a mat-list-item [routerLink]="['/mobileapp/paymentmethods']" ariaCurrentWhenActive="page" tabindex="0" (keyup.enter)="sidenav.close()">Meine Zahlungsmittel</a>
+      <a mat-list-item [routerLink]="['/mobileapp/abos']" ariaCurrentWhenActive="page" tabindex="0" (keyup.enter)="sidenav.close()">Abos</a>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <!-- Main content goes here -->
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

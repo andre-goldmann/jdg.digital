@@ -87,3 +87,11 @@ mat-card {
 h3 {
   font-weight: 400;
 }
+
+/* border-top-right-radius: var(--mat-sidenav-container-shape, var(--mat-sys-corner-large)); */
+.mat-drawer {
+  border-top-right-radius: 0px !important;
+  margin-right: 0px !important;
+  padding-right: 0px !important;
+
+}
