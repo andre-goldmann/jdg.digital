@@ -1,5 +1,20 @@
-<mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
+<mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" (selectedIndexChange)="selectedTabIndex.set($event)">
   <mat-tab label="Signals"><app-signals></app-signals></mat-tab>
   <mat-tab label="Linked Signal"><app-linked-signal></app-linked-signal></mat-tab>
-  <mat-tab label="Third"><app-avoid></app-avoid></mat-tab>
+  <mat-tab label="Avoid Effects"><app-avoid></app-avoid></mat-tab>
+  <mat-tab label="Card View">
+    @defer (when selectedTabIndex() === 3){
+      <app-card-view></app-card-view>
+    }
+  </mat-tab>
+  <mat-tab label="Video Play">
+    @defer (when selectedTabIndex() === 4){
+      <app-video-player id="DzXMkLCAPRE"></app-video-player>
+    }
+  </mat-tab>
+  <mat-tab label="Maps">
+    @defer (when selectedTabIndex() === 5){
+      <app-google-maps></app-google-maps>
+    }
+  </mat-tab>
 </mat-tab-group>

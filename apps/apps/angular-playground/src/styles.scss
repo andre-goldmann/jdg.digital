@@ -7,10 +7,6 @@
 /* You can add global styles to this file, and also import other style files */
 
 
-html {
-
-}
-
 .darkMode {
   @include mat.theme-overrides((
     "background": #24292e

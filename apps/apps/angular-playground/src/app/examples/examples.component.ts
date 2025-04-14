@@ -1,8 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { MatTab, MatTabGroup } from '@angular/material/tabs';
 import { LinkedSignalComponent } from './linked-signal/linked-signal.component';
 import { SignalsComponent } from './signals/signals.component';
 import { AvoidComponent } from './effects/avoid.component';
+import { CardViewComponent } from './card-view/card-view.component';
+import { VideoPlayerComponent } from './video-player/video-player.component';
+import { GoogleMapsComponent } from './google-maps/google-maps.component';
 
 @Component({
   selector: 'app-examples',
@@ -12,8 +15,13 @@ import { AvoidComponent } from './effects/avoid.component';
     LinkedSignalComponent,
     SignalsComponent,
     AvoidComponent,
+    CardViewComponent,
+    VideoPlayerComponent,
+    GoogleMapsComponent,
   ],
   templateUrl: './examples.component.html',
   styleUrl: './examples.component.scss',
 })
-export class ExamplesComponent {}
+export class ExamplesComponent {
+  selectedTabIndex = signal(0);
+}
