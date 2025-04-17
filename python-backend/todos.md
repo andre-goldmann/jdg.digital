@@ -19,3 +19,8 @@ CRM: 1. You need to build a crm system and you need to have: Deals, Contacts and
 	 6. Remove call company from Companies and replace with "enrich company"
 
 https://github.com/HKUDS/LightRAG
+
+https://www.youtube.com/watch?v=2oz2d9qoMm4
+https://www.youtube.com/watch?v=gsPGdq2C97c
+https://www.youtube.com/watch?v=-2M8X-jazX0&t=11s
+https://www.youtube.com/watch?v=D-hRe1Ssqq4

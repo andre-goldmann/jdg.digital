@@ -56,3 +56,6 @@ storybook-static
 /chat/backend/src/main/resources/application-prod.properties
 
 /spring-backend/.idea
+
+/docker/data
+/python-backend/graph-rag/llm.txt
