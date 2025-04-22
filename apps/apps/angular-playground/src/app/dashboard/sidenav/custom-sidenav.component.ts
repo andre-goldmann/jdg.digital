@@ -32,6 +32,11 @@ export class CustomSidenavComponent {
       route: 'home'
     },
     {
+      icon:'dashboard',
+      label:'N8N',
+      route: 'nachtn'
+    },
+    {
       icon:'receipt',
       label:'Examples',
       route: 'examples'

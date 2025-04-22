@@ -1,0 +1,21 @@
+<div class="container">
+  <button mat-raised-button color="primary" (click)="testEndpoint()" [disabled]="isLoading">
+    Endpunkt testen
+  </button>
+
+  <mat-spinner *ngIf="isLoading" diameter="30"></mat-spinner>
+</div>
+
+<div class="card-container" *ngIf="bookData">
+
+  <mat-card class="book-card" *ngFor="let book of bookData">
+    <mat-card-header>
+      <mat-card-title>Buchinformationen</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p><strong>Titel:</strong> {{ book.title }}</p>
+      <p><strong>Preis:</strong> {{ book.price }}</p>
+    </mat-card-content>
+  </mat-card>
+</div>
+
