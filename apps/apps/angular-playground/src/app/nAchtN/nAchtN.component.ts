@@ -7,6 +7,11 @@ import { MatCardModule } from '@angular/material/card';
 import { finalize } from 'rxjs/operators';
 
 // Interface für die Antwort des Endpunkts
+
+interface Result {
+  results: BookResponse[]
+}
+
 interface BookResponse {
   title: string;
   price: string;
@@ -33,8 +38,8 @@ export class NAchtNComponent {
   testEndpoint(): void {
     this.isLoading = true;
     this.bookData = [];
-
-    this.http.post<BookResponse[]>('http://localhost:5678/webhook/f70edaa3-140b-48a0-bbe5-074324633f0d', {})
+    const prompt = "List 10 books to read about Rust. Return the result as a single-line, minified JSON array of objects in the format: [{\"title\": \"Book Title\"}, ...] with no extra whitespace or line breaks.";
+    this.http.post<Result[]>('http://localhost:5678/webhook-test/21037c0b-6c2a-4c67-a0f1-55547c6f8ec6', {id:1, msg:prompt})
       .pipe(
         finalize(() => {
           this.isLoading = false;
@@ -42,8 +47,8 @@ export class NAchtNComponent {
       )
       .subscribe({
         next: (response) => {
-          console.log('Antwort erhalten:', response);
-          this.bookData = response;
+          console.log(response[0].results);
+          this.bookData = response[0].results;
         },
         error: (error) => {
           console.error('Fehler aufgetreten:', error);

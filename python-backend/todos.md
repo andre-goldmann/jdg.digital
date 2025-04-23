@@ -24,3 +24,9 @@ https://www.youtube.com/watch?v=2oz2d9qoMm4
 https://www.youtube.com/watch?v=gsPGdq2C97c
 https://www.youtube.com/watch?v=-2M8X-jazX0&t=11s
 https://www.youtube.com/watch?v=D-hRe1Ssqq4
+https://n8n.io/workflows/3188-turn-youtube-videos-into-summaries-transcripts-and-visual-insights/
+https://www.youtube.com/watch?v=Ovg_KfKxnC8
+
+https://medium.com/@syrom_85473/a-practical-n8n-workflow-example-from-a-to-z-part-1-use-case-learning-journey-and-setup-1f4efcfb81b1
+https://medium.com/@syrom_85473/a-practical-n8n-workflow-example-from-a-to-z-part-2-aggregating-newsletter-summaries-in-a-688f30f69352
+https://medium.com/@syrom_85473/a-practical-n8n-workflow-example-from-a-to-z-part-3-compile-translate-and-publish-a-linkedin-b5d2cb373b15

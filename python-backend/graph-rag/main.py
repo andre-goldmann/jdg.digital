@@ -1,9 +1,10 @@
 import os
 from typing import List
-
+import ollama
 from dotenv import load_dotenv
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import TextLoader
+from langchain_experimental.llms.ollama_functions import OllamaFunctions
 from langchain_neo4j import Neo4jGraph
 # from yfiles_jupyter_graphs import GraphWidget
 from langchain_community.vectorstores import Neo4jVector
@@ -23,10 +24,13 @@ load_dotenv()
 
 graph = Neo4jGraph()
 
-model = "gemma2:2b" #"llama3.1"
+model = "all-minilm"#"gemma2:2b" #"llama3.1"
 #model = "gemini-1.5-flash" #"gemini-2.0-flash" "gemini-2.0-flash-lite"
 
+#ollama.embeddings(model='all-minilm', prompt='The sky is blue because of Rayleigh scattering')
+# does not work with "all-minilm"
 llm = ChatOllama(model=model, temperature=0, format="json")
+
 # does work but ResourceExhausted: 429 You exceeded your current quota,
 # please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits
 #llm = ChatGoogleGenerativeAI(
@@ -151,8 +155,8 @@ Answer:"""
 
 if __name__ == '__main__':
     # Delete graph:
-    #graph.query("MATCH (n) DETACH DELETE n")
-    '''try:
+    graph.query("MATCH (n) DETACH DELETE n")
+    try:
         create_index()
         print("Index created...")
     except:
@@ -182,7 +186,6 @@ if __name__ == '__main__':
         include_source=True
     )
     print("Documents added to graph")
-'''
 
     print(graph_retriever("Who is Nonna Lucia?"))
     #entity_chain.invoke("Who are Nonna Lucia and Giovanni Caruso?")
