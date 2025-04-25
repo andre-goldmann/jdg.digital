@@ -6,6 +6,7 @@ import { AvoidComponent } from './effects/avoid.component';
 import { CardViewComponent } from './card-view/card-view.component';
 import { VideoPlayerComponent } from './video-player/video-player.component';
 import { GoogleMapsComponent } from './google-maps/google-maps.component';
+import { ScreenComponent } from './screen/screen.component';
 
 @Component({
   selector: 'app-examples',
@@ -18,6 +19,7 @@ import { GoogleMapsComponent } from './google-maps/google-maps.component';
     CardViewComponent,
     VideoPlayerComponent,
     GoogleMapsComponent,
+    ScreenComponent,
   ],
   templateUrl: './examples.component.html',
   styleUrl: './examples.component.scss',

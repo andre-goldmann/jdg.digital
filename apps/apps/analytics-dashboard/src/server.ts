@@ -7,24 +7,22 @@ import {
 import express from 'express';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { expressHandler } from '@genkit-ai/express';
+import { analysisFlow, chatFlow} from './flows';
 
 const serverDistFolder = dirname(fileURLToPath(import.meta.url));
 const browserDistFolder = resolve(serverDistFolder, '../browser');
 
 const app = express();
+app.use(express.json());
 const angularApp = new AngularNodeAppEngine();
 
 /**
- * Example Express Rest API endpoints can be defined here.
- * Uncomment and define endpoints as necessary.
- *
- * Example:
- * ```ts
- * app.get('/api/**', (req, res) => {
- *   // Handle API request
- * });
- * ```
+ * Define an endpoint to call a flow.
  */
+app.post('/chatFlow', expressHandler(chatFlow));
+//app.post('/dataFlow', expressHandler(dataFlow));
+app.post('/analysisFlow', expressHandler(analysisFlow));
 
 /**
  * Serve static files from /browser
@@ -34,7 +32,7 @@ app.use(
     maxAge: '1y',
     index: false,
     redirect: false,
-  })
+  }),
 );
 
 /**
@@ -44,7 +42,7 @@ app.use('/**', (req, res, next) => {
   angularApp
     .handle(req)
     .then((response) =>
-      response ? writeResponseToNodeResponse(response, res) : next()
+      response ? writeResponseToNodeResponse(response, res) : next(),
     )
     .catch(next);
 });

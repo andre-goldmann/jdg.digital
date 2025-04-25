@@ -1,7 +1,11 @@
 <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" (selectedIndexChange)="selectedTabIndex.set($event)">
+  <mat-tab label="3D">
+    <app-screen></app-screen>
+  </mat-tab>
   <mat-tab label="Signals"><app-signals></app-signals></mat-tab>
   <mat-tab label="Linked Signal"><app-linked-signal></app-linked-signal></mat-tab>
   <mat-tab label="Avoid Effects"><app-avoid></app-avoid></mat-tab>
+
   <mat-tab label="Card View">
     @defer (when selectedTabIndex() === 3){
       <app-card-view></app-card-view>

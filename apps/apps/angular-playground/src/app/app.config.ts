@@ -6,6 +6,8 @@ import {
   withEventReplay,
 } from '@angular/platform-browser';
 import { provideHttpClient, withFetch } from '@angular/common/http';
+import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
+import { ScreenService } from './examples/screen/screen.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -14,5 +16,7 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(appRoutes),
     provideHttpClient(withFetch()),
+    {provide: STEPPER_GLOBAL_OPTIONS, useValue: { displayDefaultIndicatorType: false }},
+    ScreenService
   ],
 };
