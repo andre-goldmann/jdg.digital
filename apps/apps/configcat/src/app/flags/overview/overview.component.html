@@ -1,0 +1,10 @@
+<p>Within Copilot select the properties file (application.properties, application.yaml) and translate it to csv using the following
+prompt:
+  <span class="highlight">
+  '''analyse the attached configuration file, from that create a csv with the following colums:
+  service property description type/range default Relevant constraints or denpendencies category remarks the created file should be named "application-config.csv", use ";" as column seperator'''
+    </span>
+  Then upload the csv file here.
+</p>
+<app-tool-bar (searchChange)="onSearchChange($event)" (parsedData)="uploadData($event)"></app-tool-bar>
+<app-table [filterValue]="searchText" [uploadedData]="uploadedData"></app-table>

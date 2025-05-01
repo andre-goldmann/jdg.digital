@@ -1,0 +1,13 @@
+<div class="container">
+  <h1>Feature Flag Management</h1>
+  <div class="feature-list">
+    <div class="feature-item" *ngFor="let feature of features">
+      <label class="feature-name">
+        {{ feature.name }}
+        <input type="checkbox" [checked]="feature.enabled" (change)="toggleFeature(feature)" 
+               aria-label="Toggle {{ feature.name }}">
+        <span class="slider round"></span>
+      </label>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,55 @@
+@use '@angular/material' as mat;
+
+
+.dense-1 {
+  @include mat.form-field-density(-1);
+}
+
+.dense-2 {
+  @include mat.form-field-density(-2);
+}
+
+:host {
+  @include mat.select-overrides((
+    panel-background-color: orange,
+    enabled-trigger-text-color: red,
+  ));
+  display: block;
+  width: 100%;
+}
+
+
+mat-toolbar {
+  color: white;
+  display: flex;
+  align-items: center;
+}
+
+mat-form-field {
+  margin-left: 16px;
+}
+
+.search-field {
+  flex-grow: 1; /* Ensures the search field takes up available space */
+  margin-left: 16px;
+}
+
+/* Override Material form field styles to fit toolbar height */
+:host ::ng-deep .mat-mdc-form-field {
+  width: 200px;
+  margin-bottom: -1.25em; /* Reduces the bottom margin */
+}
+
+:host ::ng-deep .mat-mdc-form-field-infix {
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+}
+
+:host ::ng-deep .mat-mdc-text-field-wrapper {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+:host ::ng-deep .mdc-text-field--outlined {
+  --mdc-outlined-text-field-container-height: 48px;
+}

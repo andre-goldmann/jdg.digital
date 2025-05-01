@@ -1,10 +1,10 @@
 import { Chat, genkit, Session } from 'genkit/beta';
-import { googleAI, gemini20Flash } from '@genkit-ai/googleai';
+import { googleAI, gemini20Flash, gemini15Flash } from '@genkit-ai/googleai';
 import { parse } from 'partial-json';
 import { z } from 'zod';
 import { analysisPrompt } from './prompts';
 import { writeFileSync } from 'fs';
-const model = gemini20Flash;
+const model = gemini15Flash;
 
 const ai = genkit({
   plugins: [googleAI()],
@@ -35,6 +35,106 @@ const getDateTime = ai.defineTool(
     return `The current date and time is ${formattedDate} ${formattedTime}`;
   }
 );
+
+const getFinancialData = ai.defineTool(
+  {
+    name: 'getFinancialData',
+    description: 'Gets the current financial data',
+    inputSchema: z.object({
+      ticker: z.string().describe('The ticker to get the current financial data for')
+    }),
+    outputSchema: z.object({}),
+  },
+  async (input) => {
+    console.info("loading financial data for  ", input);
+    // TODO hier muss dann der N8N Endpunkt aufgerufen werden
+    const data = {
+      "quarterly": [
+        {
+          "ticker": "AAL",
+          "endDate": "2024-12-31T21:00:00.000Z",
+          "totalRevenue": 8000000000,
+          "grossProfit": 1200000000,
+          "operatingIncome": 500000000,
+          "netIncome": 300000000,
+          "netIncomeFromContinuingOperations": 300000000,
+          "netIncomeAttributableToParent": 300000000,
+          "totalCashFromOperatingActivities": 350000000,
+          "capitalExpenditure": -15000000,
+          "cashFlowFromInvestingActivities": -1205000000,
+          "freeCashFlow": 335000000,
+          "endPeriodCashFlow": 900000000
+        }
+      ],
+      "earnings": [
+        {
+          "endDate": "2024-10-24T17:00:00.000Z",
+          "ticker": "AAL",
+          "estimatedEps": 0.15,
+          "actualEps": 0.26,
+          "surprisePercent": 87.5
+        }
+      ],
+      "keyMetrics": {
+        "aggregateGrowth": {
+          "aggregateRevenueGrowth": 495.97315436241615,
+          "aggregateGrossProfitGrowth": 276.9230769230769,
+          "aggregateNetIncomeGrowth": 163.63636363636363,
+          "aggregateOperatingIncomeGrowth": 2147.483647
+        }
+      },
+      "annualRevenueDataQuarterly": [
+        {
+          "totalRevenue": 67273000000
+        }
+      ],
+      "annualRevenueData": [
+        {
+          "totalRevenue": 67273000000,
+          "operatingIncome": 5344000000,
+          "netIncome": 4015000000,
+          "totalCashFromOperatingActivities": 20815000000,
+          "capitalExpenditure": -453300000,
+          "endDate": "2023-10-19"
+        }
+      ],
+      "annual": [
+        {
+          "totalRevenue": 8.995256928218927e+13,
+          "operatingIncome": 1197.3853707063168
+        }
+      ],
+      "yoyGrowth": {
+        "2023-10-18-19 to 2024-12-31": {
+          "totalRevenue": 0.1858381294448002,
+          "grossProfit": 0.16856302319714081,
+          "netIncome": 0.11768306377353086,
+          "operatingIncome": 0.13367008568537657
+        }
+      },
+      "valuationRatios": {
+        "priceToEarningsTtm": 25.323577874377745,
+        "priceToSalesTtm": 3.5245638903314156,
+        "priceDate": "2024-12-31",
+        "highestPrice": 117.49,
+        "lowestPrice": 67.49,
+        "commonSharesOutstanding": 657138996,
+        "marketCap": 77192475576,
+        "priceToEarningsTrailing12Months": 25.3235768978768537,
+        "priceToSales": 3.5245638903314156,
+        "priceToBookValue": 1.44148749245927141,
+        "enterpriseValue": 9.9778+10,
+        "evToRevenue": 1.1127359019676899,
+        "evToEbitda": 4.8004213010
+      },
+      "bookToMarketValue": -0.42457,
+      "sharesOutstanding": 657138996,
+      "adjustedClosingPrice": 17.43
+    };
+    return data;
+  }
+);
+
 // TODO: use the prompt from here:
 //  https://medium.datadriveninvestor.com/i-used-ai-to-analyze-every-single-us-stock-heres-what-to-look-out-for-in-2025-6223f21cb302
 // show the results within the app
@@ -123,7 +223,7 @@ export const analysisFlow = ai.defineFlow(
       session = ai.createSession({ sessionId });
       await session.updateMessages(sessionId, []);
     }
-    chat = session.chat({ sessionId, model, tools: [getDateTime] });
+    chat = session.chat({ sessionId, model, tools: [getFinancialData] });
 
     if('Hi' === userInput) {
       const tex = {
@@ -138,91 +238,14 @@ export const analysisFlow = ai.defineFlow(
       return tex;
     }
     // TODO: get the data from https://app.simfin.com/
-    const data = {
-      "quarterly": [
-        {
-          "ticker": "AAL",
-          "endDate": "2024-12-31T21:00:00.000Z",
-          "totalRevenue": 8000000000,
-          "grossProfit": 1200000000,
-          "operatingIncome": 500000000,
-          "netIncome": 300000000,
-          "netIncomeFromContinuingOperations": 300000000,
-          "netIncomeAttributableToParent": 300000000,
-          "totalCashFromOperatingActivities": 350000000,
-          "capitalExpenditure": -15000000,
-          "cashFlowFromInvestingActivities": -1205000000,
-          "freeCashFlow": 335000000,
-          "endPeriodCashFlow": 900000000
-        }
-      ],
-      "earnings": [
-        {
-          "endDate": "2024-10-24T17:00:00.000Z",
-          "ticker": "AAL",
-          "estimatedEps": 0.15,
-          "actualEps": 0.26,
-          "surprisePercent": 87.5
-        }
-      ],
-      "keyMetrics": {
-        "aggregateGrowth": {
-          "aggregateRevenueGrowth": 495.97315436241615,
-          "aggregateGrossProfitGrowth": 276.9230769230769,
-          "aggregateNetIncomeGrowth": 163.63636363636363,
-          "aggregateOperatingIncomeGrowth": 2147.483647
-        }
-      },
-      "annualRevenueDataQuarterly": [
-        {
-          "totalRevenue": 67273000000
-        }
-      ],
-      "annualRevenueData": [
-        {
-          "totalRevenue": 67273000000,
-          "operatingIncome": 5344000000,
-          "netIncome": 4015000000,
-          "totalCashFromOperatingActivities": 20815000000,
-          "capitalExpenditure": -453300000,
-          "endDate": "2023-10-19"
-        }
-      ],
-      "annual": [
-        {
-          "totalRevenue": 8.995256928218927e+13,
-          "operatingIncome": 1197.3853707063168
-        }
-      ],
-      "yoyGrowth": {
-        "2023-10-18-19 to 2024-12-31": {
-          "totalRevenue": 0.1858381294448002,
-          "grossProfit": 0.16856302319714081,
-          "netIncome": 0.11768306377353086,
-          "operatingIncome": 0.13367008568537657
-        }
-      },
-      "valuationRatios": {
-        "priceToEarningsTtm": 25.323577874377745,
-        "priceToSalesTtm": 3.5245638903314156,
-        "priceDate": "2024-12-31",
-        "highestPrice": 117.49,
-        "lowestPrice": 67.49,
-        "commonSharesOutstanding": 657138996,
-        "marketCap": 77192475576,
-        "priceToEarningsTrailing12Months": 25.3235768978768537,
-        "priceToSales": 3.5245638903314156,
-        "priceToBookValue": 1.44148749245927141,
-        "enterpriseValue": 9.9778+10,
-        "evToRevenue": 1.1127359019676899,
-        "evToEbitda": 4.8004213010
-      },
-      "bookToMarketValue": -0.42457,
-      "sharesOutstanding": 657138996,
-      "adjustedClosingPrice": 17.43
-    };
 
-    const { text } = await chat.send(analysisPrompt(userInput, data));
+
+    const { text } = await chat.send(
+      {
+        prompt: analysisPrompt(userInput),
+        tools: [getFinancialData],
+      }
+    );
 
     //return parse(maybeStripMarkdown(text));
     return {agentResponse: text};

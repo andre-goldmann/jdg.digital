@@ -31,6 +31,8 @@
     "genkit": "^1.6.2",
     "gsap": "^3.12.7",
     "lucide-angular": "^0.487.0",
+    "ngx-papaparse": "^8.0.0",
+    "papaparse": "^5.5.2",
     "postcss": "^8.5.3",
     "rxjs": "~7.8.0",
     "tailwindcss": "^4.0.17",

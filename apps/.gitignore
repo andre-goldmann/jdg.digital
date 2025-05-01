@@ -47,3 +47,5 @@ Thumbs.db
 storybook-static
 
 package-lock.json
+/apps/configcat/ConfigCat Dashboard.html
+/apps/configcat/ConfigCat Dashboard_Files/

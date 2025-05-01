@@ -1,0 +1,29 @@
+<h2 mat-dialog-title>Add Feature Flag</h2>
+<div mat-dialog-content>
+  <mat-form-field appearance="fill" class="w-full">
+    <mat-label>Name for hoomans</mat-label>
+    <input matInput [(ngModel)]="feature" name="feature" />
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="w-full">
+    <mat-label>key for programs</mat-label>
+    <input matInput [(ngModel)]="key" name="key" />
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="w-full">
+    <mat-label>Description</mat-label>
+    <input matInput [(ngModel)]="description" name="description" />
+  </mat-form-field>
+
+  <mat-slide-toggle [(ngModel)]="testEnv" name="testEnv">
+    in Test Environment ({{ testEnv ? 'on' : 'off' }})
+  </mat-slide-toggle>
+  <br />
+  <mat-slide-toggle [(ngModel)]="prodEnv" name="prodEnv">
+    in Production Environment ({{ prodEnv ? 'on' : 'off' }})
+  </mat-slide-toggle>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">CANCEL</button>
+  <button mat-raised-button color="primary" (click)="onAdd()">ADD FEATURE FLAG</button>
+</div>
