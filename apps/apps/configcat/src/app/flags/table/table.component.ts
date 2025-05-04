@@ -1,4 +1,4 @@
-import { Component, input, effect, output } from '@angular/core';
+import { Component, input, effect } from '@angular/core';
 import {AfterViewInit, ViewChild} from '@angular/core';
 import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
 import {MatSort, MatSortModule} from '@angular/material/sort';

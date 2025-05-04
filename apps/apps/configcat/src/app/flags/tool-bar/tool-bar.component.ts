@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { FeatureFlagDialogComponent } from '../feature-flag-dialog/feature-flag-dialog.component';
 import {MatDialogModule} from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
+// needs to run on server to use papaparse directly
 import { Papa } from 'ngx-papaparse';
 import { ConfigRow } from '../model';
 

@@ -30,6 +30,7 @@
     "express": "^4.21.2",
     "genkit": "^1.6.2",
     "gsap": "^3.12.7",
+    "js-yaml": "^4.1.0",
     "lucide-angular": "^0.487.0",
     "ngx-papaparse": "^8.0.0",
     "papaparse": "^5.5.2",

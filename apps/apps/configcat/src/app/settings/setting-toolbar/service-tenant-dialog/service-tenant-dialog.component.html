@@ -1,0 +1,21 @@
+<h1 mat-dialog-title>Select Service and Tenant</h1>
+<div mat-dialog-content>
+  <mat-form-field appearance="fill" style="width:100%;">
+    <mat-label>Services</mat-label>
+    <mat-select [(ngModel)]="service" required>
+      <mat-option value="UserDataService">UserDataService</mat-option>
+      <mat-option value="StorageService">StorageService</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field appearance="fill" style="width:100%;">
+    <mat-label>Tenants</mat-label>
+    <mat-select [(ngModel)]="tenant" required>
+      <mat-option value="TenantA">TenantA</mat-option>
+      <mat-option value="TenantB">TenantB</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button color="primary" [mat-dialog-close]="{service: service, tenant: tenant}" [disabled]="!service || !tenant">OK</button>
+</div>

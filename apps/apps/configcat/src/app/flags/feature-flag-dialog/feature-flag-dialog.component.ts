@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import {
   MatDialogActions,
-  MatDialogClose,
   MatDialogContent,
   MatDialogRef,
   MatDialogTitle
@@ -22,8 +21,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatButtonModule,
     MatDialogTitle,
     MatDialogContent,
-    MatDialogActions,
-    MatDialogClose],
+    MatDialogActions],
   templateUrl: './feature-flag-dialog.component.html',
   styleUrls: ['./feature-flag-dialog.component.css'],
 })
