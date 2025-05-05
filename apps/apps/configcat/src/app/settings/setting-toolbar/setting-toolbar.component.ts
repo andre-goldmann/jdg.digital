@@ -1,12 +1,12 @@
-import { Component, output } from '@angular/core';
+import { Component, inject, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import {MatInputModule} from '@angular/material/input';
 import { ServiceTenantDialogComponent } from './service-tenant-dialog/service-tenant-dialog.component';
 import { ConfigRowSimple, Configuration } from '../../flags/model';
+import { SettingsService } from '../settings.service';
+import { Observable } from 'rxjs';
 
-// needs to run on server
-//import yaml from 'js-yaml';
 
 @Component({
   selector: 'app-setting-toolbar',
@@ -17,6 +17,7 @@ import { ConfigRowSimple, Configuration } from '../../flags/model';
 export class SettingToolbarComponent {
 
   dataUpload = output<Configuration>();
+  settingService = inject(SettingsService);
 
   constructor(private dialog: MatDialog) {
 
@@ -58,7 +59,10 @@ export class SettingToolbarComponent {
     console.log('Service:', service);
     console.log('Tenant:', tenant);
     console.log('File Content:', fileContent);
-    const rows = this.convertConfigToRows(fileContent, fileName);
+    this.convertConfigToRows(service, tenant, fileContent, fileName).subscribe(rows => {
+      console.log('Converted Rows:', rows);
+      // You can do something with the converted rows here
+    });
     // Your processing logic here
     const conf:Configuration =  {
       service: service,
@@ -73,44 +77,7 @@ export class SettingToolbarComponent {
    * @param fileContent The content of the config file as string
    * @param fileName The name of the file (used to detect type)
    */
-  convertConfigToRows(fileContent: string, fileName: string): ConfigRowSimple[] {
-    if (fileName.endsWith('.yml') || fileName.endsWith('.yaml')) {
-      // Parse YAML and flatten
-      const yamlObj = yaml.load(fileContent) as any;
-      return this.flattenYamlToRows(yamlObj);
-    } else if (fileName.endsWith('.properties')) {
-      return this.parsePropertiesToRows(fileContent);
-    } else {
-      throw new Error('Unsupported file type');
-    }
-  }
-
-// Helper to flatten nested YAML object to ConfigRow[]
-  flattenYamlToRows(obj: any, prefix = ''): ConfigRowSimple[] {
-    let rows: ConfigRowSimple[] = [];
-    for (const key in obj) {
-      if (typeof obj[key] === 'object' && obj[key] !== null) {
-        rows = rows.concat(this.flattenYamlToRows(obj[key], prefix ? `${prefix}.${key}` : key));
-      } else {
-        rows.push({ key: prefix ? `${prefix}.${key}` : key, value: String(obj[key]) });
-      }
-    }
-    return rows;
-  }
-
-// Helper to parse .properties file to ConfigRow[]
-  parsePropertiesToRows(content: string): ConfigRowSimple[] {
-    return content
-      .split('\n')
-      .map(line => line.trim())
-      .filter(line => line && !line.startsWith('#'))
-      .map(line => {
-        const idx = line.indexOf('=');
-        if (idx === -1) return null;
-        const key = line.substring(0, idx).trim();
-        const value = line.substring(idx + 1).trim();
-        return { key, value };
-      })
-      .filter((row): row is ConfigRowSimple => !!row);
+  convertConfigToRows(service: string, tenant: string, fileContent: string, fileName: string): Observable<ConfigRowSimple[]> {
+    return this.settingService.convertAndStoreData(service, tenant, fileContent, fileName);
   }
 }

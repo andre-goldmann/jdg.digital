@@ -8,6 +8,7 @@ import { MatMenuModule } from '@angular/material/menu';
 
 import { RouterOutlet } from '@angular/router';
 import { SidebarComponent } from '../sidebar/sidebar.component';
+import { ApiService } from '../api.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -25,4 +26,25 @@ import { SidebarComponent } from '../sidebar/sidebar.component';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
 })
-export class DashboardComponent {}
+export class DashboardComponent {
+  constructor(private api: ApiService) {}
+
+  fetchData() {
+    /*this.api.getExample().subscribe(response:string => {
+      console.log('Server response:', response);
+    });*/
+    this.api.getExample().subscribe({
+      next: (response: string) => {
+        console.log('Server response:', response);
+      },
+      error: (error:any) => {
+        console.error('Error fetching data:', error);
+      },
+    });
+  }
+
+  sendData() {
+    const payload = { name: 'Angular User', value: 42 };
+    this.api.postData(payload).subscribe();
+  }
+}
