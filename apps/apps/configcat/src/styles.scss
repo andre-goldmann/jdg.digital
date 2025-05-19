@@ -14,3 +14,26 @@ body {
   margin: 0;
   font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
+
+$default-theme: mat.define-theme(
+      (
+        color: (
+            theme-type: dark,
+            primary: mat.$azure-palette,
+            tertiary: mat.$blue-palette,
+        ),
+        density: (
+          /*scaling this to less than -1, will end up that for EditformComponent the labels are not shown anymore*/
+          scale: -1,
+        )
+      )
+);
+
+:root {
+  @include  mat.all-component-themes($default-theme);
+}
+
+/* heighlight for ngx-monaco-editor as it does not work within component */
+.highlight {
+  background-color: #fff !important;
+}

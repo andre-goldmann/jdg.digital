@@ -1,25 +1,63 @@
-import { Component } from '@angular/core';
-import { ToolBarComponent } from '../tool-bar/tool-bar.component';
+import { Component, Input, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { TableComponent } from '../table/table.component';
-import { ConfigRow } from '../model';
-import {MatListModule} from '@angular/material/list';
+import { EditformComponent } from '../editform/editform.component';
+import { YamlEditorComponent } from '../../yaml/yamleditor.component';
+import { MatTabsModule } from '@angular/material/tabs';
+import { ToolBarComponent } from '../tool-bar/tool-bar.component';
+import { FlagDto } from '../model';
 
 @Component({
   selector: 'app-overview',
-  imports: [ToolBarComponent, TableComponent, MatListModule],
+  standalone: true,
+  imports: [
+    CommonModule,
+    ToolBarComponent,
+    TableComponent,
+    EditformComponent,
+    YamlEditorComponent,
+    MatTabsModule
+  ],
   templateUrl: './overview.component.html',
-  styleUrl: './overview.component.scss',
+  styleUrl: './overview.component.scss'
 })
 export class OverviewComponent {
+  selectedTabIndex = signal(0);
   searchText = '';
-  uploadedData:ConfigRow[] = [];
+  env = '';
+  service = '';
+  tenant = '';
+  uploadedData: any[] = [];
+  selectedRow!: FlagDto;
 
-  onSearchChange(value: string) {
-    this.searchText = value;
+
+  onSearchChange(searchText: string) {
+    this.searchText = searchText;
   }
 
-  uploadData(data: ConfigRow[]) {
+  onEnvChange(env: string) {
+    this.env = env;
+  }
+
+  onServiceChange(service: string) {
+    this.service = service;
+  }
+
+  onTenantChange(tenant: string) {
+    this.tenant = tenant;
+  }
+
+  uploadData(data: any[]) {
     this.uploadedData = data;
   }
-}
 
+  onRowSelected(row: any) {
+    this.selectedRow = row;
+  }
+
+  onFormSubmit(updatedRow: any) {
+    // Handle form submission
+    console.log('Form submitted with:', updatedRow);
+    // You might want to refresh the table data here
+  }
+}

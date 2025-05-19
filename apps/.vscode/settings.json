@@ -78,6 +78,10 @@
       }
     ],
     "servers": {
+      "nx-mcp": {
+        "type": "http",
+        "url": "http://localhost:9915/mcp"
+      },
       "github": {
         "command": "npx",
         "args": ["-y", "@modelcontextprotocol/server-github"],
@@ -92,7 +96,13 @@
       "memory": {
         "command": "npx",
         "args": ["-y", "@modelcontextprotocol/server-memory"]
+      },
+      "Context7": {
+        "type": "stdio",
+        "command": "npx",
+        "args": ["-y", "@upstash/context7-mcp@latest"]
       }
     }
-  }
+  },
+  "nxConsole.generateAiAgentRules": true
 }

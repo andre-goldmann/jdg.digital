@@ -3,16 +3,6 @@
     <app-sidebar></app-sidebar>
   </div>
   <div class="main-content">
-    <div class="content-grid">
-      <div class="left-column">
-        <router-outlet></router-outlet>
-      </div>
-      <div class="right-column">
-        <p>right column</p>
-        <!--app-accounts-card></app-accounts-card-->
-        <button (click)="fetchData()">Get Data</button>
-        <button (click)="sendData()">Send Data</button>
-      </div>
-    </div>
+    <router-outlet></router-outlet>
   </div>
 </div>

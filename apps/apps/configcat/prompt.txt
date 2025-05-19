@@ -1,0 +1,15 @@
+Analyse the attached configuration file, from that create a csv with the following columns:
+
+Property
+Description
+Type/Range
+Default
+Relevant constraints or dependencies
+Category
+Remarks
+
+Fill column category with 'Technical' if it is a technical property, fill it with 'Functional' otherwise.
+If you do not know the property check the codebase and find where it is beeing used and then try to write a description.
+If Default starts with JWE replace by 'password'.
+
+The created file should be named "application-dtag.csv", as seperator use ;

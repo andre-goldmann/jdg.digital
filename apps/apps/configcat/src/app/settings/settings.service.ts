@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ConfigRowSimple } from '../flags/model';
+import { ConfigFile } from '../flags/model';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
@@ -10,7 +10,7 @@ export class SettingsService {
 
   constructor(private http: HttpClient) { }
 
-  convertAndStoreData(service: string, tenant: string, fileContent: string, fileName: string): Observable<ConfigRowSimple[]>{
-    return this.http.post<ConfigRowSimple[]>('/api/upload/yaml', {service, tenant, fileContent, fileName });
+  convertAndStoreData(env:string, service: string, tenant: string, fileContent: string, fileName: string): Observable<ConfigFile[]>{
+    return this.http.post<ConfigFile[]>('/api/upload/yaml', {env, service, tenant, fileContent, fileName });
   }
 }

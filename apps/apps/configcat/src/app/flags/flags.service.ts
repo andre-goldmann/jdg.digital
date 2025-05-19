@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ConfigRowSimple } from './model';
+import { FlagDto } from './model';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
@@ -10,7 +10,11 @@ export class FlagsService {
 
   constructor(private http: HttpClient) { }
 
-  parseDescription(service: string, tenant: string, file: File, fileName: string): Observable<ConfigRowSimple[]>{
-    return this.http.post<ConfigRowSimple[]>('/api/upload/csv', {service, tenant, file, fileName });
+  parseDescription(env: string, service: string, tenant: string, fileContent: any, fileName: string): Observable<FlagDto[]> {
+    return this.http.post<FlagDto[]>('/api/upload/csv', {env, service, tenant, fileContent, fileName });
+  }
+
+  getConfigurations(page:number, pageSize:number): Observable<FlagDto[]> {
+    return this.http.get<FlagDto[]>(`api/flags?page=${page}&pageSize=${pageSize}`);
   }
 }

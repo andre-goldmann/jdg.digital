@@ -1,21 +1,29 @@
-<p>Within Copilot select the properties file (application.properties, application.yaml) and translate it to csv using the following
-prompt:
-  <span>
-    '''analyse the attached configuration file, from that create a csv with the following colums:
-  <ul style="list-style-type:disc;" >
-    <li>service</li>
-    <li>property</li>
-    <li>description</li>
-    <li>type/range</li>
-    <li>default</li>
-    <li>Relevant constraints or denpendencies</li>
-    <li>category</li>
-    <li>remarks</li>
-  </ul>
-  the created file should be named "application-config.csv", use ";" as column seperator'''
-</span>
-
-  Then upload the csv file here.
-</p>
-<app-tool-bar (searchChange)="onSearchChange($event)" (parsedData)="uploadData($event)"></app-tool-bar>
-<app-table [filterValue]="searchText" [uploadedData]="uploadedData"></app-table>
+<app-tool-bar (searchChange)="onSearchChange($event)"
+              (envChange)="onEnvChange($event)"
+              (serviceChange)="onServiceChange($event)"
+              (tenantChange)="onTenantChange($event)"
+              (parsedData)="uploadData($event)"></app-tool-bar>
+<app-table [filterValue]="searchText"
+           [serviceFilter]="service"
+           [envFilter]="env"
+           [tenantFilter]="tenant"
+           [uploadedData]="uploadedData"
+           (rowSelected)="onRowSelected($event)"></app-table>
+@if(selectedRow) {
+  <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" (selectedIndexChange)="selectedTabIndex.set($event)">
+    <mat-tab label="Edit Form">
+      <app-editform [selectedRow]="selectedRow" (formSubmit)="onFormSubmit($event)"></app-editform>
+    </mat-tab>
+    <mat-tab label="YAML Editor">
+      @defer (when selectedTabIndex() === 1){
+        <app-yaml-editor
+          [env]="selectedRow.config.env"
+          [service]="selectedRow.config.service"
+          [tenant]="selectedRow.config.tenant"
+          [property]="selectedRow.property"
+          [value]="selectedRow.value">
+        </app-yaml-editor>
+      }
+    </mat-tab>
+  </mat-tab-group>
+}

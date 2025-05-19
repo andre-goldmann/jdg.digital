@@ -10,14 +10,32 @@ const bodyParser = require('body-parser');
 
 const app = express();
 
-app.use(bodyParser.json());
+//app.use(bodyParser.json());
 
 //const cors = require('cors');
 
 //app.use(cors({origin: true}));
 
-app.get('/', (req, res) => {
+/*app.get('/', (req, res) => {
   res.send({ message: 'Hello API' });
+});*/
+
+app.get('/:name/:profile', (req, res) => {
+  const { name, profile } = req.params;
+  console.info(name, profile);
+  res.json({
+    name: name,
+    profiles: [profile],
+    label: null,
+    version: "1.0",
+    propertySources: [{
+      name: 'config',
+      source: {
+        // Replace with your configuration properties
+        'myapp.message': 'Hello from Express Config Server'
+      }
+    }]
+  });
 });
 
 app.listen(port, host, () => {

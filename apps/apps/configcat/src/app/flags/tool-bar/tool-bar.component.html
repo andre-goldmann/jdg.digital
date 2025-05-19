@@ -1,42 +1,11 @@
-<div class="flex items-center gap-4 bg-gray-900 px-4 py-2 shadow rounded">
-  <!-- Combobox -->
+<div class="flex items-center gap-4 bg-gray-900 px-4 py-2 shadow rounded full-width">
+
+
   <div class="relative w-48">
+
     <button
       class="border border-gray-700 bg-gray-800 text-gray-100 rounded pl-3 pr-8 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full placeholder-gray-400 cursor-pointer"
-      (click)="showDialog(selectedOption())"
-    >
-      {{ selectedOption() }}
-    </button>
-    <!-- Dropdown Icon -->
-    <button class="absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer"
-            (click)="comboOpen = !comboOpen">
-      <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-      </svg>
-    </button>
-    <!-- Dropdown Menu -->
-    <div *ngIf="comboOpen" class="absolute z-10 mt-1 w-full bg-gray-800 border border-gray-700 rounded shadow-lg">
-      <div
-        *ngFor="let option of comboOptions"
-        class="px-3 py-2 hover:bg-gray-700 cursor-pointer text-sm text-gray-100"
-        (click)="selectOption(option)"
-      >
-        {{ option }}
-      </div>
-    </div>
-  </div>
-
-  <!-- Search by tags -->
-  <div class="relative w-48">
-    <label
-      class="inline-flex items-center px-4 py-2 bg-gray-800 text-gray-100 rounded cursor-pointer hover:bg-gray-700 transition-colors">
-      <svg class="w-5 h-5 mr-2 text-gray-100" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round"
-              d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5-5m0 0l5 5m-5-5v12" />
-      </svg>
-      <span>Upload Desciption</span>
-      <input type="file" accept=".csv" class="hidden" (change)="onFileSelected($event)" />
-    </label>
+      mat-raised-button color="primary" (click)="openServiceTenantDialog()">Upload Descriptions</button>
 
   </div>
   <!-- Search by text -->
@@ -46,7 +15,7 @@
       class="border border-gray-700 bg-gray-800 text-gray-100 rounded pl-9 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full placeholder-gray-400"
       placeholder="Filter by text"
       matInput
-      (keyup)="applyFilter($event)"
+      (keyup)="applyTextFilter($event)"
     />
     <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
       <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -56,13 +25,49 @@
     </span>
   </div>
 
-  <!-- Search by tags -->
   <div class="relative w-48">
-    <input
-      type="text"
+    <select
       class="border border-gray-700 bg-gray-800 text-gray-100 rounded pl-9 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full placeholder-gray-400"
       placeholder="Filter by service"
-    />
+      (change)="applyEnvFilter($event)"
+    >
+      <option value="">Select Environment</option>
+      <option *ngFor="let service of configData.envs" [value]="service.value">{{ service.label }}</option>
+    </select>
+    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round"
+              d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L15 13.414V19a1 1 0 01-1.447.894l-4-2A1 1 0 019 17v-3.586L3.293 6.707A1 1 0 013 6V4z" />
+      </svg>
+    </span>
+  </div>
+
+  <div class="relative w-48">
+    <select
+      class="border border-gray-700 bg-gray-800 text-gray-100 rounded pl-9 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full placeholder-gray-400"
+      placeholder="Filter by service"
+      (change)="applyServiceFilter($event)"
+    >
+      <option value="">Select service</option>
+      <option *ngFor="let service of configData.services" [value]="service.value">{{ service.label }}</option>
+    </select>
+    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round"
+              d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L15 13.414V19a1 1 0 01-1.447.894l-4-2A1 1 0 019 17v-3.586L3.293 6.707A1 1 0 013 6V4z" />
+      </svg>
+    </span>
+  </div>
+
+  <div class="relative w-48">
+    <select
+      class="border border-gray-700 bg-gray-800 text-gray-100 rounded pl-9 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full placeholder-gray-400"
+      placeholder="Filter by tenant"
+      (change)="applyTenantFilter($event)"
+    >
+      <option value="">Select tenant</option>
+      <option *ngFor="let tenant of configData.tenants" [value]="tenant.value">{{ tenant.label }}</option>
+    </select>
     <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
       <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round"

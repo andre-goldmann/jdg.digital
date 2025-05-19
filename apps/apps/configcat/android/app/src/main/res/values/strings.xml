@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">configcat</string>
+    <string name="title_activity_main">configcat</string>
+    <string name="package_name">de.configcat.app</string>
+    <string name="custom_url_scheme">de.configcat.app</string>
+</resources>
