@@ -10,7 +10,7 @@ services:
     environment:
       - POSTGRES_DB=chatdb
       - POSTGRES_USER=n8nchat
-      - POSTGRES_PASSWORD=
+      - POSTGRES_PASSWORD=Blade1708
       - POSTGRES_HOST_AUTH_METHOD=trust
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
