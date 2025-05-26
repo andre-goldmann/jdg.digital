@@ -1,0 +1,296 @@
+{
+  "name": "OpenRouter Calculator Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "api_key",
+              "value": "your_openrouter_key_here"
+            },
+            {
+              "name": "model",
+              "value": "meta-llama/llama-3.3-70b-instruct"
+            },
+            {
+              "name": "provider",
+              "value": "Cerebras"
+            },
+            {
+              "name": "system_message",
+              "value": "You are a helpful assistant capable of performing mathematical calculations using the calculator tool."
+            },
+            {
+              "name": "user_message",
+              "value": "Is the square root of 16 equal to 4?"
+            }
+          ]
+        }
+      },
+      "id": "fd65763d-d46d-4afc-8510-3a61af10ec30",
+      "name": "Set Initial Variables",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openRouterApi",
+        "options": {
+          "provider": {
+            "only": "={{ [$node[\"Set Initial Variables\"].json[\"provider\"]] }}"
+          },
+          "tools": [
+            {
+              "type": "function",
+              "function": {
+                "name": "calculator",
+                "description": "Performs mathematical calculations.",
+                "parameters": {
+                  "type": "object",
+                  "properties": {
+                    "expression": {
+                      "type": "string",
+                      "description": "A mathematical expression to evaluate, e.g., 'sqrt(16)'"
+                    }
+                  },
+                  "required": [
+                    "expression"
+                  ]
+                }
+              }
+            }
+          ],
+          "tool_choice": "auto"
+        },
+        "prompt": {
+          "messages": [
+            {
+              "role": "system",
+              "content": "={{ $node[\"Set Initial Variables\"].json[\"system_message\"] }}"
+            },
+            {
+              "role": "user",
+              "content": "={{ $node[\"Set Initial Variables\"].json[\"user_message\"] }}"
+            }
+          ]
+        },
+        "model": "={{ $node[\"Set Initial Variables\"].json[\"model\"] }}"
+      },
+      "id": "31df6765-e3cc-4ea9-b183-4fea3004ea58",
+      "name": "Initial OpenRouter API Call",
+      "type": "n8n-nodes-base.openRouterApi",
+      "typeVersion": 1,
+      "position": [
+        470,
+        300
+      ],
+      "credentials": {
+        "openRouterApi": {
+          "id": "OpenRouter API key",
+          "name": "OpenRouter API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.tool_calls !== undefined && $json.tool_calls.length > 0 }}",
+              "operation": "equal",
+              "value2": "true"
+            }
+          ]
+        }
+      },
+      "id": "0fd65887-8c17-45f5-8694-c2270a8565d4",
+      "name": "Check For Tool Calls",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        690,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Get the expression from the tool calls\nconst toolCalls = $input.item.json.tool_calls;\nconst toolCall = toolCalls[0];\nconst functionName = toolCall.function.name;\nconst arguments = JSON.parse(toolCall.function.arguments);\nconst expression = arguments.expression;\n\nlet calculationResult;\nlet toolResponse;\n\n// Execute the calculator function\ntry {\n  // Create a safer evaluation context\n  const sqrt = (x) => Math.sqrt(x);\n  \n  // Use Function constructor which is slightly safer than eval\n  // Still not completely safe for production\n  calculationResult = new Function('sqrt', `return ${expression}`)(sqrt);\n  \n  toolResponse = `The result of ${expression} is ${calculationResult}.`;\n} catch (error) {\n  toolResponse = `Error evaluating expression: ${error.message}`;\n}\n\n// Return the result and other necessary data\nreturn {\n  tool_call_id: toolCall.id,\n  function_name: functionName,\n  expression: expression,\n  result: calculationResult,\n  tool_response: toolResponse\n};"
+      },
+      "id": "6eda25c9-5444-4c79-97f2-0bb0781bbbaa",
+      "name": "Calculate Result",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        910,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openRouterApi",
+        "options": {},
+        "prompt": {
+          "messages": [
+            {
+              "role": "system",
+              "content": "={{ $node[\"Set Initial Variables\"].json[\"system_message\"] }}"
+            },
+            {
+              "role": "user",
+              "content": "={{ $node[\"Set Initial Variables\"].json[\"user_message\"] }}"
+            },
+            {
+              "role": "tool",
+              "tool_call_id": "={{ $node[\"Calculate Result\"].json[\"tool_call_id\"] }}",
+              "content": "={{ $node[\"Calculate Result\"].json[\"tool_response\"] }}"
+            }
+          ]
+        },
+        "model": "={{ $node[\"Set Initial Variables\"].json[\"model\"] }}"
+      },
+      "id": "f0d9c7a8-4d55-4fd0-99c4-d2311e6f76a2",
+      "name": "Final OpenRouter API Call",
+      "type": "n8n-nodes-base.openRouterApi",
+      "typeVersion": 1,
+      "position": [
+        1130,
+        200
+      ],
+      "credentials": {
+        "openRouterApi": {
+          "id": "OpenRouter API key",
+          "name": "OpenRouter API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "No tool calls were made by the model",
+        "options": {}
+      },
+      "id": "5e85d7e7-7855-4514-908b-4b6c39717a14",
+      "name": "No Tool Calls",
+      "type": "n8n-nodes-base.respond",
+      "typeVersion": 1,
+      "position": [
+        910,
+        400
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "9165dd23-e1ce-46ce-aafb-c3d0ea7112d4",
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        60,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "content": "={{ $node[\"Final OpenRouter API Call\"].json.content }}",
+        "options": {}
+      },
+      "id": "7c95342a-4a10-4b38-be26-4622ef79f6ab",
+      "name": "Display Assistant Response",
+      "type": "n8n-nodes-base.respond",
+      "typeVersion": 1,
+      "position": [
+        1350,
+        200
+      ]
+    }
+  ],
+  "connections": {
+    "Set Initial Variables": {
+      "main": [
+        [
+          {
+            "node": "Initial OpenRouter API Call",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Initial OpenRouter API Call": {
+      "main": [
+        [
+          {
+            "node": "Check For Tool Calls",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check For Tool Calls": {
+      "main": [
+        [
+          {
+            "node": "Calculate Result",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Tool Calls",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculate Result": {
+      "main": [
+        [
+          {
+            "node": "Final OpenRouter API Call",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Final OpenRouter API Call": {
+      "main": [
+        [
+          {
+            "node": "Display Assistant Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Set Initial Variables",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-05-26T10:00:00.000Z",
+  "versionId": "a1b2c3d4-e5f6-g7h8-i9j0-k1l2m3n4o5p6"
+}
