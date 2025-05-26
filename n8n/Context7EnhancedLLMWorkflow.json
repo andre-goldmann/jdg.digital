@@ -1,0 +1,256 @@
+{
+  "name": "Context7 Enhanced LLM Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "context7_api_key",
+              "value": "your_context7_api_key_here"
+            },
+            {
+              "name": "context7_index_id",
+              "value": "your_context7_index_id_here"
+            },
+            {
+              "name": "openrouter_api_key",
+              "value": "your_openrouter_key_here"
+            },
+            {
+              "name": "llm_model",
+              "value": "meta-llama/llama-3.3-70b-instruct"
+            },
+            {
+              "name": "llm_provider",
+              "value": "Cerebras"
+            },
+            {
+              "name": "system_message",
+              "value": "You are a helpful assistant. Use the provided context to answer questions accurately."
+            },
+            {
+              "name": "user_query",
+              "value": "What information can you provide about this topic?"
+            }
+          ]
+        }
+      },
+      "id": "1a4b2c3d-5e6f-7g8h-9i0j-1k2l3m4n5o6p",
+      "name": "Set Configuration Variables",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.upstash.com/v1/context7/search",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer={{ $node[\"Set Configuration Variables\"].json[\"context7_api_key\"] }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "indexId",
+              "value": "={{ $node[\"Set Configuration Variables\"].json[\"context7_index_id\"] }}"
+            },
+            {
+              "name": "query",
+              "value": "={{ $node[\"Set Configuration Variables\"].json[\"user_query\"] }}"
+            },
+            {
+              "name": "limit",
+              "value": 5
+            },
+            {
+              "name": "includeMetadata",
+              "value": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "2b3c4d5e-6f7g-8h9i-0j1k-2l3m4n5o6p7q",
+      "name": "Search Context7",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 2,
+      "position": [
+        470,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Process Context7 search results\nconst results = $input.item.json.results || [];\n\n// Format context for LLM\nlet formattedContext = \"\";\n\nif (results.length > 0) {\n  formattedContext = \"Here is some relevant context to help answer the question:\\n\\n\";\n  \n  results.forEach((result, index) => {\n    const content = result.content || \"No content available\";\n    const score = result.score || 0;\n    const metadata = result.metadata || {};\n    const source = metadata.source || \"Unknown source\";\n    \n    formattedContext += `[Source ${index + 1}] ${source} (Relevance: ${score.toFixed(2)})\\n${content}\\n\\n`;\n  });\n}\n\nreturn {\n  formattedContext,\n  hasContext: results.length > 0,\n  resultCount: results.length\n};"
+      },
+      "id": "3c4d5e6f-7g8h-9i0j-1k2l-3m4n5o6p7q8r",
+      "name": "Format Context",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        690,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Construct the prompt with the context\nconst context = $node[\"Format Context\"].json.formattedContext;\nconst userQuery = $node[\"Set Configuration Variables\"].json.user_query;\nconst systemMessage = $node[\"Set Configuration Variables\"].json.system_message;\n\n// Enhanced system message with context\nlet enhancedSystemMessage = systemMessage;\nif (context) {\n  enhancedSystemMessage += \"\\n\\n\" + context;\n}\n\n// Create messages array for the LLM\nconst messages = [\n  {\n    role: \"system\",\n    content: enhancedSystemMessage\n  },\n  {\n    role: \"user\",\n    content: userQuery\n  }\n];\n\nreturn {\n  messages,\n  enhancedSystemMessage\n};"
+      },
+      "id": "4d5e6f7g-8h9i-0j1k-2l3m-4n5o6p7q8r9s",
+      "name": "Construct Prompt",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        910,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openRouterApi",
+        "options": {
+          "provider": {
+            "only": "={{ [$node[\"Set Configuration Variables\"].json[\"llm_provider\"]] }}"
+          }
+        },
+        "prompt": {
+          "messages": "={{ $node[\"Construct Prompt\"].json[\"messages\"] }}"
+        },
+        "model": "={{ $node[\"Set Configuration Variables\"].json[\"llm_model\"] }}"
+      },
+      "id": "5e6f7g8h-9i0j-1k2l-3m4n-5o6p7q8r9s0t",
+      "name": "OpenRouter API Call",
+      "type": "n8n-nodes-base.openRouterApi",
+      "typeVersion": 1,
+      "position": [
+        1130,
+        300
+      ],
+      "credentials": {
+        "openRouterApi": {
+          "id": "OpenRouter API key",
+          "name": "OpenRouter API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "={{ $json.content }}",
+        "options": {}
+      },
+      "id": "6f7g8h9i-0j1k-2l3m-4n5o-6p7q8r9s0t1u",
+      "name": "Display Response",
+      "type": "n8n-nodes-base.respond",
+      "typeVersion": 1,
+      "position": [
+        1350,
+        300
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "7g8h9i0j-1k2l-3m4n-5o6p-7q8r9s0t1u2v",
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        60,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Set Configuration Variables": {
+      "main": [
+        [
+          {
+            "node": "Search Context7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Context7": {
+      "main": [
+        [
+          {
+            "node": "Format Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Context": {
+      "main": [
+        [
+          {
+            "node": "Construct Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Construct Prompt": {
+      "main": [
+        [
+          {
+            "node": "OpenRouter API Call",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter API Call": {
+      "main": [
+        [
+          {
+            "node": "Display Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Set Configuration Variables",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-05-26T10:00:00.000Z",
+  "versionId": "x1y2z3a4-b5c6-d7e8-f9g0-h1i2j3k4l5m6"
+}
