@@ -1,5 +1,5 @@
 import { Component, linkedSignal, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -11,15 +11,14 @@ import { MatInput } from '@angular/material/input';
 @Component({
   selector: 'app-linked-signal',
   imports: [
-    CommonModule,
     MatCardModule,
     MatButtonModule,
     MatFormFieldModule,
     MatSelectModule,
     FormsModule,
     ReactiveFormsModule,
-    MatInput,
-  ],
+    MatInput
+],
   templateUrl: './linked-signal.component.html',
   styleUrl: './linked-signal.component.scss',
 })

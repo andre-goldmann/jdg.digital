@@ -8,7 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle } from '@angular/material/dialog';
 import {MatSelectModule} from '@angular/material/select';
 import {MatDialogModule} from '@angular/material/dialog';
-import { CommonModule } from '@angular/common';
+
 import { ConfigData } from '../../../flags/model';
 import { ConfigService } from '../../../config.service';
 
@@ -16,7 +16,6 @@ import { ConfigService } from '../../../config.service';
 @Component({
   selector: 'app-service-tenant-dialog',
   imports: [
-    CommonModule,
     MatDialogModule,
     MatSlideToggleModule,
     MatFormFieldModule,
@@ -29,8 +28,8 @@ import { ConfigService } from '../../../config.service';
     MatDialogContent,
     MatDialogActions,
     MatSelectModule,
-    MatDialogClose,
-  ],
+    MatDialogClose
+],
   templateUrl: './service-tenant-dialog.component.html',
   styleUrl: './service-tenant-dialog.component.css',
 })

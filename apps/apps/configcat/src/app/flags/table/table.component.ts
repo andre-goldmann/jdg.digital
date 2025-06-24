@@ -8,12 +8,11 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import { FlagDto } from '../model';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-table',
   imports: [
-    CommonModule,
     MatFormFieldModule,
     MatInputModule,
     MatTableModule,
@@ -21,7 +20,7 @@ import { CommonModule } from '@angular/common';
     MatPaginatorModule,
     MatProgressBarModule,
     MatProgressSpinnerModule
-  ],
+],
   templateUrl: './table.component.html',
   styleUrl: './table.component.scss',
 })
@@ -62,28 +61,28 @@ export class TableComponent implements AfterViewInit {
     envFilter:string,
     serviceFilter:string,
     tenantFilter:string}>({
-    request: () => ({
+    params: () => ({
       page: this.page(),
       pageSize: this.pageSize(),
       textFilter: this.filterValue(),
       envFilter: this.envFilter(),
       serviceFilter: this.serviceFilter(),
       tenantFilter: this.tenantFilter()}),
-    loader: async ({request}) => {
+    loader: async ({params}) => {
 
-      let url = `api/flags?page=${request.page}&pageSize=${request.pageSize}`;
+      let url = `api/flags?page=${params.page}&pageSize=${params.pageSize}`;
       //console.info(request);
-      if(request.textFilter && request.textFilter.length > 0) {
-        url += `&textFilter=${request.textFilter}`;
+      if(params.textFilter && params.textFilter.length > 0) {
+        url += `&textFilter=${params.textFilter}`;
       }
-      if(request.envFilter && request.envFilter.length > 0) {
-        url += `&envFilter=${request.envFilter}`;
+      if(params.envFilter && params.envFilter.length > 0) {
+        url += `&envFilter=${params.envFilter}`;
       }
-      if(request.serviceFilter && request.serviceFilter.length > 0) {
-        url += `&serviceFilter=${request.serviceFilter}`;
+      if(params.serviceFilter && params.serviceFilter.length > 0) {
+        url += `&serviceFilter=${params.serviceFilter}`;
       }
-      if(request.tenantFilter && request.tenantFilter.length > 0) {
-        url += `&tenantFilter=${request.tenantFilter}`;
+      if(params.tenantFilter && params.tenantFilter.length > 0) {
+        url += `&tenantFilter=${params.tenantFilter}`;
       }
 
       const confs = await fetch(url);

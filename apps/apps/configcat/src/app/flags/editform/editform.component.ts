@@ -2,7 +2,7 @@ import { Component, EventEmitter, input, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
-import { CommonModule } from '@angular/common';
+
 import {MatInputModule} from '@angular/material/input';
 import { FlagDto } from '../model';
 import {MatButtonModule} from '@angular/material/button';
@@ -13,14 +13,13 @@ import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
   selector: 'app-editform',
   templateUrl: './editform.component.html',
   imports: [
-    CommonModule,
     FormsModule,
     MatFormFieldModule,
     MatSlideToggleModule,
     MatInputModule,
     MatButtonModule,
     MatSnackBarModule
-  ],
+],
   styleUrls: ['./editform.component.css'],
 })
 export class EditformComponent {

@@ -2,14 +2,14 @@ import { Component, inject, output, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { FeatureFlagDialogComponent } from '../feature-flag-dialog/feature-flag-dialog.component';
 import {MatDialogModule} from '@angular/material/dialog';
-import { CommonModule } from '@angular/common';
+
 import { ConfigData, FlagDto } from '../model';
 import { FlagsService } from '../flags.service';
 import { ConfigService } from '../../config.service';
 
 @Component({
   selector: 'app-tool-bar',
-  imports:[MatDialogModule, CommonModule],
+  imports: [MatDialogModule],
   templateUrl: './tool-bar.component.html',
   styleUrls: ['./tool-bar.component.scss'],
 })

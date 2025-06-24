@@ -1,12 +1,12 @@
 import { Component, computed, effect, inject, linkedSignal, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { rxResource } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-avoid',
-  imports: [CommonModule, FormsModule],
+  imports: [FormsModule],
   template: `
     <h1>Star Wars Vehicle Sales</h1>
     <select class="select" (change)="onSelectedVehicle($event.target)">

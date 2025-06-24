@@ -1,5 +1,5 @@
 import { Component, inject, output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import {MatInputModule} from '@angular/material/input';
 import { ServiceTenantDialogComponent } from './service-tenant-dialog/service-tenant-dialog.component';
@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-setting-toolbar',
-  imports:[MatDialogModule, CommonModule, MatInputModule],
+  imports: [MatDialogModule, MatInputModule],
   templateUrl: './setting-toolbar.component.html',
   styleUrl: './setting-toolbar.component.css',
 })

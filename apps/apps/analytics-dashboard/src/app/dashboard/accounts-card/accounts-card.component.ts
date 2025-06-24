@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 
 interface CryptoAccount {
   name: string;
@@ -11,7 +11,7 @@ interface CryptoAccount {
 @Component({
   selector: 'app-accounts-card',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './accounts-card.component.html',
   styleUrls: ['./accounts-card.component.scss']
 })

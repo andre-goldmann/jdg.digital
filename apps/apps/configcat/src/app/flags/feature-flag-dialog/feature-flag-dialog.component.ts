@@ -12,7 +12,7 @@ import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import {MatDialogModule} from '@angular/material/dialog';
-import { CommonModule, NgForOf } from '@angular/common';
+
 import { ConfigData } from '../model';
 import { HttpClient } from '@angular/common/http';
 import { ConfigService } from '../../config.service';
@@ -20,7 +20,6 @@ import { ConfigService } from '../../config.service';
 @Component({
   selector: 'app-feature-flag-dialog',
   imports: [
-    CommonModule,
     MatDialogModule,
     MatSlideToggleModule,
     MatFormFieldModule,
@@ -33,8 +32,8 @@ import { ConfigService } from '../../config.service';
     MatDialogContent,
     MatDialogActions,
     MatSelectModule,
-    MatDialogClose,
-  ],
+    MatDialogClose
+],
   templateUrl: './feature-flag-dialog.component.html',
   styleUrls: ['./feature-flag-dialog.component.css'],
 })

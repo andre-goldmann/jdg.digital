@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -21,12 +21,11 @@ interface BookResponse {
   selector: 'app-n-acht-n',
   standalone: true,
   imports: [
-    CommonModule,
     HttpClientModule,
     MatButtonModule,
     MatProgressSpinnerModule,
     MatCardModule
-  ],
+],
   templateUrl: './nAchtN.component.html',
   styleUrl: './nAchtN.component.css',
 })

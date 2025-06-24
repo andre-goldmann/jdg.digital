@@ -1,63 +1,58 @@
-<div *ngIf="selectedRow && selectedRow.description" class="edit-form">
-  <h3>Edit Configuration</h3>
-  <form (ngSubmit)="onSubmit()">
-
-    <mat-form-field appearance="fill">
-      <mat-label>Environment</mat-label>
-      <input matInput [value]="selectedRow.config.env" disabled />
-    </mat-form-field>
-
-    <mat-form-field appearance="fill">
-      <mat-label>Service</mat-label>
-      <input matInput [value]="selectedRow.config.service" disabled />
-    </mat-form-field>
-
-    <mat-form-field appearance="fill">
-      <mat-label>Tenant</mat-label>
-      <input matInput [value]="selectedRow.config.tenant" disabled />
-    </mat-form-field>
-
-    <mat-form-field appearance="fill">
-      <mat-label>Property</mat-label>
-      <input matInput [(ngModel)]="selectedRow.property" name="property" disabled />
-    </mat-form-field>
-
-    <mat-form-field appearance="fill">
-      <mat-label>Value</mat-label>
-      <input matInput [(ngModel)]="selectedRow.value" name="value" required />
-    </mat-form-field>
-
-    <mat-form-field appearance="fill">
-      <mat-label>Description</mat-label>
-      <textarea matInput [(ngModel)]="selectedRow.description.description" name="description"></textarea>
-    </mat-form-field>
-
-    <mat-form-field appearance="fill">
-      <mat-label>Type/Range</mat-label>
-      <input matInput [(ngModel)]="selectedRow.description.typerange" name="typerange" />
-    </mat-form-field>
-
-    <mat-form-field appearance="fill">
-      <mat-label>Constraints</mat-label>
-      <input matInput [(ngModel)]="selectedRow.description.constraints" name="constraints" />
-    </mat-form-field>
-
-    <mat-form-field appearance="fill">
-      <mat-label>Category</mat-label>
-      <input matInput [(ngModel)]="selectedRow.description.category" name="category" />
-    </mat-form-field>
-
-    <mat-form-field appearance="fill">
-      <mat-label>Remarks</mat-label>
-      <textarea matInput [(ngModel)]="selectedRow.description.remarks" name="remarks"></textarea>
-    </mat-form-field>
-
-    <div class="form-actions">
-      <button mat-stroked-button color="primary" type="submit" [disabled]="saving">
-        <span *ngIf="!saving">Save</span>
-        <span *ngIf="saving">Saving...</span>
-      </button>
-      <button mat-stroked-button type="button" [disabled]="saving" (click)="selectedRow = null">Cancel</button>
-    </div>
-  </form>
-</div>
+@if (selectedRow && selectedRow.description) {
+  <div class="edit-form">
+    <h3>Edit Configuration</h3>
+    <form (ngSubmit)="onSubmit()">
+      <mat-form-field appearance="fill">
+        <mat-label>Environment</mat-label>
+        <input matInput [value]="selectedRow.config.env" disabled />
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Service</mat-label>
+        <input matInput [value]="selectedRow.config.service" disabled />
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Tenant</mat-label>
+        <input matInput [value]="selectedRow.config.tenant" disabled />
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Property</mat-label>
+        <input matInput [(ngModel)]="selectedRow.property" name="property" disabled />
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Value</mat-label>
+        <input matInput [(ngModel)]="selectedRow.value" name="value" required />
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Description</mat-label>
+        <textarea matInput [(ngModel)]="selectedRow.description.description" name="description"></textarea>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Type/Range</mat-label>
+        <input matInput [(ngModel)]="selectedRow.description.typerange" name="typerange" />
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Constraints</mat-label>
+        <input matInput [(ngModel)]="selectedRow.description.constraints" name="constraints" />
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Category</mat-label>
+        <input matInput [(ngModel)]="selectedRow.description.category" name="category" />
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Remarks</mat-label>
+        <textarea matInput [(ngModel)]="selectedRow.description.remarks" name="remarks"></textarea>
+      </mat-form-field>
+      <div class="form-actions">
+        <button mat-stroked-button color="primary" type="submit" [disabled]="saving">
+          @if (!saving) {
+            <span>Save</span>
+          }
+          @if (saving) {
+            <span>Saving...</span>
+          }
+        </button>
+        <button mat-stroked-button type="button" [disabled]="saving" (click)="selectedRow = null">Cancel</button>
+      </div>
+    </form>
+  </div>
+}

@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, Input, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import * as YAML from 'yaml';
 import { FormsModule } from '@angular/forms';
 import { EditorComponent, NgxEditorModel } from 'ngx-monaco-editor-v2';
@@ -8,7 +8,7 @@ import { editor } from 'monaco-editor';
 
 @Component({
   selector: 'app-yaml-editor',
-  imports: [FormsModule, CommonModule, EditorComponent],
+  imports: [FormsModule, EditorComponent],
   templateUrl: './yamleditor.component.html',
   styleUrl: './yamleditor.component.scss',
 })

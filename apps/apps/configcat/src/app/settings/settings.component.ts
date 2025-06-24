@@ -1,5 +1,5 @@
 import { Component, resource } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import {MatButtonModule} from '@angular/material/button';
 import { SettingToolbarComponent } from './setting-toolbar/setting-toolbar.component';
@@ -17,11 +17,9 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-settings',
   imports: [
-    CommonModule,
     MatTableModule,
     MatButtonModule,
     SettingToolbarComponent,
-    CommonModule,
     MatFormFieldModule,
     MatInputModule,
     MatTableModule,
@@ -30,7 +28,7 @@ import { Router } from '@angular/router';
     MatProgressBarModule,
     MatProgressSpinnerModule,
     MatSnackBarModule
-  ],
+],
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.scss',
 })

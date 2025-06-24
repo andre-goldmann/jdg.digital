@@ -1,5 +1,5 @@
 import { Component, Input, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { TableComponent } from '../table/table.component';
 import { EditformComponent } from '../editform/editform.component';
 import { YamlEditorComponent } from '../../yaml/yamleditor.component';
@@ -11,13 +11,12 @@ import { FlagDto } from '../model';
   selector: 'app-overview',
   standalone: true,
   imports: [
-    CommonModule,
     ToolBarComponent,
     TableComponent,
     EditformComponent,
     YamlEditorComponent,
     MatTabsModule
-  ],
+],
   templateUrl: './overview.component.html',
   styleUrl: './overview.component.scss'
 })

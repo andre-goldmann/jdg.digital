@@ -3,25 +3,31 @@
   <mat-form-field appearance="fill" style="width:100%; margin-bottom: 16px;">
     <mat-label>Environment</mat-label>
     <mat-select [(ngModel)]="env" required>
-      <mat-option *ngFor="let env of configData.envs" [value]="env.value">
-        {{env.label}}
-      </mat-option>
+      @for (env of configData.envs; track env) {
+        <mat-option [value]="env.value">
+          {{env.label}}
+        </mat-option>
+      }
     </mat-select>
   </mat-form-field>
   <mat-form-field appearance="fill" style="width:100%; margin-bottom: 16px;">
     <mat-label>Services</mat-label>
     <mat-select [(ngModel)]="service" required>
-      <mat-option *ngFor="let service of configData.services" [value]="service.value">
-        {{service.label}}
-      </mat-option>
+      @for (service of configData.services; track service) {
+        <mat-option [value]="service.value">
+          {{service.label}}
+        </mat-option>
+      }
     </mat-select>
   </mat-form-field>
   <mat-form-field appearance="fill" style="width:100%; margin-bottom: 16px;">
     <mat-label>Tenants</mat-label>
     <mat-select [(ngModel)]="tenant" required>
-      <mat-option *ngFor="let tenant of configData.tenants" [value]="tenant.value">
-        {{tenant.label}}
-      </mat-option>
+      @for (tenant of configData.tenants; track tenant) {
+        <mat-option [value]="tenant.value">
+          {{tenant.label}}
+        </mat-option>
+      }
     </mat-select>
   </mat-form-field>
 </mat-dialog-content>

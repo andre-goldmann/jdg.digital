@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, signal } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -15,25 +15,27 @@ type CardContent = {
   standalone: true,
   template: `
     <div class="responsive-grid">
-      <mat-card *ngFor="let card of cards()">
-        <mat-card-header>
-          <mat-card-title>{{ card.title }} </mat-card-title>
-        </mat-card-header>
-        <br />
-        <img mat-card-image [src]="card.imageUrl" [alt]="card.description"/>
-        <mat-card-content>
+      @for (card of cards(); track card) {
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>{{ card.title }} </mat-card-title>
+          </mat-card-header>
           <br />
-          <p>
-            {{ card.description }}
-          </p>
-        </mat-card-content>
-        <mat-card-actions>
-          <button mat-button>LIKE</button>
-          <button mat-button>SHARE</button>
-        </mat-card-actions>
-      </mat-card>
+          <img mat-card-image [src]="card.imageUrl" [alt]="card.description"/>
+          <mat-card-content>
+            <br />
+            <p>
+              {{ card.description }}
+            </p>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-button>LIKE</button>
+            <button mat-button>SHARE</button>
+          </mat-card-actions>
+        </mat-card>
+      }
     </div>
-  `,
+    `,
   styles: [
     `
       img {
@@ -49,7 +51,7 @@ type CardContent = {
       }
     `,
   ],
-  imports: [CommonModule, MatCardModule, MatToolbarModule, MatButtonModule],
+  imports: [MatCardModule, MatToolbarModule, MatButtonModule],
 })
 export class CardViewComponent {
   cards = signal<CardContent[]>([]);
