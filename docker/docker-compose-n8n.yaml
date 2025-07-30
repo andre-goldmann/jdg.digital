@@ -166,6 +166,25 @@ services:
       - "etcd"
       - "minio"
 
+  mindsdb_container:
+    image: mindsdb/mindsdb
+    restart: always
+    environment:
+      - MINDSDB_APIS=postgres,http,mcp,a2a
+      - MINDSDB_MCP_ACCESS_TOKEN=abc123
+      - MINDSDB_A2A_HOST=0.0.0.0
+    networks:
+      - ai-network
+    ports:
+      - "55432:55432"
+      - "47334:47334"
+      - "47335:47335"
+      - "47336:47336"
+      - "47337:47337"
+      - "47338:47338"
+    volumes:
+      - mdb_data:/mdb/storage
+
 volumes:
   n8n_data:
   qdrant_data:
@@ -176,6 +195,7 @@ volumes:
   etcd:
   minio:
   milvus:
+  mdb_data:
 
 networks:
   ai-network:
