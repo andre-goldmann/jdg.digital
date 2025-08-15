@@ -1,0 +1,228 @@
+// Responsive Home Component Styles
+:host {
+  font-family: 'Quicksand', sans-serif;
+  display: block;
+  min-height: 100vh;
+  background-color: #f9f9f9;
+  color: #333;
+}
+
+.home-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+// Header Styles
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+
+  .logo {
+    width: 120px;
+    height: 40px;
+    background-image: url('/assets/images/logo.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: left center;
+  }
+}
+
+// Navigation
+.menu {
+  ul {
+    display: flex;
+    list-style: none;
+    gap: 1.5rem;
+
+    li {
+      a {
+        text-decoration: none;
+        color: #333;
+        font-weight: 500;
+        transition: color 0.2s ease;
+
+        &:hover,
+        &.active {
+          color: #40b59f;
+        }
+
+        &.active {
+          position: relative;
+
+          &:after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #40b59f;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Hero Section
+.hero {
+  text-align: center;
+  padding: 3rem 1rem;
+  margin-bottom: 2rem;
+
+  h1 {
+    font-size: clamp(1.8rem, 5vw, 2.5rem);
+    font-weight: 700;
+    color: #40b59f;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+
+  p {
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    color: #666;
+    max-width: 700px;
+    margin: 0 auto 2rem;
+    line-height: 1.5;
+  }
+}
+
+// Search Container
+.search-container {
+  display: flex;
+  max-width: 600px;
+  margin: 0 auto;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+
+  .search-input {
+    flex: 1;
+    padding: 1rem 1.5rem;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+    font-family: 'Quicksand', sans-serif;
+  }
+
+  .search-button {
+    padding: 1rem 1.5rem;
+    background-color: #40b59f;
+    border: none;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-family: 'Quicksand', sans-serif;
+
+    &:hover {
+      background-color: darken(#40b59f, 10%);
+    }
+  }
+}
+
+// Featured Section
+.featured {
+  padding: 2rem 0;
+
+  h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #333;
+  }
+}
+
+// Destination Grid
+.destination-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+
+  .destination-card {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-color: white;
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .destination-image {
+      height: 180px;
+      background-size: cover;
+      background-position: center;
+
+      &.paris {
+        background-image: url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=600&q=80');
+      }
+
+      &.rome {
+        background-image: url('https://images.unsplash.com/photo-1515542622106-78bda8ba0e5b?w=600&q=80');
+      }
+
+      &.barcelona {
+        background-image: url('https://images.unsplash.com/photo-1583422409516-2895a77efded?w=600&q=80');
+      }
+    }
+
+    h3 {
+      padding: 1rem 1rem 0.5rem;
+      font-weight: 700;
+      color: #333;
+    }
+
+    p {
+      padding: 0 1rem 1rem;
+      color: #666;
+      font-size: 0.9rem;
+    }
+  }
+}
+
+// Media Queries for Responsiveness
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .menu {
+    width: 100%;
+    overflow-x: auto;
+
+    ul {
+      min-width: min-content;
+    }
+  }
+
+  .search-container {
+    flex-direction: column;
+
+    .search-input,
+    .search-button {
+      width: 100%;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    padding: 2rem 0.5rem;
+  }
+
+  .destination-grid {
+    grid-template-columns: 1fr;
+  }
+}

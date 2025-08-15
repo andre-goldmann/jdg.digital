@@ -1,0 +1,152 @@
+@use '@angular/material' as mat;
+
+// Define custom color palettes based on the existing React app colors
+
+// Primary teal palette
+$primary-palette: (
+  50: #e0f2f4,
+  100: #b3e0e4,
+  200: #80ccd2,
+  300: #4db8c0,
+  400: #26a7b3,
+  500: #0097a6,
+  // Primary color
+  600: #008796,
+  700: #007483,
+  800: #006270,
+  900: #00414f,
+  contrast: (
+    50: rgba(0, 0, 0, 0.87),
+    100: rgba(0, 0, 0, 0.87),
+    200: rgba(0, 0, 0, 0.87),
+    300: rgba(0, 0, 0, 0.87),
+    400: rgba(0, 0, 0, 0.87),
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+  ),
+);
+
+// Accent orange/coral palette
+$accent-palette: (
+  50: #ffeee6,
+  100: #ffd4c0,
+  200: #ffb799,
+  300: #ff9a72,
+  400: #ff8554,
+  500: #ff7037,
+  // Accent color
+  600: #ff6837,
+  700: #f65d30,
+  800: #e8532a,
+  900: #d1411e,
+  contrast: (
+    50: rgba(0, 0, 0, 0.87),
+    100: rgba(0, 0, 0, 0.87),
+    200: rgba(0, 0, 0, 0.87),
+    300: rgba(0, 0, 0, 0.87),
+    400: rgba(0, 0, 0, 0.87),
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+  ),
+);
+
+// Wellness purple palette
+$wellness-purple-palette: (
+  50: #f3ebfd,
+  100: #e1ccfa,
+  200: #cda9f7,
+  300: #b985f4,
+  400: #a968f1,
+  500: #9a4bed,
+  // Wellness purple color
+  600: #9044e9,
+  700: #833be4,
+  800: #7735df,
+  900: #6228d6,
+  contrast: (
+    50: rgba(0, 0, 0, 0.87),
+    100: rgba(0, 0, 0, 0.87),
+    200: rgba(0, 0, 0, 0.87),
+    300: white,
+    400: white,
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+  ),
+);
+
+// Define material palette variables
+//mat.m2-define-palette(mat.$m2-indigo-palette, 500, 100, 700);
+$wellsync-primary: mat.m2-define-palette($primary-palette, 500, 100, 700);
+$wellsync-accent: mat.m2-define-palette($accent-palette, $default: 50);
+$wellsync-warn: mat.m2-define-palette(mat.$m2-red-palette);
+$wellsync-purple: mat.m2-define-palette($wellness-purple-palette);
+
+// Define the light theme
+$wellsync-light-theme: mat.m2-define-light-theme(
+  (
+    color: (
+      primary: $wellsync-primary,
+      accent: $wellsync-accent,
+      warn: $wellsync-warn,
+    ),
+    typography: mat.m2-define-typography-config(),
+    density: 0,
+  )
+);
+
+// Define the dark theme
+$wellsync-dark-theme: mat.m2-define-dark-theme(
+  (
+    color: (
+      primary: $wellsync-primary,
+      accent: $wellsync-accent,
+      warn: $wellsync-warn,
+    ),
+    typography: mat.m2-define-typography-config(),
+    density: 0,
+  )
+);
+
+// Custom CSS variables to match the React app gradients
+:root {
+  // Gradient definitions for light theme
+  --gradient-wellness: linear-gradient(135deg, #0097a6, #2e8bf0);
+  --gradient-energy: linear-gradient(135deg, #ff7037, #ffb85c);
+  --gradient-mindful: linear-gradient(135deg, #9a4bed, #d16aec);
+  --gradient-hero: linear-gradient(
+    135deg,
+    #0097a6 0%,
+    #2e8bf0 50%,
+    #9a4bed 100%
+  );
+}
+
+.dark-theme {
+  // Gradient definitions for dark theme
+  --gradient-wellness: linear-gradient(135deg, #007483, #1d6fc0);
+  --gradient-energy: linear-gradient(135deg, #f65d30, #e59a40);
+  --gradient-mindful: linear-gradient(135deg, #833be4, #b55ac9);
+  --gradient-hero: linear-gradient(
+    135deg,
+    #007483 0%,
+    #1d6fc0 50%,
+    #833be4 100%
+  );
+}
+
+// Apply the default theme
+@include mat.all-component-themes($wellsync-light-theme);
+
+// Apply the dark theme only when the .dark-theme class is present
+.dark-theme {
+  @include mat.all-component-colors($wellsync-dark-theme);
+}

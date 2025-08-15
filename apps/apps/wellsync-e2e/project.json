@@ -1,0 +1,9 @@
+{
+  "name": "wellsync-e2e",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/wellsync-e2e/src",
+  "implicitDependencies": ["wellsync"],
+  "// targets": "to see all targets run: nx show project wellsync-e2e --web",
+  "targets": {}
+}

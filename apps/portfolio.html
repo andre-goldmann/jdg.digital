@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Madelyn Torff - Portfolio</title>
+    <link rel="stylesheet" href="portfolio.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&family=Nunito:wght@400;600;700&family=Playfair+Display:wght@700&family=Raleway:wght@500&family=Roboto:wght@500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Header section -->
+    <header>
+      <div class="container">
+        <div class="logo">Madelyn Torff</div>
+        <nav>
+          <ul class="desktop-menu">
+            <li><a href="#about">About</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#contact">Contacts</a></li>
+          </ul>
+          <div class="mobile-menu-icon">
+            <img src="images/menu-icon.svg" alt="Menu" />
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Hero section -->
+    <section class="hero">
+      <div class="container">
+        <div class="hero-content">
+          <span class="subtitle">UI/UX Designer</span>
+          <h1>Hello, my name is Madelyn Torff</h1>
+          <p>
+            Short text with details about you, what you do or your professional
+            career. You can add more information on the about page.
+          </p>
+          <div class="buttons">
+            <a href="#projects" class="btn btn-primary">Projects</a>
+            <a href="#" class="btn btn-secondary">LinkedIn</a>
+          </div>
+        </div>
+        <div class="hero-image">
+          <img
+            src="images/profile-image-58b6e4.png"
+            alt="Madelyn Torff"
+            class="profile-image"
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- Projects section -->
+    <section id="projects" class="projects">
+      <div class="container">
+        <div class="section-header">
+          <h2>Projects</h2>
+          <img
+            src="images/project-underline.svg"
+            alt="Underline"
+            class="underline"
+          />
+        </div>
+
+        <div class="project-cards">
+          <!-- Project 1 -->
+          <div class="project-card">
+            <div class="project-image">
+              <img src="images/project-image-1-427694.png" alt="Project 1" />
+            </div>
+            <div class="project-info">
+              <h3>Project Name</h3>
+              <p>
+                I created this personal project in order to show how to create
+                an interface in Figma using a portfolio as an example.
+              </p>
+              <a href="#" class="view-project">View Project</a>
+            </div>
+          </div>
+
+          <!-- Project 2 -->
+          <div class="project-card">
+            <div class="project-image">
+              <img src="images/project-image-2.png" alt="Project 2" />
+            </div>
+            <div class="project-info">
+              <h3>Project Name</h3>
+              <p>
+                What was your role, your deliverables, if the project was
+                personal, freelancing.
+              </p>
+              <a href="#" class="view-project">View Project</a>
+            </div>
+          </div>
+
+          <!-- Project 3 -->
+          <div class="project-card">
+            <div class="project-image">
+              <img src="images/project-image-3.png" alt="Project 3" />
+            </div>
+            <div class="project-info">
+              <h3>Project Name</h3>
+              <p>
+                You can also add in this description the type of the project, if
+                it was for web, mobile, electron.
+              </p>
+              <a href="#" class="view-project">View Project</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact section with form -->
+    <section id="contact" class="contact">
+      <img src="images/footer-wave.svg" alt="Wave" class="wave" />
+      <div class="container">
+        <div class="section-header">
+          <h2>Contacts</h2>
+          <img
+            src="images/project-underline.svg"
+            alt="Underline"
+            class="underline"
+          />
+        </div>
+
+        <div class="contact-content">
+          <form class="contact-form">
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" id="name" name="name" />
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" />
+            </div>
+
+            <div class="form-group">
+              <label for="message">Message</label>
+              <textarea id="message" name="message" rows="5"></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Send</button>
+          </form>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+          <div class="social-icons">
+            <a href="#"
+              ><img src="images/instagram-icon.svg" alt="Instagram"
+            /></a>
+            <a href="#"
+              ><img src="images/linkedin-icon.svg" alt="LinkedIn"
+            /></a>
+            <a href="#"><img src="images/email-icon.svg" alt="Email" /></a>
+          </div>
+          <p class="copyright">Madelyn Torff 2021</p>
+        </footer>
+      </div>
+    </section>
+  </body>
+</html>

@@ -72,3 +72,5 @@ The result would be a super app that supports productivity, physical fitness, an
 -   Error Handling and Recovery: Use n8n’s error handling features to ensure smooth user experience by handling sync errors or notification issues gracefully.
 
 -   Analytics and Reporting: Automate generation and delivery of personalized progress reports combining productivity, fitness, and mindfulness data.
+  
+- try to use this: https://n8n.io/workflows/2604-time-logging-on-clockify-using-slack/

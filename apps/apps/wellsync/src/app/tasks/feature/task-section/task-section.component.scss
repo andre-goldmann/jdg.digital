@@ -1,0 +1,158 @@
+//@use '../../../../theme/mixins' as mix;
+//@use '../../../../theme/variables' as vars;
+
+.task-section-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f9f9fb;
+}
+
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 16px;
+  background: linear-gradient(135deg, #4a90e2 0%, #954ee9 100%);
+  color: white;
+
+  .brand {
+    display: flex;
+    align-items: center;
+
+    .brand-icon {
+      margin-right: 8px;
+      font-size: 24px;
+    }
+
+    .brand-text {
+      font-size: 20px;
+      font-weight: 500;
+    }
+  }
+
+  .nav-links {
+    a {
+      display: flex;
+      align-items: center;
+      margin-left: 8px;
+
+      mat-icon {
+        margin-right: 4px;
+      }
+    }
+  }
+}
+
+.content {
+  flex: 1;
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+
+  h1 {
+    font-size: 28px;
+    margin: 0;
+    font-weight: 500;
+  }
+
+  .stats-summary {
+    display: flex;
+    gap: 20px;
+
+    .stat-item {
+      text-align: center;
+      background-color: white;
+      padding: 12px 16px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+
+      .stat-value {
+        display: block;
+        font-size: 20px;
+        font-weight: 600;
+        color: #4a90e2;
+      }
+
+      .stat-label {
+        font-size: 14px;
+        color: #777;
+      }
+    }
+  }
+}
+
+.add-task-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+  gap: 16px;
+
+  .task-input {
+    flex: 1;
+  }
+}
+
+.task-list {
+  .task-card {
+    margin-bottom: 12px;
+    border-left: 4px solid #4a90e2;
+    transition: all 0.2s ease;
+
+    &.completed {
+      border-left-color: #4caf50;
+      opacity: 0.8;
+    }
+  }
+
+  .task-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .task-completed {
+      text-decoration: line-through;
+      color: #888;
+    }
+
+    .habit-badge {
+      background-color: #ffeedd;
+      color: #ff9800;
+      font-size: 12px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+  }
+
+  .loading {
+    text-align: center;
+    padding: 24px;
+    color: #666;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 48px 0;
+    color: #888;
+
+    mat-icon {
+      font-size: 48px;
+      height: 48px;
+      width: 48px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+
+    p {
+      font-size: 16px;
+    }
+  }
+}

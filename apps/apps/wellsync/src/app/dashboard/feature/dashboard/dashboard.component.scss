@@ -1,0 +1,217 @@
+.dashboard-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-header {
+  display: flex;
+  justify-content: space-between;
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .brand-icon {
+      background: white;
+      color: var(--mat-toolbar-container-background-color);
+      border-radius: 50%;
+      padding: 4px;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .brand-text {
+      font-weight: 600;
+    }
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 8px;
+
+    a {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+  }
+}
+
+.content {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.hero-section {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  padding: 60px 40px;
+  margin-bottom: 32px;
+  background-image: url('/assets/wellness-hero.jpg');
+  background-size: cover;
+  background-position: center;
+  color: white;
+
+  // Dark overlay for better text visibility
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 600px;
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 16px;
+      font-weight: 600;
+    }
+
+    p {
+      font-size: 1.2rem;
+      margin-bottom: 24px;
+      opacity: 0.9;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 16px;
+    }
+  }
+}
+
+.hero-section {
+  background: var(--gradient-hero);
+  color: white;
+  border-radius: 12px;
+  padding: 48px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('/assets/wellness-hero.jpg');
+    background-size: cover;
+    opacity: 0.2;
+    z-index: 0;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 600px;
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 16px;
+      font-weight: 600;
+    }
+
+    p {
+      font-size: 1.25rem;
+      margin-bottom: 24px;
+      opacity: 0.9;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 16px;
+
+      a {
+        &:last-child {
+          background: transparent;
+          color: white;
+          border-color: white;
+        }
+      }
+    }
+  }
+}
+
+.stats-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+
+  .stat-card {
+    text-align: center;
+    color: white;
+    border: none;
+
+    &.wellness {
+      background: var(--gradient-wellness);
+    }
+
+    &.energy {
+      background: var(--gradient-energy);
+    }
+
+    &.mindful {
+      background: var(--gradient-mindful);
+    }
+
+    h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    p {
+      opacity: 0.9;
+      margin: 0;
+    }
+  }
+}
+
+.cards-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+@media (max-width: 768px) {
+  .hero-section {
+    padding: 32px;
+
+    .hero-content {
+      h1 {
+        font-size: 2rem;
+      }
+
+      p {
+        font-size: 1rem;
+      }
+    }
+  }
+
+  .app-header {
+    .nav-links {
+      span {
+        display: none;
+      }
+    }
+  }
+}

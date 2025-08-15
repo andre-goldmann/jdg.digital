@@ -1,0 +1,188 @@
+/* Styles based on travel-start.css with responsiveness */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:host {
+  font-family: 'Quicksand', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f5f5f5;
+  padding: 1rem;
+}
+
+/* Main App Container */
+.app-container {
+  width: 100%;
+  max-width: 375px;
+  height: 100vh;
+  max-height: 812px;
+  position: relative;
+  overflow: hidden;
+
+  /* Maintain aspect ratio for smaller screens */
+  aspect-ratio: 375 / 812;
+
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.25);
+  background-color: white;
+  background-image: url('/assets/images/background.png');
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  background-size: 100% auto;
+}
+
+/* Top Section with Curved Bottom */
+.top-section {
+  position: absolute;
+  top: -5%;
+  left: -2.5%;
+  width: 105%;
+  height: 65%;
+  background-color: white;
+  border-radius: 0 0 40% 40%;
+  box-shadow: inset 0px -1px 65px rgba(0, 0, 0, 0.06);
+}
+
+/* Welcome Text */
+.welcome-text {
+  position: absolute;
+  top: 14%;
+  width: 100%;
+  text-align: center;
+  font-size: calc(20px + 2.5vmin);
+  font-weight: 700;
+  line-height: 0.72em;
+  letter-spacing: 0.08em;
+  color: black;
+}
+
+/* Logo */
+.logo {
+  position: absolute;
+  top: 22%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  max-width: 303px;
+  aspect-ratio: 303 / 109;
+  background-image: url('/assets/images/logo.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* Action Button */
+.action-button-container {
+  position: absolute;
+  bottom: 12%;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.action-button {
+  width: 80%;
+  max-width: 303px;
+  height: 60px;
+  background-color: white;
+  border: 1px solid #40b59f;
+  border-radius: 15px;
+  font-family: 'Quicksand', sans-serif;
+  font-size: calc(16px + 0.8vmin);
+  font-weight: 700;
+  line-height: 1.22em;
+  letter-spacing: 0.03em;
+  color: #40b59f;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+
+  /* Make the button responsive to touch */
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.action-button:hover,
+.action-button:active {
+  background-color: #40b59f;
+  color: white;
+  transform: scale(0.98);
+}
+
+.arrow-icon {
+  position: absolute;
+  right: 6%;
+  width: 10px;
+  height: 16px;
+  background-image: url('/assets/images/arrow-icon.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* Pagination Dots */
+.pagination {
+  position: absolute;
+  bottom: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 15px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #352555;
+  opacity: 0.5;
+}
+
+.dot.active {
+  background-color: #352555;
+  opacity: 1;
+}
+
+/* Media Queries for different screen sizes */
+@media (max-height: 700px) {
+  .welcome-text {
+    top: 12%;
+  }
+
+  .logo {
+    top: 20%;
+  }
+
+  .action-button-container {
+    bottom: 15%;
+  }
+}
+
+@media (max-width: 320px) {
+  .welcome-text {
+    font-size: calc(16px + 2vmin);
+  }
+
+  .action-button {
+    font-size: calc(14px + 0.7vmin);
+    height: 50px;
+  }
+}
+
+/* High-DPI Screen Adjustments */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .app-container {
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+  }
+}

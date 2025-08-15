@@ -1,0 +1,33 @@
+<mat-toolbar color="primary" class="app-header">
+  <div class="brand">
+    <mat-icon class="brand-icon">psychology</mat-icon>
+    <span class="brand-text">Wellness Hub</span>
+  </div>
+
+  <div class="nav-links">
+    <a
+      mat-button
+      routerLink="/"
+      routerLinkActive="active-link"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      <mat-icon>person</mat-icon>
+      <span>Dashboard</span>
+    </a>
+    <a mat-button routerLink="/tasks" routerLinkActive="active-link">
+      <mat-icon>check_circle</mat-icon>
+      <span>Tasks</span>
+    </a>
+    <a mat-button routerLink="/workouts" routerLinkActive="active-link">
+      <mat-icon>fitness_center</mat-icon>
+      <span>Workouts</span>
+    </a>
+    <a mat-button routerLink="/meditation" routerLinkActive="active-link">
+      <mat-icon>psychology</mat-icon>
+      <span>Meditation</span>
+    </a>
+    <div class="theme-toggle">
+      <app-theme-toggle></app-theme-toggle>
+    </div>
+  </div>
+</mat-toolbar>

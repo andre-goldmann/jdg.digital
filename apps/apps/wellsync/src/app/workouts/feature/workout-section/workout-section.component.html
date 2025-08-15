@@ -1,0 +1,104 @@
+<div class="workout-section-container">
+  <!-- Navigation Header -->
+  <app-nav-bar></app-nav-bar>
+
+  <!-- Main Content -->
+  <div class="content">
+    <!-- Workouts Header -->
+    <div class="section-header">
+      <h1>Your Workout Program</h1>
+      <div class="stats-summary">
+        <div class="stat-item">
+          <span class="stat-value">{{ workoutStore.completedWorkouts() }}</span>
+          <span class="stat-label">Completed</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value">{{ workoutStore.caloriesBurned() }}</span>
+          <span class="stat-label">Calories</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value">{{ workoutStore.dayStreak() }}</span>
+          <span class="stat-label">Day Streak</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Today's Suggested Workout -->
+    <div class="today-workout">
+      <h2>Today's Suggested Workout</h2>
+      <mat-card class="featured-workout">
+        <mat-card-content>
+          <div class="workout-header">
+            <div>
+              <h3>Morning Energy Boost</h3>
+              <div class="workout-meta">
+                <span class="duration">
+                  <mat-icon>timer</mat-icon> 15 min
+                </span>
+                <mat-chip [class]="getDifficultyClass('Beginner')">
+                  Beginner
+                </mat-chip>
+              </div>
+            </div>
+            <button mat-raised-button color="primary">
+              <mat-icon>play_arrow</mat-icon> Start
+            </button>
+          </div>
+          <mat-progress-bar mode="determinate" value="0"></mat-progress-bar>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Workout List -->
+    <div class="workout-list">
+      <h2>Your Workouts</h2>
+      @if (workoutStore.loading()) {
+      <div class="loading">Loading workouts...</div>
+      } @else if (workoutStore.workoutsEntities().length === 0) {
+      <div class="empty-state">
+        <mat-icon>fitness_center</mat-icon>
+        <p>No workouts available. Check back later!</p>
+      </div>
+      } @else { @for (workout of workoutStore.workoutsEntities(); track
+      workout.id) {
+      <mat-card class="workout-card" [class.completed]="workout.completed">
+        <mat-card-content>
+          <div class="workout-content">
+            <div class="workout-info">
+              <h3>{{ workout.name }}</h3>
+              <div class="workout-meta">
+                <span class="duration">
+                  <mat-icon>timer</mat-icon> {{ workout.duration }}
+                </span>
+                <mat-chip [class]="getDifficultyClass(workout.difficulty)">
+                  {{ workout.difficulty }}
+                </mat-chip>
+              </div>
+              <div class="exercise-list">
+                @for (exercise of workout.exercises; track exercise) {
+                <span class="exercise-chip">{{ exercise }}</span>
+                }
+              </div>
+            </div>
+            <div class="workout-actions">
+              @if (!workout.completed) {
+              <button
+                mat-raised-button
+                color="primary"
+                (click)="startWorkout(workout.id)"
+              >
+                <mat-icon>play_arrow</mat-icon> Start
+              </button>
+              } @else {
+              <button mat-icon-button color="accent" disabled>
+                <mat-icon>check_circle</mat-icon>
+              </button>
+              }
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      } }
+    </div>
+  </div>
+</div>

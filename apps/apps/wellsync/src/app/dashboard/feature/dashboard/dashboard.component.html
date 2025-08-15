@@ -1,0 +1,66 @@
+<div class="dashboard-container">
+  <!-- Navigation Header -->
+  <app-nav-bar></app-nav-bar>
+
+  <!-- Main Content -->
+  <div class="content">
+    <!-- Hero Section -->
+    <div class="hero-section">
+      <div class="hero-content">
+        <h1>Your Wellness Journey</h1>
+        <p>
+          Achieve balance through mindful productivity, energizing workouts, and
+          peaceful meditation
+        </p>
+        <div class="hero-buttons">
+          <a mat-raised-button color="primary" routerLink="/tasks"
+            >Start Tasks</a
+          >
+          <a mat-stroked-button routerLink="/meditation">Meditate Now</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="stats-section">
+      @for (stat of welcomeStats; track stat.label) {
+      <mat-card [class]="'stat-card ' + getGradientClass($index)">
+        <mat-card-content>
+          <h2>{{ stat.value }}</h2>
+          <p>{{ stat.label }}</p>
+        </mat-card-content>
+      </mat-card>
+      }
+    </div>
+
+    <!-- Dashboard Cards -->
+    <div class="cards-section">
+      <app-dashboard-card
+        title="Daily Tasks"
+        description="Manage your productivity and habits"
+        iconName="check_circle"
+        buttonText="View Tasks"
+        gradient="bg-gradient-wellness"
+        [stats]="{ label: 'completed today', value: '6/8' }"
+      ></app-dashboard-card>
+
+      <app-dashboard-card
+        title="Fitness"
+        description="Track workouts and stay active"
+        iconName="fitness_center"
+        buttonText="Start Workout"
+        gradient="bg-gradient-energy"
+        [stats]="{ label: 'calories burned', value: '450' }"
+      ></app-dashboard-card>
+
+      <app-dashboard-card
+        title="Mindfulness"
+        description="Practice meditation and reflection"
+        iconName="psychology"
+        buttonText="Meditate"
+        gradient="bg-gradient-mindful"
+        [stats]="{ label: 'minutes today', value: '15' }"
+      ></app-dashboard-card>
+    </div>
+  </div>
+</div>

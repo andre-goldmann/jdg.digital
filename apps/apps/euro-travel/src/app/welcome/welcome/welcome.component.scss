@@ -1,0 +1,207 @@
+.welcome-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  height: 100%;
+  background-color: #ffffff;
+  position: relative;
+  overflow: hidden;
+  font-family: 'Quicksand', sans-serif;
+}
+
+.welcome-header {
+  width: 100%;
+  height: 40vh;
+  min-height: 300px;
+  max-height: 500px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  background-color: #ffffff;
+  border-radius: 0 0 150px 150px;
+  box-shadow: inset 0px -1px 65px 0px rgba(0, 0, 0, 0.06);
+  padding-top: clamp(20px, 5vh, 60px);
+}
+
+.logo {
+  width: min(188px, 50%);
+  max-width: 188px;
+  height: auto;
+  margin-top: clamp(10px, 3vh, 20px);
+}
+
+.welcome-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-top: min(-100px, -15vh);
+  z-index: 2;
+  padding: 0 20px;
+}
+
+.illustration {
+  width: min(232px, 70%);
+  height: auto;
+  max-width: 232px;
+}
+
+.phone-input-section {
+  width: 100%;
+  max-width: 450px;
+  padding: 0 clamp(20px, 5vw, 36px);
+  margin-top: clamp(20px, 5vh, 40px);
+}
+
+.input-label {
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 600;
+  font-size: clamp(12px, 3vw, 14px);
+  color: #40b59f;
+  margin-bottom: clamp(5px, 2vh, 10px);
+}
+
+.phone-input {
+  position: relative;
+  height: clamp(40px, 10vh, 50px);
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid #eeeeee;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.11);
+}
+
+.phone-icon {
+  width: clamp(20px, 5vw, 25px);
+  height: clamp(20px, 5vw, 25px);
+  margin: 0 clamp(5px, 2vw, 10px);
+}
+
+input {
+  flex: 1;
+  height: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  padding: 0 10px;
+  font-family: 'Quicksand', sans-serif;
+  font-size: clamp(14px, 4vw, 16px);
+}
+
+.enter-button {
+  position: absolute;
+  bottom: clamp(80px, 12vh, 120px);
+  width: min(303px, 85%);
+  max-width: 303px;
+  height: clamp(50px, 8vh, 60px);
+  background-color: #40b59f;
+  color: white;
+  border: none;
+  border-radius: 15px;
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 700;
+  font-size: clamp(18px, 5vw, 23px);
+  cursor: pointer;
+
+  &:hover {
+    background-color: #37a08b;
+  }
+}
+
+.bottom-indicators {
+  position: absolute;
+  bottom: clamp(20px, 5vh, 38px);
+  display: flex;
+  gap: 5px;
+}
+
+.indicator {
+  width: clamp(8px, 2vw, 10px);
+  height: clamp(8px, 2vw, 10px);
+  border-radius: 50%;
+  background-color: #352555;
+
+  &.active {
+    width: clamp(20px, 5vw, 25px);
+    height: clamp(8px, 2vw, 10px);
+    border-radius: 12px;
+  }
+}
+
+/* Media Queries */
+@media (max-height: 700px) {
+  .welcome-header {
+    height: 35vh;
+    min-height: 200px;
+    border-radius: 0 0 100px 100px;
+  }
+
+  .welcome-content {
+    margin-top: -80px;
+  }
+
+  .illustration {
+    width: 180px;
+  }
+}
+
+@media (max-width: 375px) {
+  .welcome-header {
+    border-radius: 0 0 100px 100px;
+  }
+
+  .phone-input-section {
+    padding: 0 15px;
+  }
+
+  .enter-button {
+    width: 85%;
+  }
+}
+
+/* Landscape orientation adjustments */
+@media (max-height: 500px) and (orientation: landscape) {
+  .welcome-container {
+    height: auto;
+    min-height: 100vh;
+    padding: 20px 0 80px;
+  }
+
+  .welcome-header {
+    height: 30vh;
+    min-height: 150px;
+    border-radius: 0 0 80px 80px;
+  }
+
+  .welcome-content {
+    margin-top: -60px;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .illustration {
+    width: 160px;
+  }
+
+  .phone-input-section {
+    width: 40%;
+    min-width: 280px;
+  }
+
+  .enter-button {
+    position: relative;
+    bottom: auto;
+    margin-top: 40px;
+  }
+
+  .bottom-indicators {
+    position: relative;
+    bottom: auto;
+    margin-top: 20px;
+  }
+}

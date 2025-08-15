@@ -62,3 +62,4 @@ storybook-static
 
 /docker/volumes
 /docker/.env
+/apps/.env

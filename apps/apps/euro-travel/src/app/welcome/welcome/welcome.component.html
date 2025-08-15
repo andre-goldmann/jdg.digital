@@ -1,0 +1,36 @@
+<div class="welcome-container">
+  <div class="welcome-header">
+    <img src="/assets/images/logo.png" alt="Euro Travel Logo" class="logo" />
+  </div>
+
+  <div class="welcome-content">
+    <img
+      src="/assets/images/welcome-illustration.png"
+      alt="Welcome Illustration"
+      class="illustration"
+    />
+
+    <div class="phone-input-section">
+      <div class="input-label">Enter your phone</div>
+      <div class="phone-input">
+        <img
+          src="/assets/images/phone-icon.png"
+          alt="Phone Icon"
+          class="phone-icon"
+        />
+        <input
+          type="tel"
+          placeholder="Phone number"
+          [(ngModel)]="phoneNumber"
+        />
+      </div>
+    </div>
+  </div>
+
+  <button class="enter-button" (click)="navigateToMain()">Enter</button>
+
+  <div class="bottom-indicators">
+    <div class="indicator active"></div>
+    <div class="indicator"></div>
+  </div>
+</div>

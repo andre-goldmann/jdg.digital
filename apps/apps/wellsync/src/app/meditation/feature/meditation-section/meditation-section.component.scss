@@ -1,0 +1,237 @@
+//@use '../../../../theme/mixins' as mix;
+//@use '../../../../theme/variables' as vars;
+
+.meditation-section-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f9f9fb;
+}
+
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 16px;
+  background: linear-gradient(135deg, #4a90e2 0%, #954ee9 100%);
+  color: white;
+
+  .brand {
+    display: flex;
+    align-items: center;
+
+    .brand-icon {
+      margin-right: 8px;
+      font-size: 24px;
+    }
+
+    .brand-text {
+      font-size: 20px;
+      font-weight: 500;
+    }
+  }
+
+  .nav-links {
+    a {
+      display: flex;
+      align-items: center;
+      margin-left: 8px;
+
+      mat-icon {
+        margin-right: 4px;
+      }
+    }
+  }
+}
+
+.content {
+  flex: 1;
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+
+  h1 {
+    font-size: 28px;
+    margin: 0;
+    font-weight: 500;
+  }
+
+  .stats-summary {
+    display: flex;
+    gap: 20px;
+
+    .stat-item {
+      text-align: center;
+      background-color: white;
+      padding: 12px 16px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+
+      .stat-value {
+        display: block;
+        font-size: 20px;
+        font-weight: 600;
+        color: #4a90e2;
+      }
+
+      .stat-label {
+        font-size: 14px;
+        color: #777;
+      }
+    }
+  }
+}
+
+h2 {
+  font-size: 20px;
+  font-weight: 500;
+  margin: 24px 0 16px;
+}
+
+.reflection-section {
+  margin-bottom: 32px;
+
+  .reflection-card {
+    background: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
+    border-radius: 12px;
+
+    .reflection-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      h2 {
+        margin-top: 0;
+        color: #4a4a4a;
+      }
+
+      p {
+        color: #777;
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+.sessions-list {
+  h2 {
+    margin-bottom: 16px;
+  }
+
+  .session-card {
+    margin-bottom: 16px;
+    transition: all 0.2s ease;
+
+    &.completed {
+      opacity: 0.8;
+    }
+  }
+}
+
+.session-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.session-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+
+  h3 {
+    font-size: 18px;
+    font-weight: 500;
+    margin: 0;
+  }
+}
+
+.session-description {
+  color: #555;
+  margin-bottom: 12px;
+}
+
+.session-meta {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+
+  .duration {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #555;
+
+    mat-icon {
+      font-size: 16px;
+      height: 16px;
+      width: 16px;
+      margin-right: 4px;
+    }
+  }
+}
+
+.progress-container {
+  margin-top: 12px;
+
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+    font-size: 12px;
+    color: #666;
+  }
+}
+
+// Meditation type chip styles
+.guided {
+  background-color: #e8f5e9 !important;
+  color: #2e7d32 !important;
+}
+
+.breathing {
+  background-color: #e3f2fd !important;
+  color: #1565c0 !important;
+}
+
+.body-scan {
+  background-color: #fff8e1 !important;
+  color: #f57f17 !important;
+}
+
+.quick {
+  background-color: #f3e5f5 !important;
+  color: #7b1fa2 !important;
+}
+
+.loading {
+  text-align: center;
+  padding: 24px;
+  color: #666;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 48px 0;
+  color: #888;
+
+  mat-icon {
+    font-size: 48px;
+    height: 48px;
+    width: 48px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+  }
+
+  p {
+    font-size: 16px;
+  }
+}

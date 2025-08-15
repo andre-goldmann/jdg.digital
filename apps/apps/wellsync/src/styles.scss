@@ -1,0 +1,57 @@
+/* You can add global styles to this file, and also import other style files */
+@use './theme/theme-colors';
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
+
+// Custom classes for gradients
+.bg-gradient-wellness {
+  background: var(--gradient-wellness);
+}
+
+.bg-gradient-energy {
+  background: var(--gradient-energy);
+}
+
+.bg-gradient-mindful {
+  background: var(--gradient-mindful);
+}
+
+.bg-gradient-hero {
+  background: var(--gradient-hero);
+}
+
+// Custom utility classes
+.text-wellness-purple {
+  color: #9a4bed;
+}
+
+// Dark mode toggle utility
+.dark-theme-toggle {
+  display: flex;
+  align-items: center;
+  margin-left: 1rem;
+}
+
+// CSS variables for gradients
+:root {
+  --gradient-wellness: linear-gradient(135deg, #0097a6 0%, #9a4bed 100%);
+  --gradient-energy: linear-gradient(135deg, #ff9b4a 0%, #ff4c79 100%);
+  --gradient-mindful: linear-gradient(135deg, #4ac2ff 0%, #6a7bff 100%);
+  --gradient-hero: linear-gradient(135deg, #4a90e2 0%, #954ee9 100%);
+}
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}

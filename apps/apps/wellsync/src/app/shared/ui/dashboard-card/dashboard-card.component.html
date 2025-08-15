@@ -1,0 +1,29 @@
+<mat-card class="dashboard-card">
+  <div [class]="'gradient-overlay ' + gradient()"></div>
+  <mat-card-header>
+    <div class="card-header-content">
+      <div class="icon-title-group">
+        <div [class]="'icon-container ' + gradient()">
+          <mat-icon>{{ iconName() }}</mat-icon>
+        </div>
+        <div>
+          <mat-card-title>{{ title() }}</mat-card-title>
+          <mat-card-subtitle>{{ description() }}</mat-card-subtitle>
+        </div>
+      </div>
+
+      @if (stats()) {
+      <div class="stats">
+        <div class="stats-value">{{ stats()?.value }}</div>
+        <div class="stats-label">{{ stats()?.label }}</div>
+      </div>
+      }
+    </div>
+  </mat-card-header>
+
+  <mat-card-content>
+    <button mat-flat-button [class]="'card-button ' + gradient()">
+      {{ buttonText() }}
+    </button>
+  </mat-card-content>
+</mat-card>

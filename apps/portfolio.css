@@ -1,0 +1,449 @@
+/* Reset and base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Nunito', sans-serif;
+  color: #25282b;
+  background-color: #f9faff;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Typography */
+h1 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 64px;
+  line-height: 1.2;
+  margin-bottom: 24px;
+}
+
+h2 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 48px;
+  line-height: 1.5;
+}
+
+h3 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 40px;
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+p {
+  font-size: 24px;
+  line-height: 1.5;
+  color: #828282;
+  margin-bottom: 32px;
+}
+
+/* Header styles */
+header {
+  background-color: #f9faff;
+  padding: 12px 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+header .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-family: 'Comfortaa', cursive;
+  font-weight: 700;
+  font-size: 18px;
+  color: #25282b;
+}
+
+nav ul {
+  display: flex;
+  gap: 48px;
+}
+
+nav ul li a {
+  font-family: 'Raleway', sans-serif;
+  font-weight: 500;
+  font-size: 18px;
+  transition: all 0.3s ease;
+}
+
+nav ul li a:hover {
+  color: #fdc435;
+}
+
+.mobile-menu-icon {
+  display: none;
+  cursor: pointer;
+}
+
+/* Button styles */
+.btn {
+  display: inline-block;
+  padding: 8px 24px;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 1.5;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 8px;
+}
+
+.btn-primary {
+  background-color: #fdc435;
+  color: #25282b;
+}
+
+.btn-primary:hover {
+  background-color: #e5b12e;
+}
+
+.btn-secondary {
+  border: 2px solid #25282b;
+  color: #25282b;
+}
+
+.btn-secondary:hover {
+  background-color: #25282b;
+  color: #fff;
+}
+
+.buttons {
+  display: flex;
+  gap: 12px;
+}
+
+/* Hero section */
+.hero {
+  padding: 60px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50%;
+  height: 100%;
+  background: url('images/yellow-bg.svg') no-repeat;
+  background-size: cover;
+  background-position: left center;
+  z-index: -1;
+}
+
+.hero .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.hero-content {
+  max-width: 486px;
+}
+
+.subtitle {
+  font-weight: 700;
+  font-size: 20px;
+  text-transform: uppercase;
+  color: #fdc435;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.hero-image {
+  position: relative;
+  max-width: 720px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.profile-image {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Projects section */
+.projects {
+  padding: 80px 0;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.underline {
+  margin-top: 4px;
+}
+
+.project-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
+}
+
+.project-card {
+  display: flex;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0px 6px 64px 0px rgba(112, 144, 176, 0.1);
+}
+
+.project-card:nth-child(even) {
+  flex-direction: row-reverse;
+}
+
+.project-image {
+  width: 50%;
+  overflow: hidden;
+}
+
+.project-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.project-info {
+  width: 50%;
+  padding: 50px;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.view-project {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  font-size: 18px;
+  padding: 8px 24px;
+  border: 1px solid #25282b;
+  border-radius: 24px;
+  align-self: flex-start;
+  transition: all 0.3s ease;
+}
+
+.view-project:hover {
+  background-color: #25282b;
+  color: #fff;
+}
+
+/* Contact section */
+.contact {
+  background-color: #fff;
+  position: relative;
+  padding: 160px 0 80px;
+}
+
+.wave {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  transform: translateY(-60%);
+}
+
+.contact-content {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 56px;
+}
+
+.contact-form {
+  max-width: 400px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.form-group input,
+.form-group textarea {
+  padding: 10px;
+  border: 1px solid #e8ecf4;
+  border-radius: 8px;
+  font-family: 'Nunito', sans-serif;
+  resize: none;
+}
+
+/* Footer */
+footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  margin-top: 32px;
+}
+
+.social-icons {
+  display: flex;
+  gap: 24px;
+}
+
+.social-icons a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: #fff;
+  transition: all 0.3s ease;
+}
+
+.social-icons a:hover {
+  transform: translateY(-5px);
+}
+
+.copyright {
+  font-size: 16px;
+  margin-bottom: 0;
+}
+
+/* Responsive styles */
+@media (max-width: 1200px) {
+  h1 {
+    font-size: 48px;
+  }
+
+  h2 {
+    font-size: 40px;
+  }
+
+  h3 {
+    font-size: 32px;
+  }
+
+  p {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 992px) {
+  .hero .container {
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  .hero-content {
+    max-width: 100%;
+    text-align: center;
+  }
+
+  .buttons {
+    justify-content: center;
+  }
+
+  .hero-image {
+    justify-content: center;
+  }
+
+  .project-card,
+  .project-card:nth-child(even) {
+    flex-direction: column;
+  }
+
+  .project-image,
+  .project-info {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .desktop-menu {
+    display: none;
+  }
+
+  .mobile-menu-icon {
+    display: block;
+  }
+
+  h1 {
+    font-size: 36px;
+  }
+
+  h2 {
+    font-size: 32px;
+  }
+
+  h3 {
+    font-size: 28px;
+  }
+
+  .project-info {
+    padding: 30px;
+  }
+
+  .hero::before {
+    width: 100%;
+    height: 50%;
+    top: 50%;
+    background-position: center bottom;
+  }
+}
+
+@media (max-width: 576px) {
+  .buttons {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .hero {
+    padding: 30px 0;
+  }
+
+  .projects,
+  .contact {
+    padding: 60px 0;
+  }
+
+  .section-header {
+    margin-bottom: 40px;
+  }
+
+  .project-cards {
+    gap: 40px;
+  }
+}
