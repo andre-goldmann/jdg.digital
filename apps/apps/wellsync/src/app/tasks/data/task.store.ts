@@ -11,6 +11,7 @@ import {
   entityConfig,
   addEntity,
   updateEntity,
+  removeEntity,
   setAllEntities,
 } from '@ngrx/signals/entities';
 import { computed } from '@angular/core';
@@ -113,6 +114,10 @@ export const TaskStore = signalStore(
           )
         );
       }
+    },
+
+    deleteTask(id: string) {
+      patchState(store, removeEntity(id, taskEntityConfig));
     },
   }))
 );

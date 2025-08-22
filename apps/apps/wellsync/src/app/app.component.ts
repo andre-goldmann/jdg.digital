@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { ThemeService } from './shared/data/services/theme.service';
+import { TaskVoiceService } from './shared/data/task-voice.service';
 
 @Component({
   standalone: true,
@@ -11,11 +11,7 @@ import { ThemeService } from './shared/data/services/theme.service';
 })
 export class AppComponent {
   protected title = 'wellsync';
-  private themeService = inject(ThemeService);
 
-  // Inject the theme service to initialize it
-  constructor() {
-    // The theme service initialization happens in its constructor
-    // We just need to make sure it's injected
-  }
+  // Initialize the task voice service
+  private taskVoiceService = inject(TaskVoiceService);
 }

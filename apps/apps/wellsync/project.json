@@ -54,7 +54,8 @@
               "maximumError": "8kb"
             }
           ],
-          "outputHashing": "all"
+          "outputHashing": "all",
+          "serviceWorker": "apps/wellsync/ngsw-config.json"
         },
         "development": {
           "optimization": false,
