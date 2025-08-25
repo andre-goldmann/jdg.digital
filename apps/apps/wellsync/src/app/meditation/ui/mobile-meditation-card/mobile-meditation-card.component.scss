@@ -1,0 +1,316 @@
+@use '../../../shared/util/mobile-mixins' as mobile;
+
+.mobile-session-card {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+  margin-bottom: 16px;
+
+  @include mobile.tablet-md {
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+
+  &.completed {
+    opacity: 0.8;
+    background: #f8f9fa;
+  }
+
+  @include mobile.touch-device {
+    &:active {
+      transform: scale(0.98);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+    }
+  }
+}
+
+.session-header {
+  margin-bottom: 12px;
+
+  @include mobile.tablet-md {
+    margin-bottom: 16px;
+  }
+}
+
+.session-title-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 8px;
+
+  @include mobile.mobile-sm {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  h3 {
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin: 0;
+    line-height: 1.3;
+    color: #333;
+
+    @include mobile.mobile-sm {
+      font-size: 1.2rem;
+    }
+
+    @include mobile.tablet-md {
+      font-size: 1.3rem;
+    }
+  }
+
+  mat-chip {
+    align-self: flex-start;
+    font-size: 0.75rem;
+    height: 24px;
+    border-radius: 12px;
+
+    @include mobile.mobile-sm {
+      font-size: 0.8rem;
+      height: 26px;
+    }
+
+    @include mobile.tablet-md {
+      font-size: 0.85rem;
+      height: 28px;
+    }
+  }
+}
+
+.session-description {
+  color: #666;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  margin: 0 0 12px 0;
+
+  @include mobile.mobile-sm {
+    font-size: 0.95rem;
+  }
+
+  @include mobile.tablet-md {
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+}
+
+.session-meta {
+  margin-bottom: 12px;
+
+  @include mobile.tablet-md {
+    margin-bottom: 16px;
+  }
+
+  .duration {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.8rem;
+    color: #666;
+    background: #f5f5f5;
+    padding: 4px 8px;
+    border-radius: 16px;
+
+    @include mobile.mobile-sm {
+      font-size: 0.875rem;
+      padding: 6px 10px;
+    }
+
+    @include mobile.tablet-md {
+      font-size: 0.9rem;
+      padding: 6px 12px;
+    }
+
+    mat-icon {
+      font-size: 16px;
+      height: 16px;
+      width: 16px;
+      margin-right: 4px;
+      color: #4a90e2;
+
+      @include mobile.tablet-md {
+        font-size: 18px;
+        height: 18px;
+        width: 18px;
+      }
+    }
+  }
+}
+
+.progress-container {
+  margin-bottom: 16px;
+
+  @include mobile.tablet-md {
+    margin-bottom: 20px;
+  }
+
+  .progress-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+
+    .progress-label {
+      font-size: 0.75rem;
+      color: #666;
+      font-weight: 500;
+
+      @include mobile.mobile-sm {
+        font-size: 0.8rem;
+      }
+
+      @include mobile.tablet-md {
+        font-size: 0.85rem;
+      }
+    }
+
+    .progress-value {
+      font-size: 0.75rem;
+      color: #4a90e2;
+      font-weight: 600;
+
+      @include mobile.mobile-sm {
+        font-size: 0.8rem;
+      }
+
+      @include mobile.tablet-md {
+        font-size: 0.85rem;
+      }
+    }
+  }
+
+  mat-progress-bar {
+    height: 6px;
+    border-radius: 3px;
+    overflow: hidden;
+
+    @include mobile.tablet-md {
+      height: 8px;
+      border-radius: 4px;
+    }
+
+    ::ng-deep .mat-mdc-progress-bar-buffer {
+      background-color: #e8f4f8;
+    }
+
+    ::ng-deep .mat-mdc-progress-bar-fill::after {
+      background: linear-gradient(90deg, #4a90e2 0%, #6a7bff 100%);
+    }
+  }
+}
+
+.session-action {
+  display: flex;
+  justify-content: center;
+
+  @include mobile.tablet-md {
+    justify-content: flex-end;
+  }
+
+  .action-button {
+    min-height: 48px;
+    min-width: 140px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 24px;
+
+    @include mobile.mobile-sm {
+      min-width: 160px;
+      font-size: 0.95rem;
+    }
+
+    @include mobile.tablet-md {
+      min-height: 44px;
+      min-width: 120px;
+      font-size: 1rem;
+      border-radius: 22px;
+    }
+
+    mat-icon {
+      margin-right: 6px;
+      font-size: 18px;
+      height: 18px;
+      width: 18px;
+
+      @include mobile.tablet-md {
+        font-size: 20px;
+        height: 20px;
+        width: 20px;
+      }
+    }
+
+    // Disabled state
+    &[disabled] {
+      background-color: #e0e0e0 !important;
+      color: #9e9e9e !important;
+      cursor: not-allowed;
+    }
+  }
+}
+
+// Meditation type chip styles
+::ng-deep {
+  .guided {
+    background-color: #e8f5e9 !important;
+    color: #2e7d32 !important;
+  }
+
+  .breathing {
+    background-color: #e3f2fd !important;
+    color: #1565c0 !important;
+  }
+
+  .bodyscan {
+    background-color: #fff8e1 !important;
+    color: #f57f17 !important;
+  }
+
+  .quick {
+    background-color: #f3e5f5 !important;
+    color: #7b1fa2 !important;
+  }
+}
+
+// Mobile-specific optimizations
+@include mobile.mobile-xs {
+  .mobile-session-card {
+    padding: 12px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+  }
+
+  .session-title-row {
+    gap: 6px;
+
+    h3 {
+      font-size: 1rem;
+    }
+
+    mat-chip {
+      font-size: 0.7rem;
+      height: 22px;
+    }
+  }
+
+  .session-description {
+    font-size: 0.8rem;
+  }
+
+  .session-action .action-button {
+    min-height: 52px; // Larger touch target
+    min-width: 120px;
+    font-size: 0.8rem;
+  }
+}
+
+// Touch feedback
+@include mobile.touch-device {
+  .action-button {
+    &:active:not([disabled]) {
+      transform: scale(0.96);
+      transition: transform 0.1s ease;
+    }
+  }
+}
