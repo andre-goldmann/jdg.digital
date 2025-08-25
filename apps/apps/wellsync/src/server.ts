@@ -26,6 +26,15 @@ const angularApp = new AngularNodeAppEngine();
  * ```
  */
 
+// Hello World API endpoint
+app.get('/api/hello', (req, res) => {
+  res.json({
+    message: 'Hello World from WellSync Server!',
+    timestamp: new Date().toISOString(),
+    status: 'success',
+  });
+});
+
 /**
  * Serve static files from /browser
  */

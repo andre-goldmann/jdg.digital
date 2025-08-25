@@ -57,3 +57,4 @@ npx nx g @nx/angular:setup-tailwind my-project
 nx g @angular/pwa:ng-add --project wellsync
 
 
+npx nx migrate latest
