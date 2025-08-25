@@ -10,7 +10,7 @@
   ],
   "functions": {
     "api/index.js": {
-      "includeFiles": "dist/apps/wellsync/**"
+      "includeFiles": "dist/apps/wellsync/browser/**"
     }
   }
 }
