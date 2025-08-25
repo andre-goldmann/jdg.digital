@@ -208,7 +208,7 @@ export class VoiceCommandService {
     if (!isPlatformBrowser(this.platformId)) {
       this.updateState({
         isSupported: false,
-        error: 'Speech recognition only available in browser',
+        error: `Speech recognition only available in browser (platformId: ${this.platformId})`,
       });
       return;
     }
