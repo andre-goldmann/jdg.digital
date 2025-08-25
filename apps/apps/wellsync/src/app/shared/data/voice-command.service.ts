@@ -188,27 +188,23 @@ export class VoiceCommandService {
   readonly voiceState$ = this._voiceState.asObservable();
   readonly commandExecuted$ = this._commandExecuted.asObservable();
 
-  constructor() {
-    // Remove initialization from constructor - will be called explicitly
-  }
-
   /**
    * Initialize the voice command service. Should be called from a component's ngAfterViewInit
    * to ensure proper browser platform detection.
    */
-  initialize(): void {
+  initialize(platformId: object): void {
     if (this._initialized) {
       return;
     }
 
     this._initialized = true;
-    this.initializeSpeechRecognition();
-    this.initializeSpeechSynthesis();
+    this.initializeSpeechRecognition(platformId);
+    this.initializeSpeechSynthesis(platformId);
   }
 
-  private initializeSpeechSynthesis(): void {
+  private initializeSpeechSynthesis(platformId: object): void {
     // Only initialize in browser environment
-    if (!isPlatformBrowser(this.platformId)) {
+    if (!isPlatformBrowser(platformId)) {
       return;
     }
 
@@ -217,12 +213,12 @@ export class VoiceCommandService {
     }
   }
 
-  private initializeSpeechRecognition(): void {
+  private initializeSpeechRecognition(platformId: object): void {
     // Only initialize in browser environment
-    if (!isPlatformBrowser(this.platformId)) {
+    if (!isPlatformBrowser(platformId)) {
       this.updateState({
         isSupported: false,
-        error: `Speech recognition only available in browser (platformId: ${this.platformId})`,
+        error: `Speech recognition only available in browser (platformId: ${platformId})`,
       });
       return;
     }
@@ -272,8 +268,6 @@ export class VoiceCommandService {
   }
 
   startListening(): void {
-    // Ensure service is initialized before starting
-    this.initialize();
 
     if (!this.recognition || this._voiceState.value.isListening) {
       return;

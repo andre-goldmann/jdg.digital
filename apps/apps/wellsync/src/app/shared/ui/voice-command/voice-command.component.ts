@@ -4,7 +4,8 @@ import {
   inject,
   OnDestroy,
   OnInit,
-  AfterViewInit
+  AfterViewInit,
+  PLATFORM_ID,
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -90,10 +91,11 @@ import { CommonModule } from '@angular/common';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VoiceCommandComponent implements OnInit, OnDestroy, AfterViewInit {
+export class VoiceCommandComponent implements OnDestroy, AfterViewInit {
   private voiceService = inject(VoiceCommandService);
   private snackBar = inject(MatSnackBar);
   private destroy$ = new Subject<void>();
+  private platformId = inject(PLATFORM_ID);
 
   voiceState: VoiceState = {
     isListening: false,
@@ -102,7 +104,10 @@ export class VoiceCommandComponent implements OnInit, OnDestroy, AfterViewInit {
     error: null,
   };
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
+    // Initialize voice command service after view is ready
+    this.voiceService.initialize(this.platformId);
+
     // Subscribe to voice state changes
     this.voiceService.voiceState$
       .pipe(takeUntil(this.destroy$))
@@ -123,8 +128,8 @@ export class VoiceCommandComponent implements OnInit, OnDestroy, AfterViewInit {
           result.command.action === 'navigate'
             ? `Navigation: ${result.command.description}`
             : `${result.command.description}${
-                result.extractedText ? `: ${result.extractedText}` : ''
-              }`;
+              result.extractedText ? `: ${result.extractedText}` : ''
+            }`;
         this.showMessage(description, 'success');
       });
 
@@ -137,11 +142,7 @@ export class VoiceCommandComponent implements OnInit, OnDestroy, AfterViewInit {
         );
       }, 1000);
     }
-  }
 
-  ngAfterViewInit(): void {
-    // Initialize voice command service after view is ready
-    this.voiceService.initialize();
   }
 
   ngOnDestroy(): void {
