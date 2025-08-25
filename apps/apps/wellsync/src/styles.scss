@@ -51,9 +51,86 @@ html,
 body {
   height: 100%;
 }
+
 body {
   margin: 0;
   font-family: Roboto, 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
+}
+
+// Mobile-friendly global improvements
+* {
+  box-sizing: border-box;
+}
+
+// Improve touch targets
+button,
+a,
+[role='button'] {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+// Improve readability on mobile
+p,
+span,
+div {
+  word-wrap: break-word;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}
+
+// Responsive images
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+// Smooth scrolling
+html {
+  scroll-behavior: smooth;
+}
+
+// Focus outline improvements for accessibility
+:focus {
+  outline: 2px solid #3f51b5;
+  outline-offset: 2px;
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+// Mobile-specific Material Design improvements
+.mat-mdc-button,
+.mat-mdc-raised-button,
+.mat-mdc-outlined-button {
+  min-height: 44px; // iOS/Android recommended minimum
+
+  @media (min-width: 768px) {
+    min-height: 36px; // Desktop can be smaller
+  }
+}
+
+// Responsive typography
+@media (max-width: 576px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+@media (min-width: 577px) and (max-width: 768px) {
+  html {
+    font-size: 15px;
+  }
+}
+
+@media (min-width: 769px) {
+  html {
+    font-size: 16px;
+  }
 }
 
 // Voice command snackbar styles

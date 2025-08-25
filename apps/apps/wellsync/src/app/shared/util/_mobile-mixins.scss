@@ -1,0 +1,181 @@
+// Mobile-first responsive mixins for WellSync
+// Based on Material Design breakpoints
+
+// Breakpoint values
+$breakpoints: (
+  xs: 0px,
+  // Extra small devices (phones)
+  sm: 600px,
+  // Small devices (large phones)
+  md: 960px,
+  // Medium devices (tablets)
+  lg: 1280px,
+  // Large devices (desktops)
+  xl: 1920px,
+  // Extra large devices
+);
+
+// Media query mixins - mobile first approach
+@mixin mobile-xs {
+  @media (max-width: 599px) {
+    @content;
+  }
+}
+
+@mixin mobile-sm {
+  @media (min-width: 600px) {
+    @content;
+  }
+}
+
+@mixin tablet-md {
+  @media (min-width: 960px) {
+    @content;
+  }
+}
+
+@mixin desktop-lg {
+  @media (min-width: 1280px) {
+    @content;
+  }
+}
+
+@mixin desktop-xl {
+  @media (min-width: 1920px) {
+    @content;
+  }
+}
+
+// Orientation mixins
+@mixin landscape {
+  @media (orientation: landscape) {
+    @content;
+  }
+}
+
+@mixin portrait {
+  @media (orientation: portrait) {
+    @content;
+  }
+}
+
+// Touch device mixins
+@mixin touch-device {
+  @media (hover: none) and (pointer: coarse) {
+    @content;
+  }
+}
+
+@mixin mouse-device {
+  @media (hover: hover) and (pointer: fine) {
+    @content;
+  }
+}
+
+// High DPI displays
+@mixin high-dpi {
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    @content;
+  }
+}
+
+// Mobile-specific utilities
+@mixin touch-friendly-sizing {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 12px 16px;
+}
+
+@mixin mobile-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  @include tablet-md {
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+}
+
+@mixin mobile-padding {
+  padding: 16px;
+
+  @include mobile-sm {
+    padding: 20px;
+  }
+
+  @include tablet-md {
+    padding: 24px;
+  }
+
+  @include desktop-lg {
+    padding: 32px;
+  }
+}
+
+@mixin mobile-gap {
+  gap: 12px;
+
+  @include mobile-sm {
+    gap: 16px;
+  }
+
+  @include tablet-md {
+    gap: 20px;
+  }
+
+  @include desktop-lg {
+    gap: 24px;
+  }
+}
+
+// Responsive grid system
+@mixin mobile-grid($columns: 1) {
+  display: grid;
+  grid-template-columns: repeat($columns, 1fr);
+
+  @include mobile-gap;
+}
+
+@mixin responsive-grid($mobile: 1, $tablet: 2, $desktop: 3) {
+  @include mobile-grid($mobile);
+
+  @include tablet-md {
+    grid-template-columns: repeat($tablet, 1fr);
+  }
+
+  @include desktop-lg {
+    grid-template-columns: repeat($desktop, 1fr);
+  }
+}
+
+// Responsive typography
+@mixin mobile-heading {
+  font-size: 1.5rem;
+  line-height: 1.2;
+
+  @include mobile-sm {
+    font-size: 1.75rem;
+  }
+
+  @include tablet-md {
+    font-size: 2rem;
+  }
+
+  @include desktop-lg {
+    font-size: 2.25rem;
+  }
+}
+
+@mixin mobile-body {
+  font-size: 0.875rem;
+  line-height: 1.4;
+
+  @include mobile-sm {
+    font-size: 0.95rem;
+  }
+
+  @include tablet-md {
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+}
