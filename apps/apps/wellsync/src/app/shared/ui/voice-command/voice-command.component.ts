@@ -5,7 +5,7 @@ import {
   OnDestroy,
   AfterViewInit,
   PLATFORM_ID,
-  OnInit,
+  OnInit, signal,
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -32,9 +32,9 @@ import { CommonModule } from '@angular/common';
     <button
       mat-fab
       [color]="getButtonColor()"
-      [class.listening]="voiceState.isListening"
-      [class.pulse]="voiceState.isListening"
-      [disabled]="!voiceState.isSupported"
+      [class.listening]="voiceState().isListening"
+      [class.pulse]="voiceState().isListening"
+      [disabled]="!voiceState().isSupported"
       [matTooltip]="getTooltipText()"
       (click)="toggleListening()"
       aria-label="Voice command button"
@@ -91,17 +91,30 @@ import { CommonModule } from '@angular/common';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VoiceCommandComponent implements OnInit, OnDestroy, AfterViewInit {
-  ngOnInit(): void {
-    // Initialize voice command service after view is ready
+export class VoiceCommandComponent implements OnDestroy, AfterViewInit {
+
+  private voiceService = inject(VoiceCommandService);
+  private snackBar = inject(MatSnackBar);
+  private destroy$ = new Subject<void>();
+  private platformId = inject(PLATFORM_ID);
+
+  //cards = signal<CardContent[]>([]);
+  voiceState = signal<VoiceState>({
+    isListening: false,
+    isSupported: false,
+    lastCommand: null,
+    error: null,
+  });
+
+  ngAfterViewInit(): void {
     this.voiceService.initialize(this.platformId);
 
     // Subscribe to voice state changes
     this.voiceService.voiceState$
       .pipe(takeUntil(this.destroy$))
       .subscribe((state) => {
-        console.info('Got state:', state);
-        this.voiceState = state;
+        console.info('Set state to:', state);
+        this.voiceState.set(state);
 
         // Show error messages
         if (state.error) {
@@ -132,21 +145,6 @@ export class VoiceCommandComponent implements OnInit, OnDestroy, AfterViewInit {
       }, 1000);
     }
   }
-  private voiceService = inject(VoiceCommandService);
-  private snackBar = inject(MatSnackBar);
-  private destroy$ = new Subject<void>();
-  private platformId = inject(PLATFORM_ID);
-
-  voiceState: VoiceState = {
-    isListening: false,
-    isSupported: false,
-    lastCommand: null,
-    error: null,
-  };
-
-  ngAfterViewInit(): void {
-
-  }
 
   ngOnDestroy(): void {
     this.destroy$.next();
@@ -154,7 +152,7 @@ export class VoiceCommandComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   toggleListening(): void {
-    if (this.voiceState.isListening) {
+    if (this.voiceState().isListening) {
       this.voiceService.stopListening();
     } else {
       this.voiceService.startListening();
@@ -166,23 +164,23 @@ export class VoiceCommandComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   getButtonColor(): string {
-    if (!this.voiceState.isSupported) return '';
-    if (this.voiceState.error) return 'warn';
-    if (this.voiceState.isListening) return 'accent';
+    if (!this.voiceState().isSupported) return '';
+    if (this.voiceState().error) return 'warn';
+    if (this.voiceState().isListening) return 'accent';
     return 'primary';
   }
 
   getIconName(): string {
-    if (!this.voiceState.isSupported) return 'mic_off';
-    if (this.voiceState.isListening) return 'mic';
+    if (!this.voiceState().isSupported) return 'mic_off';
+    if (this.voiceState().isListening) return 'mic';
     return 'mic_none';
   }
 
   getTooltipText(): string {
-    if (!this.voiceState.isSupported) {
+    if (!this.voiceState().isSupported) {
       return 'Voice commands not supported in this browser';
     }
-    if (this.voiceState.isListening) {
+    if (this.voiceState().isListening) {
       return 'Listening... Click to stop';
     }
     return 'Click to start voice commands';
