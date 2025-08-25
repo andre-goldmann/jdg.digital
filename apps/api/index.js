@@ -1,8 +1,12 @@
 //export default import('../dist/apps/wellsync/server/server.mjs').then(module => module.app);
 
-const server = require('../dist/apps/wellsync/server/server.mjs');
+//const server = require('../dist/apps/wellsync/server/server.mjs');
 
-module.exports = server.app();
+(async () => {
+  const server = await import('../dist/apps/wellsync/server/server.mjs');
+  module.exports = server.app();
+})();
+
 
 // Import required modules
 //const path = require('path');
