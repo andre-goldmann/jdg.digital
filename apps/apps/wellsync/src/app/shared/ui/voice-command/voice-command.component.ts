@@ -3,9 +3,9 @@ import {
   Component,
   inject,
   OnDestroy,
-  OnInit,
   AfterViewInit,
   PLATFORM_ID,
+  OnInit,
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -91,20 +91,8 @@ import { CommonModule } from '@angular/common';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VoiceCommandComponent implements OnDestroy, AfterViewInit {
-  private voiceService = inject(VoiceCommandService);
-  private snackBar = inject(MatSnackBar);
-  private destroy$ = new Subject<void>();
-  private platformId = inject(PLATFORM_ID);
-
-  voiceState: VoiceState = {
-    isListening: false,
-    isSupported: false,
-    lastCommand: null,
-    error: null,
-  };
-
-  ngAfterViewInit(): void {
+export class VoiceCommandComponent implements OnInit, OnDestroy, AfterViewInit {
+  ngOnInit(): void {
     // Initialize voice command service after view is ready
     this.voiceService.initialize(this.platformId);
 
@@ -112,6 +100,7 @@ export class VoiceCommandComponent implements OnDestroy, AfterViewInit {
     this.voiceService.voiceState$
       .pipe(takeUntil(this.destroy$))
       .subscribe((state) => {
+        console.info('Got state:', state);
         this.voiceState = state;
 
         // Show error messages
@@ -142,6 +131,20 @@ export class VoiceCommandComponent implements OnDestroy, AfterViewInit {
         );
       }, 1000);
     }
+  }
+  private voiceService = inject(VoiceCommandService);
+  private snackBar = inject(MatSnackBar);
+  private destroy$ = new Subject<void>();
+  private platformId = inject(PLATFORM_ID);
+
+  voiceState: VoiceState = {
+    isListening: false,
+    isSupported: false,
+    lastCommand: null,
+    error: null,
+  };
+
+  ngAfterViewInit(): void {
 
   }
 
