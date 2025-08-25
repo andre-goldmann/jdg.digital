@@ -98,6 +98,7 @@ export class VoiceCommandService {
   });
 
   private _commandExecuted = new Subject<VoiceCommandResult>();
+  private _initialized = false;
 
   // Voice commands mapping
   private readonly voiceCommands: VoiceCommand[] = [
@@ -188,6 +189,19 @@ export class VoiceCommandService {
   readonly commandExecuted$ = this._commandExecuted.asObservable();
 
   constructor() {
+    // Remove initialization from constructor - will be called explicitly
+  }
+
+  /**
+   * Initialize the voice command service. Should be called from a component's ngAfterViewInit
+   * to ensure proper browser platform detection.
+   */
+  initialize(): void {
+    if (this._initialized) {
+      return;
+    }
+
+    this._initialized = true;
     this.initializeSpeechRecognition();
     this.initializeSpeechSynthesis();
   }
@@ -258,6 +272,9 @@ export class VoiceCommandService {
   }
 
   startListening(): void {
+    // Ensure service is initialized before starting
+    this.initialize();
+
     if (!this.recognition || this._voiceState.value.isListening) {
       return;
     }
@@ -393,13 +410,5 @@ export class VoiceCommandService {
 
   isVoiceSupported(): boolean {
     return this._voiceState.value.isSupported;
-  }
-}
-
-// Extend the Window interface for TypeScript
-declare global {
-  interface Window {
-    SpeechRecognition: typeof SpeechRecognition;
-    webkitSpeechRecognition: typeof SpeechRecognition;
   }
 }
