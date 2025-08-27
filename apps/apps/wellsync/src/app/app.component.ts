@@ -1,4 +1,15 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import {
+  Component,
+  inject,
+  OnInit,
+  signal,
+  Inject,
+  PLATFORM_ID,
+  AfterViewInit,
+} from '@angular/core';
+
+import { isPlatformBrowser, isPlatformServer } from '@angular/common';
+
 import { RouterModule } from '@angular/router';
 import { TaskVoiceService } from './shared/data/task-voice.service';
 import { ApiService, HelloResponse } from './shared/data/services/api.service';
@@ -11,7 +22,21 @@ import { CommonModule } from '@angular/common';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, AfterViewInit {
+
+  server = false;
+  client = false;
+
+  constructor(@Inject(PLATFORM_ID) private platformId: any) {
+    this.server = isPlatformServer(this.platformId);
+  }
+
+  ngAfterViewInit() {
+    if (isPlatformBrowser(this.platformId)) {
+      this.client = true;
+    }
+  }
+
   protected title = 'wellsync';
   protected serverResponse = signal<HelloResponse | null>(null);
   protected isLoading = signal<boolean>(false);
