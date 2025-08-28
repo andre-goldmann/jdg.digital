@@ -1,5 +1,7 @@
 import { Injectable, signal, linkedSignal } from '@angular/core';
 import { runFlow } from 'genkit/beta/client';
+import { HttpClient } from '@angular/common/http';
+import { inject } from '@angular/core';
 
 const USER = 'USER';
 const AGENT = 'AGENT';
@@ -17,14 +19,47 @@ interface AnalyisResponse {
   agentResponse: string;
 }
 
+interface WhaleWisdomData {
+  filer_name: string;
+  url: string;
+  fund_info?: {
+    name?: string;
+    description?: string;
+    location?: string;
+    market_value?: string;
+    top_10_concentration?: string;
+    largest_holding?: string;
+  };
+  top_buys?: Array<{
+    symbol: string;
+    name: string;
+    percentage_change: string;
+  }>;
+  top_sells?: Array<{
+    symbol: string;
+    name: string;
+    percentage_change: string;
+  }>;
+  activity_data: Record<string, string>;
+  scraped_at: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class AnalysisService {
+  private readonly http = inject(HttpClient);
+
   userInput = signal('');
   analysisResult = signal<AnalyisResponse | null>(null);
   isLoading = signal(false);
   error = signal<string | null>(null);
+
+  // WhaleWisdom related signals
+  investorInput = signal('');
+  whaleWisdomData = signal<WhaleWisdomData | null>(null);
+  isLoadingWhaleWisdom = signal(false);
+  whaleWisdomError = signal<string | null>(null);
 
   // Only set this on the initial request
   // Note: for demonstration purposes only; use security best practices for managing sessions
@@ -89,5 +124,34 @@ export class AnalysisService {
       role,
       text,
     };
+  }
+
+  async loadInvestorData(investor: string): Promise<void> {
+    this.isLoadingWhaleWisdom.set(true);
+    this.whaleWisdomError.set(null);
+
+    try {
+      const response = await this.http
+        .post<WhaleWisdomData>('/api/whale-wisdom', {
+          investor,
+        })
+        .toPromise();
+
+      this.whaleWisdomData.set(response || null);
+    } catch (err) {
+      this.whaleWisdomError.set(
+        err instanceof Error
+          ? err.message
+          : 'An error occurred while fetching investor data'
+      );
+      this.whaleWisdomData.set(null);
+    } finally {
+      this.isLoadingWhaleWisdom.set(false);
+    }
+  }
+
+  searchInvestor(investor: string): void {
+    this.investorInput.set(investor);
+    this.loadInvestorData(investor);
   }
 }

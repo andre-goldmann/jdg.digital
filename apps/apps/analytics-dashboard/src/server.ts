@@ -8,7 +8,8 @@ import express from 'express';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { expressHandler } from '@genkit-ai/express';
-import { analysisFlow, chatFlow} from './flows';
+import { analysisFlow, chatFlow } from './flows';
+import { WhaleWisdomScraper } from './whale-wisdom-scraper';
 
 const serverDistFolder = dirname(fileURLToPath(import.meta.url));
 const browserDistFolder = resolve(serverDistFolder, '../browser');
@@ -25,6 +26,26 @@ app.post('/chatFlow', expressHandler(chatFlow));
 app.post('/analysisFlow', expressHandler(analysisFlow));
 
 /**
+ * Endpoint for WhaleWisdom scraping
+ */
+app.post('/api/whale-wisdom', async (req, res) => {
+  try {
+    const { investor } = req.body;
+    if (!investor) {
+      return res.status(400).json({ error: 'Investor name is required' });
+    }
+
+    const scraper = new WhaleWisdomScraper();
+    const data = await scraper.getFilerData(investor);
+
+    return res.json(data);
+  } catch (error) {
+    console.error('WhaleWisdom API error:', error);
+    return res.status(500).json({ error: 'Failed to fetch investor data' });
+  }
+});
+
+/**
  * Serve static files from /browser
  */
 app.use(
@@ -32,7 +53,7 @@ app.use(
     maxAge: '1y',
     index: false,
     redirect: false,
-  }),
+  })
 );
 
 /**
@@ -42,7 +63,7 @@ app.use('/**', (req, res, next) => {
   angularApp
     .handle(req)
     .then((response) =>
-      response ? writeResponseToNodeResponse(response, res) : next(),
+      response ? writeResponseToNodeResponse(response, res) : next()
     )
     .catch(next);
 });
