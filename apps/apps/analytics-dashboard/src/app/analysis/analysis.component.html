@@ -1,29 +1,34 @@
 <div class="chat-container">
   <div class="title">Chat with an chat</div>
   <div #scrollContainer class="history-body history-container">
-    @if (analysisService.analysisResource.isLoading()) {
-      <div class="loading-container">
-        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-      </div>
-    }
-
-    @for (item of analysisService.chat(); track item.id) {
-      @if (item.role === 'USER') {
-        <div class="bubble-container">
-          <div></div>
-          <div class="chat user">{{item.text}}</div>
-        </div>
-      } @else if (item.role === 'AGENT') {
-        <div class="bubble-container">
-          <div class="chat agent">{{item.text}}</div>
-        </div>
-      }
-    }
+    @if (analysisService.isLoading()) {
+    <div class="loading-container">
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    </div>
+    } @for (item of analysisService.chat(); track item.id) { @if (item.role ===
+    'USER') {
+    <div class="bubble-container">
+      <div></div>
+      <div class="chat user">{{ item.text }}</div>
+    </div>
+    } @else if (item.role === 'AGENT') {
+    <div class="bubble-container">
+      <div class="chat agent">{{ item.text }}</div>
+    </div>
+    } }
   </div>
   <div class="input-container">
     <input #userInputEl [(ngModel)]="userInput" (keydown.enter)="onSubmit()" />
-    <button (click)="onSubmit()" [disabled]="analysisService.analysisResource.isLoading() || userInput === ''">
-      <mat-icon aria-hidden="false" aria-label="send icon" fontIcon="send"></mat-icon>
+    <button
+      (click)="onSubmit()"
+      [disabled]="analysisService.isLoading() || userInput === ''"
+    >
+      >
+      <mat-icon
+        aria-hidden="false"
+        aria-label="send icon"
+        fontIcon="send"
+      ></mat-icon>
     </button>
   </div>
 </div>
