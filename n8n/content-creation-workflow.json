@@ -1,0 +1,318 @@
+{
+  "name": "Content Creation Workflow with Telegram",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "1a2b3c4d-5e6f-7g8h-9i0j-k1l2m3n4o5p6",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "telegram-content-webhook"
+    },
+    {
+      "parameters": {
+        "url": "https://api.perplexity.ai/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyContentType": "json",
+        "jsonBody": "{\n  \"model\": \"llama-3.1-sonar-small-128k-online\",\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"Du bist ein Recherche-Assistent. Führe eine gründliche Webrecherche zum gegebenen Thema durch und liefere relevante, aktuelle Informationen.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"{{ $json.message.text }}\"\n    }\n  ],\n  \"max_tokens\": 1000,\n  \"temperature\": 0.2\n}",
+        "options": {}
+      },
+      "id": "2b3c4d5e-6f7g-8h9i-0j1k-l2m3n4o5p6q7",
+      "name": "Perplexity Research",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        280,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "condition1",
+              "leftValue": "{{ $json.choices }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "exists"
+              }
+            },
+            {
+              "id": "condition2",
+              "leftValue": "{{ $json.choices[0].message.content }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "3c4d5e6f-7g8h-9i0j-1k2l-m3n4o5p6q7r8",
+      "name": "Check Perplexity Response",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        560,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "❌ **Fehler bei der Recherche**\n\nDie Webrecherche über Perplexity konnte nicht erfolgreich durchgeführt werden.\n\n**Mögliche Ursachen:**\n- API-Limit erreicht\n- Netzwerkfehler\n- Ungültige Query\n\n**Bitte versuchen Sie es später erneut oder kontaktieren Sie den Administrator.**\n\n🔄 *Workflow gestoppt*",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "id": "4d5e6f7g-8h9i-0j1k-2l3m-n4o5p6q7r8s9",
+      "name": "Send Error Message",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.1,
+      "position": [
+        560,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "text",
+        "operation": "message",
+        "model": "gpt-4",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "Du bist ein professioneller Content Creator für LinkedIn. Deine Aufgabe ist es, hochwertige, ansprechende LinkedIn-Posts zu erstellen, die:\n\n1. Professionell und authentisch klingen\n2. Relevante Hashtags enthalten\n3. Call-to-Actions verwenden\n4. Storytelling-Elemente einbauen\n5. Wert für die Zielgruppe bieten\n\nDer Post sollte zwischen 150-300 Wörtern lang sein und eine klare Struktur haben."
+            },
+            {
+              "role": "user",
+              "content": "Erstelle einen hochwertigen LinkedIn-Post basierend auf folgenden Informationen:\n\n**Original-Idee:** {{ $('Telegram Trigger').item.json.message.text }}\n\n**Recherche-Ergebnisse:** {{ $('Perplexity Research').item.json.choices[0].message.content }}\n\nBitte erstelle einen ansprechenden LinkedIn-Post, der die Recherche-Ergebnisse einbezieht und die ursprüngliche Idee professionell aufbereitet."
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.7,
+          "maxTokens": 500
+        }
+      },
+      "id": "5e6f7g8h-9i0j-1k2l-3m4n-o5p6q7r8s9t0",
+      "name": "Generate LinkedIn Post",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.3,
+      "position": [
+        840,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "post",
+        "text": "={{ $json.choices[0].message.content }}",
+        "additionalFields": {}
+      },
+      "id": "6f7g8h9i-0j1k-2l3m-4n5o-p6q7r8s9t0u1",
+      "name": "Publish to LinkedIn",
+      "type": "n8n-nodes-base.linkedIn",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "✅ **LinkedIn-Post erfolgreich veröffentlicht!**\n\n🎉 Ihr Content wurde erfolgreich auf LinkedIn geteilt.\n\n**Veröffentlichter Post:**\n\n{{ $('Generate LinkedIn Post').item.json.choices[0].message.content }}\n\n---\n\n📊 **Workflow-Details:**\n- Original-Idee: {{ $('Telegram Trigger').item.json.message.text }}\n- Recherche: ✅ Erfolgreich\n- Content-Erstellung: ✅ Abgeschlossen\n- LinkedIn-Veröffentlichung: ✅ Erfolgreich\n\n🔗 Überprüfen Sie Ihr LinkedIn-Profil für Engagement-Statistiken.\n\n*Workflow erfolgreich abgeschlossen* ✨",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "id": "7g8h9i0j-1k2l-3m4n-5o6p-q7r8s9t0u1v2",
+      "name": "Send Success Notification",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.1,
+      "position": [
+        1400,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 📋 Content Creation Workflow\n\n**Zweck:** Automatische LinkedIn-Content-Erstellung basierend auf Telegram-Ideen\n\n**Prozess:**\n1. 💬 Telegram-Nachricht als Ideenquelle\n2. 🔍 Webrecherche über Perplexity API\n3. 🤖 Content-Erstellung mit OpenAI\n4. 📤 Veröffentlichung auf LinkedIn\n5. ✅ Bestätigung via Telegram\n\n**Vorteile:**\n- Vollautomatisierter Content-Prozess\n- Recherche-basierte Qualität\n- Direkte Social Media Integration\n- Echtzeit-Feedback",
+        "height": 180,
+        "width": 320,
+        "color": 4
+      },
+      "id": "sticky-note-1",
+      "name": "Workflow Übersicht",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -200,
+        -280
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 🔑 Erforderliche API-Konfiguration\n\n**Credentials benötigt:**\n- 🤖 Telegram Bot Token\n- 🔍 Perplexity API Key\n- 🧠 OpenAI API Key\n- 💼 LinkedIn OAuth\n\n**Setup-Hinweise:**\n- Telegram Bot über @BotFather erstellen\n- Perplexity API-Zugang aktivieren\n- OpenAI GPT-4 Zugang erforderlich\n- LinkedIn Developer App registrieren\n\n**Security:** Alle Keys sicher in n8n Credentials speichern!",
+        "height": 240,
+        "width": 280,
+        "color": 6
+      },
+      "id": "sticky-note-2",
+      "name": "API Konfiguration",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        -300
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## ⚠️ Error Handling & Troubleshooting\n\n**Häufige Probleme:**\n- API Rate Limits erreicht\n- Ungültige Credentials\n- Netzwerk-Timeouts\n- Leere/ungültige Responses\n\n**Lösungsansätze:**\n- IF-Node prüft Response-Validität\n- Detaillierte Fehlermeldungen\n- Automatische Retry-Mechanismen\n- Fallback-Strategien implementieren\n\n**Monitoring:** Workflow-Logs regelmäßig überprüfen",
+        "height": 160,
+        "width": 300,
+        "color": 3
+      },
+      "id": "sticky-note-3",
+      "name": "Error Handling",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        400,
+        350
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 🔄 Datenfluss & Node-Verbindungen\n\n**Hauptpfad (Erfolg):**\nTelegram → Perplexity → IF (True) → OpenAI → LinkedIn → Success Notification\n\n**Fehler-Pfad:**\nTelegram → Perplexity → IF (False) → Error Message\n\n**Datenübertragung:**\n- Telegram: message.text\n- Perplexity: choices[0].message.content\n- OpenAI: choices[0].message.content\n- LinkedIn: Post-ID\n\n**Validierung:** IF-Node prüft API-Response-Struktur",
+        "height": 180,
+        "width": 350,
+        "color": 5
+      },
+      "id": "sticky-note-4",
+      "name": "Datenfluss",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        350
+      ]
+    }
+  ],
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Perplexity Research",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Perplexity Research": {
+      "main": [
+        [
+          {
+            "node": "Check Perplexity Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Perplexity Response": {
+      "main": [
+        [
+          {
+            "node": "Generate LinkedIn Post",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Error Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate LinkedIn Post": {
+      "main": [
+        [
+          {
+            "node": "Publish to LinkedIn",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Publish to LinkedIn": {
+      "main": [
+        [
+          {
+            "node": "Send Success Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2024-01-15T10:00:00.000Z",
+      "updatedAt": "2024-01-15T10:00:00.000Z",
+      "id": "content-automation",
+      "name": "Content Automation"
+    },
+    {
+      "createdAt": "2024-01-15T10:00:00.000Z",
+      "updatedAt": "2024-01-15T10:00:00.000Z",
+      "id": "social-media",
+      "name": "Social Media"
+    }
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false
+  },
+  "id": "content-creation-telegram-workflow",
+  "versionId": "1.0.0"
+}
