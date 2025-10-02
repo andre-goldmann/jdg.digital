@@ -63,3 +63,5 @@ storybook-static
 /docker/volumes
 /docker/.env
 /apps/.env
+
+package-lock.json
