@@ -167,6 +167,7 @@ services:
       - "minio"
 
   mindsdb_container:
+    container_name: mindsdb
     image: mindsdb/mindsdb
     restart: always
     environment:

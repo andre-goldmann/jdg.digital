@@ -2,11 +2,15 @@
   "name": "Content Creation Workflow with Telegram",
   "nodes": [
     {
-      "parameters": {},
+      "parameters": {
+        "updates": [
+          "message"
+        ]
+      },
       "id": "1a2b3c4d-5e6f-7g8h-9i0j-k1l2m3n4o5p6",
       "name": "Telegram Trigger",
       "type": "n8n-nodes-base.telegramTrigger",
-      "typeVersion": 1.1,
+      "typeVersion": 1.2,
       "position": [
         0,
         0
@@ -15,9 +19,10 @@
     },
     {
       "parameters": {
+        "method": "POST",
         "url": "https://api.perplexity.ai/chat/completions",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -29,13 +34,15 @@
         },
         "sendBody": true,
         "bodyContentType": "json",
-        "jsonBody": "{\n  \"model\": \"llama-3.1-sonar-small-128k-online\",\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"Du bist ein Recherche-Assistent. Führe eine gründliche Webrecherche zum gegebenen Thema durch und liefere relevante, aktuelle Informationen.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"{{ $json.message.text }}\"\n    }\n  ],\n  \"max_tokens\": 1000,\n  \"temperature\": 0.2\n}",
-        "options": {}
+        "jsonBody": "={\n  \"model\": \"llama-3.1-sonar-small-128k-online\",\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"Du bist ein Recherche-Assistent. Führe eine gründliche Webrecherche zum gegebenen Thema durch und liefere relevante, aktuelle Informationen.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"{{ $json.message.text }}\"\n    }\n  ],\n  \"max_tokens\": 1000,\n  \"temperature\": 0.2\n}",
+        "options": {
+          "timeout": 30000
+        }
       },
       "id": "2b3c4d5e-6f7g-8h9i-0j1k-l2m3n4o5p6q7",
       "name": "Perplexity Research",
       "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.1,
+      "typeVersion": 4.2,
       "position": [
         280,
         0
@@ -52,7 +59,7 @@
           "conditions": [
             {
               "id": "condition1",
-              "leftValue": "{{ $json.choices }}",
+              "leftValue": "={{ $json.choices }}",
               "rightValue": "",
               "operator": {
                 "type": "object",
@@ -61,7 +68,7 @@
             },
             {
               "id": "condition2",
-              "leftValue": "{{ $json.choices[0].message.content }}",
+              "leftValue": "={{ $json.choices && $json.choices[0] && $json.choices[0].message && $json.choices[0].message.content }}",
               "rightValue": "",
               "operator": {
                 "type": "string",
@@ -84,16 +91,18 @@
     },
     {
       "parameters": {
+        "resource": "message",
+        "operation": "sendMessage",
         "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
         "text": "❌ **Fehler bei der Recherche**\n\nDie Webrecherche über Perplexity konnte nicht erfolgreich durchgeführt werden.\n\n**Mögliche Ursachen:**\n- API-Limit erreicht\n- Netzwerkfehler\n- Ungültige Query\n\n**Bitte versuchen Sie es später erneut oder kontaktieren Sie den Administrator.**\n\n🔄 *Workflow gestoppt*",
         "additionalFields": {
-          "parse_mode": "Markdown"
+          "parse_mode": "MarkdownV2"
         }
       },
       "id": "4d5e6f7g-8h9i-0j1k-2l3m-n4o5p6q7r8s9",
       "name": "Send Error Message",
       "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.1,
+      "typeVersion": 1.2,
       "position": [
         560,
         220
@@ -103,7 +112,7 @@
       "parameters": {
         "resource": "text",
         "operation": "message",
-        "model": "gpt-4",
+        "model": "gpt-4o",
         "messages": {
           "values": [
             {
@@ -124,7 +133,7 @@
       "id": "5e6f7g8h-9i0j-1k2l-3m4n-o5p6q7r8s9t0",
       "name": "Generate LinkedIn Post",
       "type": "n8n-nodes-base.openAi",
-      "typeVersion": 1.3,
+      "typeVersion": 1.4,
       "position": [
         840,
         0
@@ -133,13 +142,16 @@
     {
       "parameters": {
         "resource": "post",
+        "operation": "create",
         "text": "={{ $json.choices[0].message.content }}",
-        "additionalFields": {}
+        "additionalFields": {
+          "visibility": "PUBLIC"
+        }
       },
       "id": "6f7g8h9i-0j1k-2l3m-4n5o-p6q7r8s9t0u1",
       "name": "Publish to LinkedIn",
       "type": "n8n-nodes-base.linkedIn",
-      "typeVersion": 1,
+      "typeVersion": 2,
       "position": [
         1120,
         0
@@ -147,16 +159,18 @@
     },
     {
       "parameters": {
+        "resource": "message",
+        "operation": "sendMessage",
         "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
-        "text": "✅ **LinkedIn-Post erfolgreich veröffentlicht!**\n\n🎉 Ihr Content wurde erfolgreich auf LinkedIn geteilt.\n\n**Veröffentlichter Post:**\n\n{{ $('Generate LinkedIn Post').item.json.choices[0].message.content }}\n\n---\n\n📊 **Workflow-Details:**\n- Original-Idee: {{ $('Telegram Trigger').item.json.message.text }}\n- Recherche: ✅ Erfolgreich\n- Content-Erstellung: ✅ Abgeschlossen\n- LinkedIn-Veröffentlichung: ✅ Erfolgreich\n\n🔗 Überprüfen Sie Ihr LinkedIn-Profil für Engagement-Statistiken.\n\n*Workflow erfolgreich abgeschlossen* ✨",
+        "text": "✅ **LinkedIn-Post erfolgreich veröffentlicht!**\n\n🎉 Ihr Content wurde erfolgreich auf LinkedIn geteilt.\n\n**Veröffentlichter Post:**\n\n{{ $('Generate LinkedIn Post').item.json.choices && $('Generate LinkedIn Post').item.json.choices[0] && $('Generate LinkedIn Post').item.json.choices[0].message ? $('Generate LinkedIn Post').item.json.choices[0].message.content : 'Post content unavailable' }}\n\n---\n\n📊 **Workflow-Details:**\n- Original-Idee: {{ $('Telegram Trigger').item.json.message.text }}\n- Recherche: ✅ Erfolgreich\n- Content-Erstellung: ✅ Abgeschlossen\n- LinkedIn-Veröffentlichung: ✅ Erfolgreich\n\n🔗 Überprüfen Sie Ihr LinkedIn-Profil für Engagement-Statistiken.\n\n*Workflow erfolgreich abgeschlossen* ✨",
         "additionalFields": {
-          "parse_mode": "Markdown"
+          "parse_mode": "MarkdownV2"
         }
       },
       "id": "7g8h9i0j-1k2l-3m4n-5o6p-q7r8s9t0u1v2",
       "name": "Send Success Notification",
       "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.1,
+      "typeVersion": 1.2,
       "position": [
         1400,
         0
@@ -293,7 +307,11 @@
   },
   "pinData": {},
   "settings": {
-    "executionOrder": "v1"
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": "",
+    "timezone": "Europe/Berlin"
   },
   "staticData": null,
   "tags": [

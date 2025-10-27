@@ -1,0 +1,24 @@
+<router-outlet></router-outlet>
+
+<form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+  <h2>User Profile</h2>
+
+  <div>
+    <label for="from">Von</label>
+    <input id="from" type="text" formControlName="from">
+  </div>
+
+  <div>
+    <label for="to">Bis</label>
+    <input id="to" type="text" formControlName="to">
+  </div>
+
+
+  <button type="submit" [disabled]="userForm.invalid">
+    Save Profile
+  </button>
+
+  <div class="status-message">
+
+  </div>
+</form>
