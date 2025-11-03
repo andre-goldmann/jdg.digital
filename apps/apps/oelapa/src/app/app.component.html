@@ -1,6 +1,44 @@
-<router-outlet></router-outlet>
+@if (navigationConfig$ | async; as navConfig) {
+  <div class="app-container">
+    <mat-sidenav-container class="sidenav-container">
+      <!-- Sidenav -->
+      <mat-sidenav 
+        #sidenav
+        [mode]="navConfig.mode"
+        [opened]="isExpanded$ | async"
+        class="app-sidenav">
+        <app-navigation-sidemenu></app-navigation-sidemenu>
+      </mat-sidenav>
 
-<form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+      <!-- Main Content -->
+      <mat-sidenav-content class="main-content">
+        <!-- Toolbar -->
+        <mat-toolbar color="primary" class="app-toolbar">
+          <button 
+            mat-icon-button 
+            (click)="toggleSidenav()"
+            aria-label="Toggle navigation menu"
+            class="menu-toggle">
+            <mat-icon>menu</mat-icon>
+          </button>
+          
+          <span class="toolbar-title">OELAPA Property Management</span>
+          
+          <span class="toolbar-spacer"></span>
+          
+          <app-auth-status></app-auth-status>
+        </mat-toolbar>
+
+        <!-- Page Content -->
+        <div class="page-content">
+          <router-outlet></router-outlet>
+        </div>
+      </mat-sidenav-content>
+    </mat-sidenav-container>
+  </div>
+}
+
+<!--form [formGroup]="userForm" (ngSubmit)="onSubmit()">
   <h2>User Profile</h2>
 
   <div>
@@ -20,5 +58,56 @@
 
   <div class="status-message">
 
+  </div>
+</form-->
+
+<!-- Signal-based reactive form -->
+<form (ngSubmit)="onSubmit()" class="signal-form">
+  <h2>Invoice Date Range Filter</h2>
+
+  <div class="form-group">
+    <label for="from">From Date</label>
+    <input 
+      id="from" 
+      type="date" 
+      [formControl]="fromControl"
+      class="form-control">
+    @if (fromControl.invalid && fromControl.touched) {
+      <div class="error-message">From date is required</div>
+    }
+  </div>
+
+  <div class="form-group">
+    <label for="to">To Date</label>
+    <input 
+      id="to" 
+      type="date" 
+      [formControl]="toControl"
+      class="form-control">
+    @if (toControl.invalid && toControl.touched) {
+      <div class="error-message">To date is required</div>
+    }
+  </div>
+
+  <div class="form-actions">
+    <button 
+      type="submit" 
+      [disabled]="!isFormValid()"
+      class="submit-button">
+      Apply Filter
+    </button>
+    
+    <button 
+      type="button" 
+      (click)="resetForm()"
+      class="reset-button">
+      Reset
+    </button>
+  </div>
+
+  <div class="form-status">
+    <p>Form Valid: {{ isFormValid() }}</p>
+    <p>Current Values: {{ formData() | json }}</p>
+    <p>Store Values - From: {{ store.from() | date }}, To: {{ store.to() | date }}</p>
   </div>
 </form>

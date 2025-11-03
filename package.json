@@ -1,7 +1,16 @@
 {
   "dependencies": {
+    "@angular/animations": "^20.3.7",
+    "@angular/cdk": "^20.2.10",
+    "@angular/material": "^20.2.10",
     "@capacitor/android": "^7.2.0",
     "@modelcontextprotocol/sdk": "^1.8.0",
+    "keycloak-angular": "^20.0.0",
+    "keycloak-js": "^26.2.1",
     "nx": "^21.4.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.1",
+    "@types/node": "^24.9.2"
   }
 }

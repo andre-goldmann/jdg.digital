@@ -1,0 +1,81 @@
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 1rem;
+}
+
+.auth-card {
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+}
+
+.auth-card mat-card-header {
+  text-align: center;
+  padding-bottom: 1rem;
+}
+
+.auth-card h1 {
+  margin: 0;
+  color: #333;
+  font-weight: 500;
+}
+
+.login-content {
+  text-align: center;
+  padding: 1rem 0;
+}
+
+.login-description {
+  margin-bottom: 2rem;
+  color: #666;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.login-button {
+  height: 48px;
+  font-size: 16px;
+  font-weight: 500;
+  margin-top: 1rem;
+  
+  mat-icon {
+    margin-right: 8px;
+  }
+}
+
+.footer-text {
+  text-align: center;
+  color: #666;
+  font-size: 0.875rem;
+  margin: 1rem 0 0 0;
+}
+
+mat-card-content {
+  padding: 1.5rem;
+}
+
+mat-card-footer {
+  padding: 0 1.5rem 1.5rem;
+}
+
+// Accessibility improvements
+button:focus {
+  outline: 2px solid #667eea;
+  outline-offset: 2px;
+}
+
+// Hover effects
+.login-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  transition: all 0.2s ease;
+}
