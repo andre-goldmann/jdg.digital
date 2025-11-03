@@ -1,0 +1,59 @@
+.dashboard-container {
+  min-height: 100%;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.dashboard-content {
+  width: 100%;
+}
+
+.welcome-card {
+  margin-bottom: 2rem;
+}
+
+.user-details {
+  background-color: #f8f9fa;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+
+  h3 {
+    margin-top: 0;
+    color: #333;
+  }
+
+  p {
+    margin: 0.5rem 0;
+    color: #666;
+  }
+}
+
+.features-section {
+  h3 {
+    color: #333;
+    margin-bottom: 1rem;
+  }
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.feature-card {
+  height: 180px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  mat-icon {
+    color: #667eea;
+  }
+}

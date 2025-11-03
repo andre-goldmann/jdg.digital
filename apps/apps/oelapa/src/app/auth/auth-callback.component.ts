@@ -9,49 +9,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   selector: 'app-auth-callback',
   standalone: true,
   imports: [CommonModule, MatCardModule, MatProgressSpinnerModule],
-  template: `
-    <div class="callback-container">
-      <mat-card class="callback-card">
-        <mat-card-content>
-          <div class="loading-content">
-            <mat-spinner diameter="40"></mat-spinner>
-            <h2>Completing authentication...</h2>
-            <p>Please wait while we process your login.</p>
-          </div>
-        </mat-card-content>
-      </mat-card>
-    </div>
-  `,
-  styles: [`
-    .callback-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    }
-
-    .callback-card {
-      max-width: 400px;
-      width: 100%;
-      margin: 2rem;
-      text-align: center;
-    }
-
-    .loading-content {
-      padding: 2rem;
-    }
-
-    h2 {
-      margin: 1rem 0 0.5rem 0;
-      color: #333;
-    }
-
-    p {
-      color: #666;
-      margin: 0;
-    }
-  `]
+  templateUrl: './auth-callback.component.html',
+  styleUrl: './auth-callback.component.scss'
 })
 export class AuthCallbackComponent implements OnInit {
   private router = inject(Router);

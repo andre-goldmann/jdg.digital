@@ -1,0 +1,112 @@
+<div class="reservation-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Create New Reservation</mat-card-title>
+      <mat-card-subtitle>Enter guest and booking details</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="reservationForm" (ngSubmit)="onSubmit()">
+        <!-- Guest Information -->
+        <div class="form-section">
+          <h3>Guest Information</h3>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Guest Name</mat-label>
+            <input matInput
+                   formControlName="guestName"
+                   placeholder="Enter guest full name"
+                   required>
+            @if (reservationForm.get('guestName')?.hasError('required') && reservationForm.get('guestName')?.touched) {
+              <mat-error>Guest name is required</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Guest Count</mat-label>
+            <mat-select formControlName="guestCount" required>
+              <mat-option [value]="1">1 Guest</mat-option>
+              <mat-option [value]="2">2 Guests</mat-option>
+              <mat-option [value]="3">3 Guests</mat-option>
+              <mat-option [value]="4">4 Guests</mat-option>
+              <mat-option [value]="5">5 Guests</mat-option>
+              <mat-option [value]="6">6+ Guests</mat-option>
+            </mat-select>
+            @if (reservationForm.get('guestCount')?.hasError('required') && reservationForm.get('guestCount')?.touched) {
+              <mat-error>Guest count is required</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <!-- Booking Details -->
+        <div class="form-section">
+          <h3>Booking Details</h3>
+
+          <div class="date-row">
+            <mat-form-field appearance="outline" class="date-field">
+              <mat-label>Check-in Date</mat-label>
+              <input matInput
+                     type="date"
+                     formControlName="checkInDate"
+                     required>
+              @if (reservationForm.get('checkInDate')?.hasError('required') && reservationForm.get('checkInDate')?.touched) {
+                <mat-error>Check-in date is required</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="date-field">
+              <mat-label>Check-out Date</mat-label>
+              <input matInput
+                     type="date"
+                     formControlName="checkOutDate"
+                     required>
+              @if (reservationForm.get('checkOutDate')?.hasError('required') && reservationForm.get('checkOutDate')?.touched) {
+                <mat-error>Check-out date is required</mat-error>
+              }
+              @if (reservationForm.hasError('dateOrder')) {
+                <mat-error>Check-out date must be after check-in date</mat-error>
+              }
+            </mat-form-field>
+          </div>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Room Type</mat-label>
+            <mat-select formControlName="roomType">
+              <mat-option value="Standard">Standard Room</mat-option>
+              <mat-option value="Deluxe">Deluxe Room</mat-option>
+              <mat-option value="Suite">Suite</mat-option>
+              <mat-option value="Executive">Executive Room</mat-option>
+              <mat-option value="Presidential">Presidential Suite</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Special Requests</mat-label>
+            <textarea matInput
+                      formControlName="specialRequests"
+                      placeholder="Any special requests or notes"
+                      rows="3"></textarea>
+          </mat-form-field>
+        </div>
+      </form>
+    </mat-card-content>
+
+    <mat-card-actions align="end">
+      <button mat-button
+              type="button"
+              (click)="onReset()"
+              [disabled]="loading()">
+        Reset
+      </button>
+      <button mat-raised-button
+              color="primary"
+              (click)="onSubmit()"
+              [disabled]="reservationForm.invalid || loading()">
+        @if (loading()) {
+          <mat-spinner diameter="20" style="margin-right: 8px;"></mat-spinner>
+        }
+        Create Reservation
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

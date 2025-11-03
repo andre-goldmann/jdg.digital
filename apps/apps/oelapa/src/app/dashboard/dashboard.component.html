@@ -1,0 +1,73 @@
+<div class="dashboard-container">
+  <div class="dashboard-content">
+    <mat-card class="welcome-card">
+      <mat-card-header>
+        <mat-card-title>Welcome to OELAPA</mat-card-title>
+        <mat-card-subtitle>Property Management System</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        @if (authState$ | async; as authState) {
+          @if (authState.user) {
+            <div class="user-details">
+              <h3>User Information</h3>
+              <p><strong>Name:</strong> {{ authState.user.firstName }} {{ authState.user.lastName }}</p>
+              <p><strong>Username:</strong> {{ authState.user.username }}</p>
+              <p><strong>Email:</strong> {{ authState.user.email }}</p>
+              <p><strong>Roles:</strong> {{ authState.user.roles.join(', ') || 'No roles assigned' }}</p>
+            </div>
+          }
+        }
+
+        <div class="features-section">
+          <h3>Available Features</h3>
+          <div class="feature-grid">
+            <mat-card class="feature-card" (click)="navigateToReservations()">
+              <mat-card-header>
+                <mat-icon mat-card-avatar>hotel</mat-icon>
+                <mat-card-title>Reservations</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                Manage bookings and guest reservations
+              </mat-card-content>
+              <mat-card-actions>
+                <button mat-button color="primary">Create New Reservation</button>
+              </mat-card-actions>
+            </mat-card>
+
+            <mat-card class="feature-card">
+              <mat-card-header>
+                <mat-icon mat-card-avatar>home</mat-icon>
+                <mat-card-title>Properties</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                Manage units and property inventory
+              </mat-card-content>
+            </mat-card>
+
+            <mat-card class="feature-card">
+              <mat-card-header>
+                <mat-icon mat-card-avatar>receipt</mat-icon>
+                <mat-card-title>Invoicing</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                Handle billing and financial transactions
+              </mat-card-content>
+            </mat-card>
+
+            <mat-card class="feature-card">
+              <mat-card-header>
+                <mat-icon mat-card-avatar>analytics</mat-icon>
+                <mat-card-title>Reports</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                View analytics and generate reports
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+

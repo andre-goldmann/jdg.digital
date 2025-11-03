@@ -1,0 +1,74 @@
+<div class="invoice-stores-demo">
+  <h2>Invoice Stores Comparison</h2>
+
+  <!-- @ngrx/signals Store -->
+  <div class="store-section">
+    <h3>@ngrx/signals Store</h3>
+    <div class="stats">
+      <p>Total Invoices: {{ ngrxStore.filteredInvoices().length }}</p>
+      <p>Total Amount: {{ ngrxStore.totalAmount() | currency }}</p>
+      <p>Paid Amount: {{ ngrxStore.paidAmount() | currency }}</p>
+      <p>Unpaid Amount: {{ ngrxStore.unpaidAmount() | currency }}</p>
+      <p>Status Filter: {{ ngrxStore.status() }}</p>
+      <p>Loading: {{ ngrxStore.loading() }}</p>
+    </div>
+
+    <div class="actions">
+      <button (click)="loadSampleDataNgrx()">Load Sample Data</button>
+      <button (click)="setStatusFilterNgrx('paid')">Show Paid</button>
+      <button (click)="setStatusFilterNgrx('unpaid')">Show Unpaid</button>
+      <button (click)="ngrxStore.resetFilters()">Reset Filters</button>
+    </div>
+  </div>
+
+  <!-- Pure Angular Signals Store -->
+  <div class="store-section">
+    <h3>Pure Angular Signals Store</h3>
+    <div class="stats">
+      <p>Total Invoices: {{ pureStore.filteredInvoices().length }}</p>
+      <p>Total Amount: {{ pureStore.totalAmount() | currency }}</p>
+      <p>Paid Amount: {{ pureStore.paidAmount() | currency }}</p>
+      <p>Unpaid Amount: {{ pureStore.unpaidAmount() | currency }}</p>
+      <p>Status Filter: {{ pureStore.status() }}</p>
+      <p>Loading: {{ pureStore.loading() }}</p>
+    </div>
+
+    <div class="actions">
+      <button (click)="loadSampleDataPure()">Load Sample Data</button>
+      <button (click)="pureStore.setStatusFilter('paid')">Show Paid</button>
+      <button (click)="pureStore.setStatusFilter('unpaid')">Show Unpaid</button>
+      <button (click)="pureStore.resetFilters()">Reset Filters</button>
+    </div>
+  </div>
+
+  <!-- Invoice Lists -->
+  <div class="invoice-lists">
+    <div class="list-section">
+      <h4>@ngrx/signals Invoices</h4>
+      @for (invoice of ngrxStore.filteredInvoices(); track invoice.id) {
+        <div class="invoice-item" [class.selected]="ngrxStore.selectedInvoiceId() === invoice.id">
+          <span>{{ invoice.customerName }}</span>
+          <span>{{ invoice.amount | currency }}</span>
+          <span [class]="'status-' + invoice.status">{{ invoice.status }}</span>
+          <button (click)="ngrxStore.selectInvoice(invoice.id)">Select</button>
+        </div>
+      } @empty {
+        <p>No invoices found</p>
+      }
+    </div>
+
+    <div class="list-section">
+      <h4>Pure Signals Invoices</h4>
+      @for (invoice of pureStore.filteredInvoices(); track invoice.id) {
+        <div class="invoice-item" [class.selected]="pureStore.selectedInvoiceId() === invoice.id">
+          <span>{{ invoice.customerName }}</span>
+          <span>{{ invoice.amount | currency }}</span>
+          <span [class]="'status-' + invoice.status">{{ invoice.status }}</span>
+          <button (click)="pureStore.selectInvoice(invoice.id)">Select</button>
+        </div>
+      } @empty {
+        <p>No invoices found</p>
+      }
+    </div>
+  </div>
+</div>

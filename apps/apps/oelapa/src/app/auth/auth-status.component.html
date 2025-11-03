@@ -1,0 +1,36 @@
+@if (authState$ | async; as authState) {
+  <div class="auth-status">
+    @if (authState.loading) {
+      <div class="loading-indicator">
+        <mat-spinner diameter="24"></mat-spinner>
+        <span>Authenticating...</span>
+      </div>
+    }
+
+    @if (!authState.loading && authState.isAuthenticated) {
+      <div class="user-info">
+        <mat-icon>account_circle</mat-icon>
+        <span>Welcome, {{ authState.user?.firstName || authState.user?.username }}!</span>
+        <button mat-icon-button (click)="logout()" [attr.aria-label]="'Logout'">
+          <mat-icon>logout</mat-icon>
+        </button>
+      </div>
+    }
+
+    @if (!authState.loading && !authState.isAuthenticated) {
+      <div class="login-prompt">
+        <button mat-raised-button color="primary" (click)="login()">
+          Login
+        </button>
+      </div>
+    }
+
+    @if (authState.error) {
+      <div class="error-message">
+        <mat-icon color="warn">error</mat-icon>
+        <span>{{ authState.error }}</span>
+      </div>
+    }
+  </div>
+}
+

@@ -1,0 +1,129 @@
+.reservation-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding: 20px;
+  background-color: #f5f5f5;
+}
+
+.reservation-card {
+  width: 100%;
+  max-width: 800px;
+  margin: 20px auto;
+}
+
+.reservation-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.form-section {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 20px;
+  background: #fafafa;
+
+  h3 {
+    margin: 0 0 16px 0;
+    color: #333;
+    font-size: 1.2rem;
+  }
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.date-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.date-field {
+  margin-bottom: 16px;
+}
+
+.nights-info {
+  color: #666;
+  font-style: italic;
+  margin: 8px 0;
+}
+
+.form-summary {
+  background: #e8f5e8;
+  border: 1px solid #4caf50;
+  border-radius: 8px;
+  padding: 20px;
+
+  h3 {
+    margin: 0 0 16px 0;
+    color: #2e7d32;
+  }
+}
+
+.summary-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+
+  p {
+    margin: 4px 0;
+  }
+}
+
+.total-price {
+  grid-column: 1 / -1;
+  font-size: 1.1rem;
+  color: #2e7d32;
+  border-top: 1px solid #4caf50;
+  padding-top: 8px;
+  margin-top: 8px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.form-status {
+  background: #f0f0f0;
+  padding: 16px;
+  border-radius: 4px;
+  font-size: 12px;
+  color: #666;
+
+  p {
+    margin: 4px 0;
+  }
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .reservation-container {
+    padding: 10px;
+  }
+
+  .date-fields {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .date-field {
+    margin-bottom: 16px;
+  }
+
+  .summary-content {
+    grid-template-columns: 1fr;
+  }
+
+  .form-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

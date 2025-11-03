@@ -1,0 +1,53 @@
+.reservation-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.form-section {
+  margin-bottom: 24px;
+
+  h3 {
+    margin: 0 0 16px 0;
+    color: #424242;
+    font-weight: 500;
+  }
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.date-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.date-field {
+  flex: 1;
+}
+
+mat-card-header {
+  margin-bottom: 20px;
+}
+
+mat-card-actions {
+  padding: 16px 24px;
+}
+
+@media (max-width: 600px) {
+  .reservation-container {
+    padding: 10px;
+  }
+
+  .date-row {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .date-field {
+    margin-bottom: 16px;
+  }
+}

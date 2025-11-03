@@ -1,0 +1,111 @@
+.invoice-stores-demo {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.store-section {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 20px;
+  background: #f9f9f9;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+
+  p {
+    margin: 4px 0;
+    padding: 8px;
+    background: white;
+    border-radius: 4px;
+  }
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+
+  button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    background: #007bff;
+    color: white;
+    cursor: pointer;
+
+    &:hover {
+      background: #0056b3;
+    }
+  }
+}
+
+.invoice-lists {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.list-section {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+
+  h4 {
+    margin-top: 0;
+    color: #333;
+  }
+}
+
+.invoice-item {
+  display: grid;
+  grid-template-columns: 1fr auto auto auto;
+  gap: 10px;
+  align-items: center;
+  padding: 8px;
+  border-bottom: 1px solid #eee;
+
+  &.selected {
+    background: #e3f2fd;
+    border-color: #2196f3;
+  }
+
+  button {
+    padding: 4px 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: white;
+    cursor: pointer;
+  }
+}
+
+.status-paid {
+  color: green;
+  font-weight: bold;
+}
+
+.status-unpaid {
+  color: orange;
+  font-weight: bold;
+}
+
+.status-overdue {
+  color: red;
+  font-weight: bold;
+}
+
+@media (max-width: 768px) {
+  .invoice-lists {
+    grid-template-columns: 1fr;
+  }
+
+  .stats {
+    grid-template-columns: 1fr;
+  }
+}

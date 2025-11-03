@@ -1,0 +1,28 @@
+.callback-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.callback-card {
+  max-width: 400px;
+  width: 100%;
+  margin: 2rem;
+  text-align: center;
+}
+
+.loading-content {
+  padding: 2rem;
+
+  h2 {
+    margin: 1rem 0 0.5rem 0;
+    color: #333;
+  }
+
+  p {
+    color: #666;
+    margin: 0;
+  }
+}

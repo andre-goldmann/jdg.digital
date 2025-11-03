@@ -1,0 +1,86 @@
+@if (navigationState$ | async; as navState) {
+  <div class="sidenav-content">
+    <!-- Header Section -->
+    <div class="sidenav-header">
+      <div class="logo-section">
+        <mat-icon class="logo-icon">business</mat-icon>
+        <span class="logo-text">OELAPA</span>
+      </div>
+    </div>
+
+    <!-- Menu Items -->
+    <mat-nav-list class="navigation-menu" role="navigation" aria-label="Main navigation">
+      @for (item of navState.menuItems; track trackByItemId($index, item)) {
+        @if (item.divider) {
+          <!-- Divider -->
+          <mat-divider class="menu-divider"></mat-divider>
+        } @else if (item.children && item.children.length > 0) {
+          <!-- Menu Item with Children (Expandable) -->
+          <mat-expansion-panel
+            class="menu-expansion-panel"
+            [expanded]="item.expanded"
+            hideToggle>
+
+            <mat-expansion-panel-header
+              class="menu-expansion-header"
+              [class.active]="isMenuItemActive(item, navState.activeRoute)">
+              <mat-panel-title class="menu-panel-title">
+                <mat-icon class="menu-icon">{{ item.icon }}</mat-icon>
+                <span class="menu-label">{{ item.label }}</span>
+              </mat-panel-title>
+              <mat-icon class="expand-icon">
+                {{ item.expanded ? 'expand_less' : 'expand_more' }}
+              </mat-icon>
+            </mat-expansion-panel-header>
+
+            <!-- Submenu Items -->
+            <div class="submenu-container">
+              @for (child of item.children; track trackByItemId($index, child)) {
+                <a
+                  mat-list-item
+                  [routerLink]="child.route"
+                  routerLinkActive="active-submenu-item"
+                  class="submenu-item"
+                  [attr.aria-label]="child.label"
+                  (click)="onMenuItemClick()">
+                  <mat-icon matListItemIcon class="submenu-icon">{{ child.icon }}</mat-icon>
+                  <span matListItemTitle class="submenu-label">{{ child.label }}</span>
+                </a>
+              }
+            </div>
+          </mat-expansion-panel>
+        } @else {
+          <!-- Simple Menu Item (No Children) -->
+          <a
+            mat-list-item
+            [routerLink]="item.route"
+            routerLinkActive="active-menu-item"
+            class="simple-menu-item"
+            [attr.aria-label]="item.label"
+            (click)="onMenuItemClick()">
+            <mat-icon matListItemIcon class="menu-icon">{{ item.icon }}</mat-icon>
+            <span matListItemTitle class="menu-label">{{ item.label }}</span>
+          </a>
+        }
+      }
+    </mat-nav-list>
+
+    <!-- Footer Section -->
+    <div class="sidenav-footer">
+      <mat-divider></mat-divider>
+      @if (authState$ | async; as authState) {
+        @if (authState.user) {
+          <div class="user-info">
+            <div class="user-details">
+              <mat-icon class="user-avatar">account_circle</mat-icon>
+              <div class="user-text">
+                <span class="user-name">{{ authState.user.firstName }} {{ authState.user.lastName }}</span>
+                <span class="user-role">{{ getUserRoleDisplay(authState.user.roles) }}</span>
+              </div>
+            </div>
+          </div>
+        }
+      }
+    </div>
+  </div>
+}

@@ -1,33 +1,45 @@
 import { TestBed } from '@angular/core/testing';
-import { KeycloakService } from 'keycloak-angular';
+import { OAuthService, OAuthEvent } from 'angular-oauth2-oidc';
 import { AuthenticationService } from './authentication.service';
 import { AuthState } from './auth.models';
+import { Subject } from 'rxjs';
 
 describe('AuthenticationService', () => {
   let service: AuthenticationService;
-  let keycloakServiceSpy: jest.Mocked<KeycloakService>;
+  let oauthServiceSpy: Partial<OAuthService> & {
+    hasValidAccessToken: jest.Mock;
+    hasValidIdToken: jest.Mock;
+    getIdentityClaims: jest.Mock;
+    initCodeFlow: jest.Mock;
+    logOut: jest.Mock;
+    getAccessToken: jest.Mock;
+    refreshToken: jest.Mock;
+    events: Subject<OAuthEvent>;
+  };
+  let eventsSubject: Subject<OAuthEvent>;
 
   beforeEach(() => {
-    const spy = {
-      isLoggedIn: jest.fn(),
-      loadUserProfile: jest.fn(),
-      getUserRoles: jest.fn(),
-      login: jest.fn(),
-      logout: jest.fn(),
-      getToken: jest.fn(),
-      updateToken: jest.fn(),
-      isUserInRole: jest.fn()
-    } as jest.Mocked<KeycloakService>;
+    eventsSubject = new Subject<OAuthEvent>();
+
+    oauthServiceSpy = {
+      hasValidAccessToken: jest.fn(),
+      hasValidIdToken: jest.fn(),
+      getIdentityClaims: jest.fn(),
+      initCodeFlow: jest.fn(),
+      logOut: jest.fn(),
+      getAccessToken: jest.fn(),
+      refreshToken: jest.fn(),
+      events: eventsSubject
+    };
 
     TestBed.configureTestingModule({
       providers: [
         AuthenticationService,
-        { provide: KeycloakService, useValue: spy }
+        { provide: OAuthService, useValue: oauthServiceSpy }
       ]
     });
 
     service = TestBed.inject(AuthenticationService);
-    keycloakServiceSpy = TestBed.inject(KeycloakService) as jest.Mocked<KeycloakService>;
   });
 
   it('should be created', () => {
@@ -40,75 +52,164 @@ describe('AuthenticationService', () => {
     });
   });
 
-  it('should return authenticated status', () => {
+  it('should return authenticated status when tokens are valid', () => {
     // Arrange
-    keycloakServiceSpy.isLoggedIn.mockResolvedValue(true);
-    
-    // Act & Assert
-    expect(service.isAuthenticated()).toBeDefined();
+    oauthServiceSpy.hasValidAccessToken.mockReturnValue(true);
+    oauthServiceSpy.hasValidIdToken.mockReturnValue(true);
+
+    // Act
+    const isAuthenticated = service.isAuthenticated();
+
+    // Assert
+    expect(isAuthenticated).toBe(true);
+    expect(oauthServiceSpy.hasValidAccessToken).toHaveBeenCalled();
+    expect(oauthServiceSpy.hasValidIdToken).toHaveBeenCalled();
   });
 
-  it('should get token from keycloak service', () => {
+  it('should return false when tokens are invalid', () => {
+    // Arrange
+    oauthServiceSpy.hasValidAccessToken.mockReturnValue(false);
+    oauthServiceSpy.hasValidIdToken.mockReturnValue(false);
+
+    // Act
+    const isAuthenticated = service.isAuthenticated();
+
+    // Assert
+    expect(isAuthenticated).toBe(false);
+  });
+
+  it('should get token from oauth service', () => {
     // Arrange
     const mockToken = 'mock-jwt-token';
-    keycloakServiceSpy.getToken.mockReturnValue(mockToken);
-    
+    oauthServiceSpy.getAccessToken.mockReturnValue(mockToken);
+
     // Act
     const token = service.getToken();
-    
+
     // Assert
     expect(token).toBe(mockToken);
-    expect(keycloakServiceSpy.getToken).toHaveBeenCalled();
+    expect(oauthServiceSpy.getAccessToken).toHaveBeenCalled();
   });
 
-  it('should handle login', async () => {
-    // Arrange
-    keycloakServiceSpy.login.mockResolvedValue();
-    
+  it('should handle login by initiating code flow', () => {
     // Act
-    await service.login();
-    
+    service.login();
+
     // Assert
-    expect(keycloakServiceSpy.login).toHaveBeenCalledWith({
-      redirectUri: window.location.origin + '/auth/callback'
-    });
+    expect(oauthServiceSpy.initCodeFlow).toHaveBeenCalled();
   });
 
-  it('should handle logout', async () => {
-    // Arrange
-    keycloakServiceSpy.logout.mockResolvedValue();
-    
+  it('should handle logout', () => {
     // Act
-    await service.logout();
-    
+    service.logout();
+
     // Assert
-    expect(keycloakServiceSpy.logout).toHaveBeenCalledWith(window.location.origin);
+    expect(oauthServiceSpy.logOut).toHaveBeenCalled();
   });
 
   it('should refresh token', async () => {
     // Arrange
-    const mockToken = 'refreshed-token';
-    keycloakServiceSpy.updateToken.mockResolvedValue(true);
-    keycloakServiceSpy.getToken.mockReturnValue(mockToken);
-    
+    oauthServiceSpy.refreshToken.mockResolvedValue({} as any);
+
     // Act
-    const token = await service.refreshToken();
-    
+    await service.refreshToken();
+
     // Assert
-    expect(token).toBe(mockToken);
-    expect(keycloakServiceSpy.updateToken).toHaveBeenCalledWith(30);
+    expect(oauthServiceSpy.refreshToken).toHaveBeenCalled();
   });
 
-  it('should check user roles', () => {
+  it('should handle token refresh failure', async () => {
+    // Arrange
+    oauthServiceSpy.refreshToken.mockRejectedValue(new Error('Token refresh failed'));
+
+    // Act & Assert
+    await expect(service.refreshToken()).rejects.toThrow('Token refresh failed');
+  });
+
+  it('should check user roles from identity claims', () => {
     // Arrange
     const role = 'admin';
-    keycloakServiceSpy.isUserInRole.mockReturnValue(true);
-    
+    const mockClaims = {
+      realm_access: {
+        roles: ['admin', 'user']
+      }
+    };
+    oauthServiceSpy.getIdentityClaims.mockReturnValue(mockClaims);
+
     // Act
     const hasRole = service.hasRole(role);
-    
+
     // Assert
     expect(hasRole).toBe(true);
-    expect(keycloakServiceSpy.isUserInRole).toHaveBeenCalledWith(role);
+    expect(oauthServiceSpy.getIdentityClaims).toHaveBeenCalled();
+  });
+
+  it('should return false for roles when no claims available', () => {
+    // Arrange
+    oauthServiceSpy.getIdentityClaims.mockReturnValue(undefined);
+
+    // Act
+    const hasRole = service.hasRole('admin');
+
+    // Assert
+    expect(hasRole).toBe(false);
+  });
+
+  it('should load user profile when token is received', () => {
+    // Arrange
+    const mockClaims = {
+      sub: 'user123',
+      preferred_username: 'testuser',
+      email: 'test@example.com',
+      given_name: 'Test',
+      family_name: 'User',
+      realm_access: {
+        roles: ['user']
+      }
+    };
+    oauthServiceSpy.getIdentityClaims.mockReturnValue(mockClaims);
+
+    // Act
+    eventsSubject.next({ type: 'token_received' } as OAuthEvent);
+
+    // Assert
+    service.authState$.subscribe(state => {
+      expect(state.isAuthenticated).toBe(true);
+      expect(state.user).toEqual({
+        id: 'user123',
+        username: 'testuser',
+        email: 'test@example.com',
+        firstName: 'Test',
+        lastName: 'User',
+        roles: ['user']
+      });
+      expect(state.loading).toBe(false);
+    });
+  });
+
+  it('should handle token error', () => {
+    // Act
+    eventsSubject.next({ type: 'token_error' } as OAuthEvent);
+
+    // Assert
+    service.authState$.subscribe(state => {
+      expect(state.isAuthenticated).toBe(false);
+      expect(state.user).toBe(null);
+      expect(state.loading).toBe(false);
+      expect(state.error).toBe('Authentication failed');
+    });
+  });
+
+  it('should handle logout event', () => {
+    // Act
+    eventsSubject.next({ type: 'logout' } as OAuthEvent);
+
+    // Assert
+    service.authState$.subscribe(state => {
+      expect(state.isAuthenticated).toBe(false);
+      expect(state.user).toBe(null);
+      expect(state.loading).toBe(false);
+      expect(state.error).toBe(null);
+    });
   });
 });
