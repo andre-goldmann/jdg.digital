@@ -1,6 +1,14 @@
 import { test, expect } from '@playwright/test';
 import { loginUser, navigateToNewReservation, fillReservationForm, submitReservationForm } from './helpers';
 
+// Load test credentials from environment variables
+const E2E_USERNAME = process.env.E2E_USERNAME;
+const E2E_PASSWORD = process.env.E2E_PASSWORD;
+
+if (!E2E_USERNAME || !E2E_PASSWORD) {
+  throw new Error('E2E_USERNAME and E2E_PASSWORD must be set in the .env file');
+}
+
 test.describe('Reservation E2E Test - Simplified', () => {
   test.beforeEach(async ({ page }) => {
     // Navigate to the application with better error handling
@@ -21,9 +29,9 @@ test.describe('Reservation E2E Test - Simplified', () => {
     }
   });
 
-  test('should create a reservation with soulsaver/Blade23 credentials', async ({ page }) => {
+  test('should create a reservation with test credentials', async ({ page }) => {
     // Login with the provided credentials
-    await loginUser(page, 'soulsaver', 'Blade23');
+    await loginUser(page, E2E_USERNAME, E2E_PASSWORD);
     
     // Navigate to new reservation page
     await navigateToNewReservation(page);
@@ -71,7 +79,7 @@ test.describe('Reservation E2E Test - Simplified', () => {
 
   test('should show validation errors for empty form', async ({ page }) => {
     // Login first
-    await loginUser(page, 'soulsaver', 'Blade23');
+    await loginUser(page, E2E_USERNAME, E2E_PASSWORD);
     
     // Navigate to reservations
     await navigateToNewReservation(page);
@@ -109,7 +117,7 @@ test.describe('Reservation E2E Test - Simplified', () => {
 
   test('should validate checkout date after checkin date', async ({ page }) => {
     // Login first
-    await loginUser(page, 'soulsaver', 'Blade23');
+    await loginUser(page, E2E_USERNAME, E2E_PASSWORD);
     
     // Navigate to reservations
     await navigateToNewReservation(page);
@@ -145,7 +153,7 @@ test.describe('Reservation E2E Test - Simplified', () => {
 
   test('should reset form when reset button is clicked', async ({ page }) => {
     // Login first
-    await loginUser(page, 'soulsaver', 'Blade23');
+    await loginUser(page, E2E_USERNAME, E2E_PASSWORD);
     
     // Navigate to reservations
     await navigateToNewReservation(page);

@@ -1,4 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
+import * as path from 'path';
+
+// Load environment variables from the e2e directory
+require('dotenv').config({ path: path.join(__dirname, 'e2e', '.env') });
 
 /**
  * @see https://playwright.dev/docs/test-configuration

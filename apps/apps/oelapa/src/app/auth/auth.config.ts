@@ -18,6 +18,9 @@ export function createAuthConfig(authConfig: AuthenticationConfig): AuthConfig {
     // Use the authorization code flow with PKCE
     responseType: 'code',
 
+    // Enable PKCE (Proof Key for Code Exchange) for security
+    oidc: true,
+    
     // set the scope for the permissions the client should request
     // The first four are defined by OIDC.
     // Important: Request offline_access to get a refresh token
@@ -62,6 +65,9 @@ export const fallbackAuthConfig: AuthConfig = {
   // Use the authorization code flow with PKCE
   responseType: 'code',
 
+  // Enable PKCE (Proof Key for Code Exchange) for security
+  oidc: true,
+  
   // set the scope for the permissions the client should request
   // The first four are defined by OIDC.
   // Important: Request offline_access to get a refresh token

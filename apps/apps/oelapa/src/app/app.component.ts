@@ -1,8 +1,6 @@
-import { Component, inject, OnInit, ChangeDetectionStrategy, signal, computed, effect } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { InvoicesStore } from './invoices.store';
-import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { JwksValidationHandler } from 'angular-oauth2-oidc-jwks';
 import { createAuthConfig, fallbackAuthConfig } from './auth/auth.config';
@@ -10,12 +8,13 @@ import { MaterialModule } from './shared/material.module';
 import { NavigationSidenavComponent } from './shared/navigation-sidemenu.component';
 import { NavigationService } from './shared/navigation.service';
 import { AuthStatusComponent } from './auth/auth-status.component';
+import { AuthenticationService } from './auth/authentication.service';
 import { ConfigurationService } from './core/configuration.service';
 import { Observable } from 'rxjs';
 import { NavigationConfig } from './shared/navigation.models';
 
 @Component({
-  imports: [CommonModule, RouterModule, ReactiveFormsModule, MaterialModule, NavigationSidenavComponent, AuthStatusComponent],
+  imports: [CommonModule, RouterModule, MaterialModule, NavigationSidenavComponent, AuthStatusComponent],
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
@@ -23,79 +22,22 @@ import { NavigationConfig } from './shared/navigation.models';
 })
 export class AppComponent implements OnInit {
   protected title = 'oelapa';
-  store = inject(InvoicesStore);
   
-  // Signal-based FormControls
   private readonly oauthService = inject(OAuthService);
   private readonly router = inject(Router);
   private readonly navigationService = inject(NavigationService);
   private readonly configurationService = inject(ConfigurationService);
-
-  // Signal-based form controls
-  fromControl = new FormControl(this.store.from(), [Validators.required]);
-  toControl = new FormControl(this.store.to(), [Validators.required]);
-
-  // Computed signals for form state
-  isFormValid = computed(() => this.fromControl.valid && this.toControl.valid);
-  formData = computed(() => ({
-    from: this.fromControl.value,
-    to: this.toControl.value
-  }));
-
-  // Create form value signal for easier reactivity
-  formValueSignal = signal({
-    from: this.fromControl.value,
-    to: this.toControl.value
-  });
+  private readonly authenticationService = inject(AuthenticationService);
 
   navigationConfig$: Observable<NavigationConfig> = this.navigationService.navigationConfig$;
   isExpanded$ = this.navigationService.isExpanded$;
 
   constructor() {
-    // Set up form control value change effects
-    effect(() => {
-      // Sync form values to signal when controls change
-      this.formValueSignal.set({
-        from: this.fromControl.value,
-        to: this.toControl.value
-      });
-    });
-
-    // Set up form control value change listeners
-    this.fromControl.valueChanges.subscribe(value => {
-      if (value && this.fromControl.valid) {
-        this.store.setDateRange(value, this.toControl.value || new Date());
-      }
-    });
-
-    this.toControl.valueChanges.subscribe(value => {
-      if (value && this.toControl.valid) {
-        this.store.setDateRange(this.fromControl.value || new Date(), value);
-      }
-    });
+    // Constructor is empty - initialization happens in ngOnInit
   }
 
   ngOnInit(): void {
     this.configureAuth();
-  }
-
-  onSubmit(): void {
-    if (this.isFormValid()) {
-      const formValue = this.formData();
-      if (formValue.from && formValue.to) {
-        this.store.setDateRange(formValue.from, formValue.to);
-        console.log('Form submitted with values:', formValue);
-      }
-    }
-  }
-
-  resetForm(): void {
-    const defaultFrom = new Date(new Date().setDate(new Date().getDate() - 30));
-    const defaultTo = new Date();
-    
-    this.fromControl.setValue(defaultFrom);
-    this.toControl.setValue(defaultTo);
-    this.store.setDateRange(defaultFrom, defaultTo);
   }
 
   private configureAuth(): void {
@@ -103,32 +45,72 @@ export class AppComponent implements OnInit {
     const config = this.configurationService.getCurrentConfiguration();
     const authConfig = config?.authentication ? createAuthConfig(config.authentication) : fallbackAuthConfig;
     
+    // Configure OAuth service
     this.oauthService.configure(authConfig);
     this.oauthService.tokenValidationHandler = new JwksValidationHandler();
 
+    // Check for OAuth callback BEFORE loading discovery document
+    const urlParams = new URLSearchParams(window.location.search);
+    const hasCode = urlParams.has('code');
+    const hasState = urlParams.has('state');
+    const hasError = urlParams.has('error');
+
+    if (hasError) {
+      this.authenticationService.recheckAuthState();
+      return;
+    }
+
+    // Store callback parameters before they get lost
+    const callbackData = hasCode || hasState ? {
+      code: urlParams.get('code'),
+      state: urlParams.get('state'),
+      sessionState: urlParams.get('session_state'),
+      iss: urlParams.get('iss')
+    } : null;
+
     // Load discovery document and try to login
     this.oauthService.loadDiscoveryDocumentAndTryLogin().then(() => {
-      console.log('Discovery document loaded and login attempted');
-
-      // Check if this is an OAuth callback
-      const urlParams = new URLSearchParams(window.location.search);
-      const hasCode = urlParams.has('code');
-      const hasState = urlParams.has('state');
-
-      if (hasCode || hasState) {
-        console.log('OAuth callback detected');
-        // After processing OAuth callback, navigate to dashboard
-        setTimeout(() => {
-          if (this.oauthService.hasValidAccessToken()) {
-            console.log('Authentication successful, navigating to dashboard');
-            this.router.navigate(['/dashboard']);
+      if (callbackData) {
+        // Try manual processing if automatic didn't work
+        setTimeout(async () => {
+          if (!this.oauthService.hasValidAccessToken() || !this.oauthService.hasValidIdToken()) {
+            try {
+              // Create a new URL with the stored callback parameters
+              const originalUrl = window.location.href;
+              const callbackUrl = `${window.location.origin}/?code=${callbackData.code}&state=${callbackData.state}&session_state=${callbackData.sessionState}&iss=${encodeURIComponent(callbackData.iss || '')}`;
+              
+              // Temporarily restore callback URL for token exchange
+              window.history.replaceState(null, '', callbackUrl);
+              
+              await this.oauthService.tryLoginCodeFlow();
+              
+              if (this.oauthService.hasValidAccessToken() && this.oauthService.hasValidIdToken()) {
+                this.authenticationService.recheckAuthState();
+                window.history.replaceState({}, document.title, window.location.pathname);
+                this.router.navigate(['/dashboard']);
+              } else {
+                // Restore original URL if token exchange failed
+                window.history.replaceState(null, '', originalUrl);
+              }
+            } catch (error) {
+              console.error('Token exchange error:', error);
+              this.authenticationService.recheckAuthState();
+            }
           } else {
-            console.log('Authentication failed, staying on current page');
+            this.authenticationService.recheckAuthState();
+            window.history.replaceState({}, document.title, window.location.pathname);
+            this.router.navigate(['/dashboard']);
           }
-        }, 100);
+        }, 2000);
+      } else {
+        // Not an OAuth callback, check existing authentication
+        setTimeout(() => {
+          this.authenticationService.recheckAuthState();
+        }, 500);
       }
     }).catch(error => {
       console.error('OAuth configuration error:', error);
+      this.authenticationService.recheckAuthState();
     });
   }
 

@@ -15,12 +15,19 @@ import { AuthState } from '../auth/auth.models';
   styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent {
-  private authService = inject(AuthenticationService);
+  public authService = inject(AuthenticationService);
   private router = inject(Router);
 
   authState$: Observable<AuthState> = this.authService.authState$;
 
   navigateToReservations(): void {
-    this.router.navigate(['/reservations/new']);
+    // Check if user is authenticated before navigating to reservations
+    const authState = this.authService.authState();
+    if (authState.isAuthenticated) {
+      this.router.navigate(['/reservations/new']);
+    } else {
+      // If not authenticated, start login flow
+      this.authService.login();
+    }
   }
 }

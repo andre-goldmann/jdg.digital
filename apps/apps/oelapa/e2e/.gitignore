@@ -1,0 +1,7 @@
+# Environment variables with sensitive test credentials
+.env
+
+# Test results
+test-results/
+playwright-report/
+coverage/

@@ -17,7 +17,7 @@
       </div>
     }
 
-    @if (!authState.loading && !authState.isAuthenticated) {
+    @if (!authState.loading && !authState.isAuthenticated && !authState.error) {
       <div class="login-prompt">
         <button mat-raised-button color="primary" (click)="login()">
           Login

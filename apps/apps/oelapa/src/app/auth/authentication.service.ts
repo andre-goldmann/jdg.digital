@@ -19,22 +19,51 @@ export class AuthenticationService {
 
   // Read-only signals for consumers
   public readonly authState = this._authState.asReadonly();
-  
+
   // Computed signals for specific auth properties (prefixed to avoid conflicts)
-  public readonly currentUser = computed(() => this._authState().user);
   public readonly isLoading = computed(() => this._authState().loading);
-  public readonly authError = computed(() => this._authState().error);
 
   // Backward compatibility - provides Observable interface
   public authState$ = toObservable(this.authState);
 
   constructor() {
-    this.initAuthState();
     this.setupEventHandling();
+    this.initAuthState();
   }
 
   private initAuthState(): void {
-    // Check if user is already authenticated
+    // Set initial loading state
+    this._authState.set({
+      isAuthenticated: false,
+      user: null,
+      loading: true,
+      error: null
+    });
+
+    // Check authentication status after a short delay to allow OAuth service initialization
+    setTimeout(() => {
+      this.checkInitialAuthState();
+    }, 500);
+  }
+
+  private checkInitialAuthState(): void {
+    if (this.oauthService.hasValidAccessToken() && this.oauthService.hasValidIdToken()) {
+      this.loadUserProfile();
+    } else {
+      this._authState.set({
+        isAuthenticated: false,
+        user: null,
+        loading: false,
+        error: null
+      });
+    }
+  }
+
+  /**
+   * Force a re-check of authentication state
+   * Useful after OAuth callback processing
+   */
+  public recheckAuthState(): void {
     if (this.oauthService.hasValidAccessToken() && this.oauthService.hasValidIdToken()) {
       this.loadUserProfile();
     } else {
@@ -52,9 +81,16 @@ export class AuthenticationService {
     this.oauthService.events.subscribe(event => {
       switch (event.type) {
         case 'token_received':
+          // Give a moment for the tokens to be properly stored
+          setTimeout(() => {
+            this.loadUserProfile();
+          }, 100);
+          break;
+        case 'silently_refreshed':
           this.loadUserProfile();
           break;
         case 'token_error':
+        case 'token_refresh_error':
           this._authState.set({
             isAuthenticated: false,
             user: null,
@@ -70,6 +106,22 @@ export class AuthenticationService {
             error: null
           });
           break;
+        case 'session_terminated':
+          this._authState.set({
+            isAuthenticated: false,
+            user: null,
+            loading: false,
+            error: 'Session terminated'
+          });
+          break;
+        case 'code_error':
+          this._authState.set({
+            isAuthenticated: false,
+            user: null,
+            loading: false,
+            error: 'Authorization failed'
+          });
+          break;
       }
     });
   }
@@ -77,6 +129,7 @@ export class AuthenticationService {
   private async loadUserProfile(): Promise<void> {
     try {
       const claims = this.oauthService.getIdentityClaims();
+
       if (claims) {
         const userProfile: UserProfile = {
           id: claims['sub'] || '',
@@ -93,9 +146,15 @@ export class AuthenticationService {
           loading: false,
           error: null
         });
+      } else {
+        this._authState.set({
+          isAuthenticated: false,
+          user: null,
+          loading: false,
+          error: 'No user claims available'
+        });
       }
-    } catch (error: unknown) {
-      console.error('Failed to load user profile:', error);
+    } catch {
       this._authState.set({
         isAuthenticated: false,
         user: null,
@@ -112,7 +171,24 @@ export class AuthenticationService {
       error: null
     }));
 
-    this.oauthService.initCodeFlow();
+    try {
+      if (!this.oauthService.discoveryDocumentLoaded) {
+        this._authState.update(state => ({
+          ...state,
+          loading: false,
+          error: 'OAuth service not properly configured'
+        }));
+        return;
+      }
+
+      this.oauthService.initCodeFlow();
+    } catch (error) {
+      this._authState.update(state => ({
+        ...state,
+        loading: false,
+        error: 'Failed to initiate login: ' + (error as Error).message
+      }));
+    }
   }
 
   public logout(): void {

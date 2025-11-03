@@ -17,9 +17,19 @@
   gap: 0.5rem;
 }
 
+.login-prompt {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .error-message {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   color: #f44336;
+}
+
+.debug-button {
+  margin-left: 0.5rem;
 }

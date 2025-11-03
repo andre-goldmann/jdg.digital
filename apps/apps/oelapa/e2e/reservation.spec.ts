@@ -1,52 +1,82 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, Page } from '@playwright/test';
+
+// Load test credentials from environment variables
+const E2E_USERNAME = process.env.E2E_USERNAME;
+const E2E_PASSWORD = process.env.E2E_PASSWORD;
+
+if (!E2E_USERNAME || !E2E_PASSWORD) {
+  throw new Error('E2E_USERNAME and E2E_PASSWORD must be set in the .env file');
+}
 
 test.describe('Reservation E2E Test', () => {
   test.beforeEach(async ({ page }) => {
     // Navigate to the application
     await page.goto('/');
+    await page.waitForLoadState('networkidle');
   });
 
-  test('should create a reservation after login', async ({ page }) => {
-    // Check if we're redirected to login (Keycloak) or already authenticated
-    // Since we might be redirected to Keycloak, let's wait for the page to stabilize
-    await page.waitForLoadState('networkidle');
-
-    // Check if we need to login or if we're already on the dashboard
+  /**
+   * Helper function to perform login if needed
+   */
+  async function loginIfNeeded(page: Page) {
     const url = page.url();
     
-    if (url.includes('keycloak') || url.includes('auth') || page.locator('[data-testid="login-form"]').isVisible()) {
-      // We're on the Keycloak login page
+    if (url.includes('keycloak') || url.includes('auth')) {
       console.log('Detected Keycloak login page, proceeding with authentication...');
       
       // Wait for Keycloak login form to be visible
       await page.waitForSelector('input[name="username"], #username', { timeout: 10000 });
       
       // Fill in the login credentials
-      const usernameSelector = await page.locator('input[name="username"], #username').first();
-      const passwordSelector = await page.locator('input[name="password"], #password').first();
-      
-      await usernameSelector.fill('soulsaver');
-      await passwordSelector.fill('Blade23');
+      await page.locator('input[name="username"], #username').first().fill(E2E_USERNAME);
+      await page.locator('input[name="password"], #password').first().fill(E2E_PASSWORD);
       
       // Click the login button
-      await page.locator('input[type="submit"], button[type="submit"], #kc-login').first().click();
+      await page.locator('button[type="submit"], #kc-login').first().click();
       
       // Wait for redirect back to application
       await page.waitForURL(/dashboard|\/$/);
+      await page.waitForLoadState('networkidle');
     }
+  }
 
-    // Should now be on the dashboard, wait for it to load
-    await page.waitForSelector('[data-testid="dashboard"], h1, mat-card', { timeout: 10000 });
+  test('should show dashboard as guest and require login for reservations', async ({ page }) => {
+    // Should be on dashboard without authentication
+    await expect(page).toHaveURL(/dashboard/);
     
-    // Navigate to reservations page
-    // Try multiple ways to get to reservations:
-    // 1. Click on the reservation card if it exists
-    if (await page.locator('mat-card:has-text("Reservations")').count() > 0) {
-      await page.locator('mat-card:has-text("Reservations")').click();
-    } else {
-      // 2. Or navigate directly to the reservations URL
-      await page.goto('/reservations/new');
-    }
+    // Should show guest welcome
+    await expect(page.locator('h3:has-text("Welcome, Guest!")')).toBeVisible();
+    
+    // Should show login required indicators
+    await expect(page.locator('small:has-text("* Login required")')).toHaveCount(4);
+    
+    // Click on reservations feature card
+    await page.locator('mat-card:has-text("Reservations")').click();
+    
+    // Should be redirected to Keycloak login
+    await page.waitForURL(/keycloak|auth/, { timeout: 10000 });
+    await expect(page.locator('input[name="username"], #username')).toBeVisible();
+  });
+
+  test('should create a reservation after login', async ({ page }) => {
+    // Dashboard should be accessible without auth
+    await expect(page).toHaveURL(/dashboard/);
+    
+    // Navigate to reservations to trigger login
+    await page.locator('mat-card:has-text("Reservations")').click();
+    
+    // Handle authentication
+    await loginIfNeeded(page);
+
+    // Should now be back on dashboard after login
+    await expect(page).toHaveURL(/dashboard/);
+    
+    // Verify we're logged in (should show user info instead of guest welcome)
+    await expect(page.locator('h3:has-text("User Information")')).toBeVisible();
+    await expect(page.locator('h3:has-text("Welcome, Guest!")')).not.toBeVisible();
+    
+    // Now navigate to reservations again - should work without login redirect
+    await page.locator('mat-card:has-text("Reservations")').click();
 
     // Wait for the reservation form to load
     await page.waitForSelector('form, mat-card:has-text("Create New Reservation")', { timeout: 10000 });
@@ -84,7 +114,7 @@ test.describe('Reservation E2E Test', () => {
     await page.locator('button:has-text("Create Reservation")').click();
     
     // Wait for either success or error message
-    await page.waitForTimeout(2000); // Give some time for the request to process
+    await page.waitForTimeout(2000);
     
     // Check for success or error message
     const successMessage = page.locator('.mat-mdc-snack-bar-container:has-text("successfully"), .success-snackbar');
@@ -94,60 +124,31 @@ test.describe('Reservation E2E Test', () => {
     try {
       await expect(successMessage.or(errorMessage)).toBeVisible({ timeout: 10000 });
       
-      // Check if it's a success message
       if (await successMessage.count() > 0) {
         console.log('✅ Reservation created successfully!');
         await expect(successMessage).toContainText('successfully');
       } else {
         console.log('❌ Reservation creation failed - this might be expected if API is not available');
         await expect(errorMessage).toBeVisible();
-        // Log the error message for debugging
-        const errorText = await errorMessage.textContent();
-        console.log('Error message:', errorText);
       }
     } catch {
-      console.log('⚠️  No success/error message appeared - form submission might be pending');
-      // Check if form is still loading
-      const loadingSpinner = page.locator('mat-spinner, .loading');
-      if (await loadingSpinner.count() > 0) {
-        console.log('Form is still loading...');
-      }
-    }
-    
-    // Verify form behavior - the form should either be reset (success) or still show data (error)
-    const guestNameField = page.locator('input[formControlName="guestName"]');
-    const guestNameValue = await guestNameField.inputValue();
-    
-    if (guestNameValue === '' || guestNameValue === null) {
-      console.log('✅ Form was reset after submission (likely successful)');
-    } else {
-      console.log('ℹ️  Form still contains data (error case or validation issue)');
+      console.log('⚠️ No success/error message appeared - form submission might be pending');
     }
   });
 
   test('should validate required fields', async ({ page }) => {
-    // Login first (reuse login logic)
-    await page.waitForLoadState('networkidle');
-    const url = page.url();
+    // Navigate to reservations to trigger login
+    await page.locator('mat-card:has-text("Reservations")').click();
     
-    if (url.includes('keycloak') || url.includes('auth')) {
-      await page.waitForSelector('input[name="username"], #username', { timeout: 10000 });
-      const usernameSelector = await page.locator('input[name="username"], #username').first();
-      const passwordSelector = await page.locator('input[name="password"], #password').first();
-      await usernameSelector.fill('soulsaver');
-      await passwordSelector.fill('Blade23');
-      await page.locator('input[type="submit"], button[type="submit"], #kc-login').first().click();
-      await page.waitForURL(/dashboard|\/$/);
-    }
+    // Handle authentication
+    await loginIfNeeded(page);
 
-    // Navigate to reservations
+    // Navigate to reservations after login
     await page.goto('/reservations/new');
     await page.waitForSelector('form, mat-card:has-text("Create New Reservation")');
 
-    // Try to submit empty form
+    // Try to submit empty form - button should be disabled
     const submitButton = page.locator('button:has-text("Create Reservation")');
-    
-    // Submit button should be disabled when form is invalid
     await expect(submitButton).toBeDisabled();
     
     // Fill only guest name and verify button is still disabled
@@ -173,19 +174,11 @@ test.describe('Reservation E2E Test', () => {
   });
 
   test('should validate date order', async ({ page }) => {
-    // Login first
-    await page.waitForLoadState('networkidle');
-    const url = page.url();
+    // Navigate to reservations to trigger login
+    await page.locator('mat-card:has-text("Reservations")').click();
     
-    if (url.includes('keycloak') || url.includes('auth')) {
-      await page.waitForSelector('input[name="username"], #username', { timeout: 10000 });
-      const usernameSelector = await page.locator('input[name="username"], #username').first();
-      const passwordSelector = await page.locator('input[name="password"], #password').first();
-      await usernameSelector.fill('soulsaver');
-      await passwordSelector.fill('Blade23');
-      await page.locator('input[type="submit"], button[type="submit"], #kc-login').first().click();
-      await page.waitForURL(/dashboard|\/$/);
-    }
+    // Handle authentication
+    await loginIfNeeded(page);
 
     // Navigate to reservations
     await page.goto('/reservations/new');
@@ -210,5 +203,17 @@ test.describe('Reservation E2E Test', () => {
     
     // Should show validation error
     await expect(page.locator('mat-error:has-text("Check-out date must be after check-in date")')).toBeVisible();
+  });
+
+  test('should redirect unauthenticated users trying to access reservations directly', async ({ page }) => {
+    // Try to navigate directly to reservations route as unauthenticated user
+    await page.goto('/reservations/new');
+    
+    // Should be redirected to Keycloak login page
+    await page.waitForURL(/keycloak|auth/, { timeout: 10000 });
+    
+    // Should show Keycloak login form
+    await expect(page.locator('input[name="username"], #username')).toBeVisible();
+    await expect(page.locator('input[name="password"], #password')).toBeVisible();
   });
 });

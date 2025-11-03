@@ -1,9 +1,57 @@
 import { Page } from '@playwright/test';
 
+// Load test credentials from environment variables
+const E2E_USERNAME = process.env.E2E_USERNAME;
+const E2E_PASSWORD = process.env.E2E_PASSWORD;
+
+if (!E2E_USERNAME || !E2E_PASSWORD) {
+  throw new Error('E2E_USERNAME and E2E_PASSWORD must be set in the .env file');
+}
+
 /**
  * Helper function to login with the provided credentials
  */
-export async function loginUser(page: Page, username = 'soulsaver', password = 'Blade23') {
+/**
+ * Helper function to ensure the sidenav is closed before interacting with elements
+ */
+export async function ensureSidenavClosed(page: Page) {
+  // Check if the backdrop is visible (indicating sidenav is open)
+  const backdrop = page.locator('.mat-drawer-backdrop');
+  
+  if (await backdrop.count() > 0 && await backdrop.isVisible()) {
+    try {
+      // Try pressing Escape key to close the sidenav
+      await page.keyboard.press('Escape');
+      // Wait a short time for the animation
+      await page.waitForTimeout(500);
+      
+      // If backdrop is still there, try clicking the menu toggle button
+      if (await backdrop.count() > 0 && await backdrop.isVisible()) {
+        const menuToggle = page.locator('button[aria-label="Toggle navigation menu"], .menu-toggle');
+        if (await menuToggle.count() > 0) {
+          await menuToggle.click();
+          await page.waitForTimeout(500);
+        }
+      }
+    } catch {
+      // If all else fails, try forcing the backdrop click with a small timeout
+      try {
+        await backdrop.click({ timeout: 2000 });
+      } catch {
+        // Ignore if backdrop click fails
+        console.log('Could not close sidenav, continuing with test...');
+      }
+    }
+  }
+}
+
+/**
+ * Helper function to log in with specified credentials
+ */
+export async function loginUser(page: Page, username: string, password: string) {
+  // Ensure sidenav is closed before trying to interact with elements
+  await ensureSidenavClosed(page);
+  
   // Wait for the page to load
   await page.waitForLoadState('networkidle');
   
@@ -28,19 +76,46 @@ export async function loginUser(page: Page, username = 'soulsaver', password = '
     
     // Wait for redirect back to application
     await page.waitForURL(/dashboard|\/$/);
+  } else {
+    // If we're not on a login page, click the login button to start auth flow
+    await page.locator('app-auth-status button:has-text("Login")').click();
+    
+    // Wait for Keycloak login page
+    await page.waitForURL(/keycloak|auth/, { timeout: 10000 });
+    
+    // Fill in login credentials
+    await page.locator('input[name="username"], #username').first().fill(username);
+    await page.locator('input[name="password"], #password').first().fill(password);
+    
+    // Submit login form
+    await page.locator('button[type="submit"], #kc-login').first().click();
+    
+    // Wait for redirect back to app
+    await page.waitForURL(/dashboard|reservations/, { timeout: 15000 });
+    await page.waitForLoadState('networkidle');
   }
   
-  // Ensure we're on the dashboard
+  // Ensure we're on the dashboard or a protected page
   await page.waitForSelector('[data-testid="dashboard"], h1, mat-card', { timeout: 10000 });
+}
+
+/**
+ * Helper function to log in with test credentials from environment
+ */
+export async function loginWithCredentials(page: Page) {
+  return loginUser(page, E2E_USERNAME, E2E_PASSWORD);
 }
 
 /**
  * Helper function to navigate to the new reservation page
  */
 export async function navigateToNewReservation(page: Page) {
+  // Ensure sidenav is closed before trying to click feature cards
+  await ensureSidenavClosed(page);
+  
   // Try multiple ways to get to reservations:
-  // 1. Click on the reservation card if it exists
-  const reservationCard = page.locator('mat-card:has-text("Reservations")');
+  // 1. Click on the reservation feature card if it exists
+  const reservationCard = page.locator('.feature-card:has-text("Reservations")');
   if (await reservationCard.count() > 0) {
     await reservationCard.click();
   } else {

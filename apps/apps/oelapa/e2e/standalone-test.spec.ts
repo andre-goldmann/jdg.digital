@@ -1,5 +1,13 @@
 import { test, expect } from '@playwright/test';
 
+// Load test credentials from environment variables
+const E2E_USERNAME = process.env.E2E_USERNAME;
+const E2E_PASSWORD = process.env.E2E_PASSWORD;
+
+if (!E2E_USERNAME || !E2E_PASSWORD) {
+  throw new Error('E2E_USERNAME and E2E_PASSWORD must be set in the .env file');
+}
+
 test.describe('Standalone Reservation Test', () => {
   test('should be able to access the application and attempt login', async ({ page }) => {
     // This test will run against a manual server or skip if not available
@@ -26,10 +34,10 @@ test.describe('Standalone Reservation Test', () => {
           const usernameField = page.locator('input[name="username"], #username').first();
           const passwordField = page.locator('input[name="password"], #password').first();
           
-          await usernameField.fill('soulsaver');
-          await passwordField.fill('Blade23');
+          await usernameField.fill(E2E_USERNAME);
+          await passwordField.fill(E2E_PASSWORD);
           
-          console.log('📝 Filled login credentials: soulsaver / Blade23');
+          console.log(`📝 Filled login credentials: ${E2E_USERNAME} / ***`);
           
           // Click login button
           await page.locator('input[type="submit"], button[type="submit"], #kc-login').first().click();

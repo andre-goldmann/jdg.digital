@@ -8,8 +8,7 @@ export const appRoutes: Route[] = [
   },
   {
     path: 'dashboard',
-    loadComponent: () => import('./dashboard/dashboard.component').then(m => m.DashboardComponent),
-    canActivate: [authGuard]
+    loadComponent: () => import('./dashboard/dashboard.component').then(m => m.DashboardComponent)
   },
   {
     path: 'reservations/new',

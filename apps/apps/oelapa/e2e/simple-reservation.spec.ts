@@ -1,5 +1,13 @@
 import { test, expect } from '@playwright/test';
 
+// Load test credentials from environment variables
+const E2E_USERNAME = process.env.E2E_USERNAME;
+const E2E_PASSWORD = process.env.E2E_PASSWORD;
+
+if (!E2E_USERNAME || !E2E_PASSWORD) {
+  throw new Error('E2E_USERNAME and E2E_PASSWORD must be set in the .env file');
+}
+
 test.describe('Simple Reservation E2E Test', () => {
   test('should login and access reservation form', async ({ page }) => {
     console.log('🚀 Starting reservation e2e test...');
@@ -17,9 +25,9 @@ test.describe('Simple Reservation E2E Test', () => {
       await page.waitForSelector('input[name="username"], #username');
       
       // Fill credentials
-      await page.locator('input[name="username"], #username').first().fill('soulsaver');
-      await page.locator('input[name="password"], #password').first().fill('Blade23');
-      console.log('📝 Credentials entered: soulsaver / Blade23');
+      await page.locator('input[name="username"], #username').first().fill(E2E_USERNAME);
+      await page.locator('input[name="password"], #password').first().fill(E2E_PASSWORD);
+      console.log(`📝 Credentials entered: ${E2E_USERNAME} / ***`);
       
       // Submit login
       await page.locator('input[type="submit"], button[type="submit"], #kc-login').first().click();
