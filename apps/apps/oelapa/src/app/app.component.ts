@@ -3,7 +3,7 @@ import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { JwksValidationHandler } from 'angular-oauth2-oidc-jwks';
-import { createAuthConfig, fallbackAuthConfig } from './auth/auth.config';
+import { createAuthConfig } from './auth/auth.config';
 import { MaterialModule } from './shared/material.module';
 import { NavigationSidenavComponent } from './shared/navigation-sidemenu.component';
 import { NavigationService } from './shared/navigation.service';
@@ -22,7 +22,7 @@ import { NavigationConfig } from './shared/navigation.models';
 })
 export class AppComponent implements OnInit {
   protected title = 'oelapa';
-  
+
   private readonly oauthService = inject(OAuthService);
   private readonly router = inject(Router);
   private readonly navigationService = inject(NavigationService);
@@ -43,8 +43,11 @@ export class AppComponent implements OnInit {
   private configureAuth(): void {
     // Get current configuration or fallback
     const config = this.configurationService.getCurrentConfiguration();
-    const authConfig = config?.authentication ? createAuthConfig(config.authentication) : fallbackAuthConfig;
-    
+    if(!config || !config.authentication) {
+      throw new Error('Config can not be null!');
+    }
+    const authConfig = createAuthConfig(config.authentication);
+
     // Configure OAuth service
     this.oauthService.configure(authConfig);
     this.oauthService.tokenValidationHandler = new JwksValidationHandler();
@@ -78,12 +81,12 @@ export class AppComponent implements OnInit {
               // Create a new URL with the stored callback parameters
               const originalUrl = window.location.href;
               const callbackUrl = `${window.location.origin}/?code=${callbackData.code}&state=${callbackData.state}&session_state=${callbackData.sessionState}&iss=${encodeURIComponent(callbackData.iss || '')}`;
-              
+
               // Temporarily restore callback URL for token exchange
               window.history.replaceState(null, '', callbackUrl);
-              
+
               await this.oauthService.tryLoginCodeFlow();
-              
+
               if (this.oauthService.hasValidAccessToken() && this.oauthService.hasValidIdToken()) {
                 this.authenticationService.recheckAuthState();
                 window.history.replaceState({}, document.title, window.location.pathname);
