@@ -7,14 +7,16 @@ import { createAuthConfig } from './auth/auth.config';
 import { MaterialModule } from './shared/material.module';
 import { NavigationSidenavComponent } from './shared/navigation-sidemenu.component';
 import { NavigationService } from './shared/navigation.service';
+import { NavigationEnhancementService } from './shared/navigation-enhancement.service';
 import { AuthStatusComponent } from './auth/auth-status.component';
+import { BreadcrumbComponent } from './shared/breadcrumb.component';
 import { AuthenticationService } from './auth/authentication.service';
 import { ConfigurationService } from './core/configuration.service';
 import { Observable } from 'rxjs';
 import { NavigationConfig } from './shared/navigation.models';
 
 @Component({
-  imports: [CommonModule, RouterModule, MaterialModule, NavigationSidenavComponent, AuthStatusComponent],
+  imports: [CommonModule, RouterModule, MaterialModule, NavigationSidenavComponent, AuthStatusComponent, BreadcrumbComponent],
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
@@ -26,6 +28,7 @@ export class AppComponent implements OnInit {
   private readonly oauthService = inject(OAuthService);
   private readonly router = inject(Router);
   private readonly navigationService = inject(NavigationService);
+  private readonly navigationEnhancementService = inject(NavigationEnhancementService);
   private readonly configurationService = inject(ConfigurationService);
   private readonly authenticationService = inject(AuthenticationService);
 
@@ -37,6 +40,8 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // Initialize navigation enhancement service for consistent navigation experience
+    this.navigationEnhancementService.setupNavigationTracking();
     this.configureAuth();
   }
 

@@ -1,46 +1,55 @@
 <div class="reservation-container">
-  <mat-card>
+  <mat-card class="reservation-card">
     <mat-card-header>
-      <mat-card-title>Create New Reservation</mat-card-title>
-      <mat-card-subtitle>Enter guest and booking details</mat-card-subtitle>
+      <div class="header-content">
+        <mat-icon class="header-icon">hotel</mat-icon>
+        <div class="header-text">
+          <mat-card-title>✨ Create New Reservation</mat-card-title>
+          <mat-card-subtitle>Book your perfect stay with our modern reservation system</mat-card-subtitle>
+        </div>
+      </div>
     </mat-card-header>
 
     <mat-card-content>
-      <form [formGroup]="reservationForm" (ngSubmit)="onSubmit()">
+      <form [formGroup]="reservationForm" (ngSubmit)="onSubmit()" class="reservation-form">
         <!-- Guest Information -->
         <div class="form-section">
-          <h3>Guest Information</h3>
+          <h3><mat-icon>person</mat-icon> Guest Information</h3>
 
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Guest Name</mat-label>
             <input matInput
                    formControlName="guestName"
-                   placeholder="Enter guest full name"
+                   placeholder="Enter guest name"
                    required>
-            @if (reservationForm.get('guestName')?.hasError('required') && reservationForm.get('guestName')?.touched) {
-              <mat-error>Guest name is required</mat-error>
+            @if (guestNameControl.invalid && guestNameControl.touched) {
+              <mat-error>
+                @if (guestNameControl.errors?.['required']) {
+                  Guest name is required
+                }
+                @if (guestNameControl.errors?.['minlength']) {
+                  Guest name must be at least 2 characters
+                }
+              </mat-error>
             }
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Guest Count</mat-label>
+            <mat-label>Number of Guests</mat-label>
             <mat-select formControlName="guestCount" required>
-              <mat-option [value]="1">1 Guest</mat-option>
-              <mat-option [value]="2">2 Guests</mat-option>
-              <mat-option [value]="3">3 Guests</mat-option>
-              <mat-option [value]="4">4 Guests</mat-option>
-              <mat-option [value]="5">5 Guests</mat-option>
-              <mat-option [value]="6">6+ Guests</mat-option>
+              @for (count of guestCountOptions; track count) {
+                <mat-option [value]="count">{{ count }}</mat-option>
+              }
             </mat-select>
-            @if (reservationForm.get('guestCount')?.hasError('required') && reservationForm.get('guestCount')?.touched) {
-              <mat-error>Guest count is required</mat-error>
+            @if (guestCountControl.invalid && guestCountControl.touched) {
+              <mat-error>Please select number of guests</mat-error>
             }
           </mat-form-field>
         </div>
 
-        <!-- Booking Details -->
+        <!-- Reservation Dates -->
         <div class="form-section">
-          <h3>Booking Details</h3>
+          <h3><mat-icon>calendar_today</mat-icon> Reservation Dates</h3>
 
           <div class="date-row">
             <mat-form-field appearance="outline" class="date-field">
@@ -48,8 +57,9 @@
               <input matInput
                      type="date"
                      formControlName="checkInDate"
+                     [min]="minDate"
                      required>
-              @if (reservationForm.get('checkInDate')?.hasError('required') && reservationForm.get('checkInDate')?.touched) {
+              @if (checkInDateControl.invalid && checkInDateControl.touched) {
                 <mat-error>Check-in date is required</mat-error>
               }
             </mat-form-field>
@@ -59,24 +69,41 @@
               <input matInput
                      type="date"
                      formControlName="checkOutDate"
+                     [min]="minCheckoutDate()"
                      required>
-              @if (reservationForm.get('checkOutDate')?.hasError('required') && reservationForm.get('checkOutDate')?.touched) {
-                <mat-error>Check-out date is required</mat-error>
-              }
-              @if (reservationForm.hasError('dateOrder')) {
-                <mat-error>Check-out date must be after check-in date</mat-error>
+              @if (checkOutDateControl.invalid && checkOutDateControl.touched) {
+                <mat-error>
+                  @if (checkOutDateControl.errors?.['required']) {
+                    Check-out date is required
+                  }
+                  @if (checkOutDateControl.errors?.['dateOrder']) {
+                    Check-out must be after check-in
+                  }
+                </mat-error>
               }
             </mat-form-field>
           </div>
 
+          @if (nightsCount() > 0) {
+            <div class="nights-info">
+              <mat-icon>nights_stay</mat-icon>
+              <span>{{ nightsCount() }} night{{ nightsCount() > 1 ? 's' : '' }}</span>
+            </div>
+          }
+        </div>
+
+        <!-- Room Information -->
+        <div class="form-section">
+          <h3><mat-icon>bed</mat-icon> Room Information</h3>
+
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Room Type</mat-label>
             <mat-select formControlName="roomType">
-              <mat-option value="Standard">Standard Room</mat-option>
-              <mat-option value="Deluxe">Deluxe Room</mat-option>
-              <mat-option value="Suite">Suite</mat-option>
-              <mat-option value="Executive">Executive Room</mat-option>
-              <mat-option value="Presidential">Presidential Suite</mat-option>
+              @for (roomType of roomTypeOptions; track roomType.value) {
+                <mat-option [value]="roomType.value">
+                  {{ roomType.label }} - {{ roomType.price | currency }}
+                </mat-option>
+              }
             </mat-select>
           </mat-form-field>
 
@@ -85,28 +112,90 @@
             <textarea matInput
                       formControlName="specialRequests"
                       placeholder="Any special requests or notes"
-                      rows="3"></textarea>
+                      rows="3">
+            </textarea>
           </mat-form-field>
         </div>
+
+        <!-- Form Summary -->
+        <div class="form-summary">
+          <h3><mat-icon>summarize</mat-icon> Reservation Summary</h3>
+          <mat-card class="summary-card">
+            <div class="summary-content">
+              <div class="summary-row">
+                <mat-icon>person</mat-icon>
+                <span class="label">Guest:</span>
+                <span class="value">{{ formSummary().guestName || 'Not specified' }}</span>
+              </div>
+              <div class="summary-row">
+                <mat-icon>group</mat-icon>
+                <span class="label">Guests:</span>
+                <span class="value">{{ formSummary().guestCount || 'Not specified' }}</span>
+              </div>
+              <div class="summary-row">
+                <mat-icon>event_available</mat-icon>
+                <span class="label">Check-in:</span>
+                <span class="value">{{ formSummary().checkInDate || 'Not specified' }}</span>
+              </div>
+              <div class="summary-row">
+                <mat-icon>event_busy</mat-icon>
+                <span class="label">Check-out:</span>
+                <span class="value">{{ formSummary().checkOutDate || 'Not specified' }}</span>
+              </div>
+              <div class="summary-row">
+                <mat-icon>hotel</mat-icon>
+                <span class="label">Room:</span>
+                <span class="value">{{ formSummary().roomType || 'Standard' }}</span>
+              </div>
+              @if (formSummary().specialRequests) {
+                <div class="summary-row">
+                  <mat-icon>note</mat-icon>
+                  <span class="label">Special Requests:</span>
+                  <span class="value">{{ formSummary().specialRequests }}</span>
+                </div>
+              }
+              @if (estimatedTotal() > 0) {
+                <div class="summary-row total-row">
+                  <mat-icon>attach_money</mat-icon>
+                  <span class="label">Estimated Total:</span>
+                  <span class="value total-price">{{ estimatedTotal() | currency }}</span>
+                </div>
+              }
+            </div>
+          </mat-card>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="form-actions">
+          <button type="button"
+                  mat-stroked-button
+                  (click)="resetForm()"
+                  color="accent">
+            <mat-icon>refresh</mat-icon>
+            Reset Form
+          </button>
+
+          <button type="submit"
+                  mat-raised-button
+                  color="primary"
+                  [disabled]="reservationForm.invalid || hasDateOrderError() || loading()"
+                  class="submit-button">
+            @if (loading()) {
+              <mat-spinner diameter="20"></mat-spinner>
+              Creating Reservation...
+            } @else {
+              <ng-container>
+                <mat-icon>add_circle</mat-icon>
+                Create Reservation
+              </ng-container>
+            }
+          </button>
+        </div>
+
+
+
+
       </form>
     </mat-card-content>
-
-    <mat-card-actions align="end">
-      <button mat-button
-              type="button"
-              (click)="onReset()"
-              [disabled]="loading()">
-        Reset
-      </button>
-      <button mat-raised-button
-              color="primary"
-              (click)="onSubmit()"
-              [disabled]="reservationForm.invalid || loading()">
-        @if (loading()) {
-          <mat-spinner diameter="20" style="margin-right: 8px;"></mat-spinner>
-        }
-        Create Reservation
-      </button>
-    </mat-card-actions>
   </mat-card>
 </div>

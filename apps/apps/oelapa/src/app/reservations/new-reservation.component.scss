@@ -1,53 +1,547 @@
+// ===============================================
+// RESERVATION CONTAINER - MOBILE FIRST
+// ===============================================
 .reservation-container {
   max-width: 800px;
   margin: 0 auto;
-  padding: 20px;
-}
+  padding: var(--spacing-md);
 
-.form-section {
-  margin-bottom: 24px;
+  @media (min-width: 768px) {
+    padding: var(--spacing-lg);
+  }
 
-  h3 {
-    margin: 0 0 16px 0;
-    color: #424242;
-    font-weight: 500;
+  @media (min-width: 1024px) {
+    padding: var(--spacing-xl);
+  }
+
+  @media (max-width: 480px) {
+    padding: var(--spacing-sm);
   }
 }
 
-.full-width {
-  width: 100%;
-  margin-bottom: 16px;
+// ===============================================
+// FORM SECTIONS
+// ===============================================
+.form-section {
+  margin-bottom: var(--spacing-lg);
+
+  @media (min-width: 768px) {
+    margin-bottom: var(--spacing-xl);
+  }
+
+  @media (max-width: 480px) {
+    margin-bottom: var(--spacing-md);
+  }
+
+  h3 {
+    margin: 0 0 var(--spacing-md) 0;
+    color: #424242;
+    font-weight: 500;
+    font-size: var(--text-lg);
+
+    @media (min-width: 768px) {
+      margin-bottom: var(--spacing-lg);
+      font-size: var(--text-xl);
+    }
+
+    @media (max-width: 480px) {
+      font-size: var(--text-base);
+      margin-bottom: var(--spacing-sm);
+    }
+  }
 }
 
+// ===============================================
+// FORM FIELDS
+// ===============================================
+.full-width {
+  width: 100%;
+  margin-bottom: var(--spacing-md);
+
+  @media (min-width: 768px) {
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .mat-mdc-form-field {
+    width: 100%;
+
+    // Touch-friendly field height
+    @media (max-width: 767px) {
+      .mat-mdc-text-field-wrapper {
+        min-height: 52px;
+      }
+    }
+  }
+}
+
+// ===============================================
+// DATE ROW - RESPONSIVE LAYOUT
+// ===============================================
 .date-row {
   display: flex;
-  gap: 16px;
-  margin-bottom: 16px;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+
+  @media (min-width: 768px) {
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+  }
+
+  // Stack on mobile and small tablets
+  @media (max-width: 600px) {
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
 }
 
 .date-field {
   flex: 1;
+
+  @media (max-width: 600px) {
+    margin-bottom: var(--spacing-sm);
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .mat-mdc-form-field {
+    width: 100%;
+
+    // Ensure touch-friendly date inputs
+    @media (max-width: 767px) {
+      .mat-mdc-text-field-wrapper {
+        min-height: 52px;
+      }
+    }
+  }
+}
+
+// ===============================================
+// CARD STYLING
+// ===============================================
+mat-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  @media (min-width: 768px) {
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  @media (max-width: 480px) {
+    border-radius: 4px;
+    margin: 0 var(--spacing-xs);
+  }
 }
 
 mat-card-header {
-  margin-bottom: 20px;
+  margin-bottom: var(--spacing-md);
+
+  @media (min-width: 768px) {
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .mat-mdc-card-title {
+    font-size: var(--text-lg);
+
+    @media (min-width: 768px) {
+      font-size: var(--text-xl);
+    }
+
+    @media (max-width: 480px) {
+      font-size: var(--text-base);
+    }
+  }
+}
+
+mat-card-content {
+  padding: var(--spacing-md);
+
+  @media (min-width: 768px) {
+    padding: var(--spacing-lg);
+  }
+
+  @media (max-width: 480px) {
+    padding: var(--spacing-sm);
+  }
 }
 
 mat-card-actions {
-  padding: 16px 24px;
+  padding: var(--spacing-md) var(--spacing-lg);
+
+  @media (min-width: 768px) {
+    padding: var(--spacing-lg) var(--spacing-xl);
+  }
+
+  @media (max-width: 480px) {
+    padding: var(--spacing-sm);
+
+    // Stack action buttons on small screens
+    .mat-mdc-button,
+    .mat-mdc-raised-button {
+      width: 100%;
+      margin: var(--spacing-xs) 0;
+      min-height: 48px;
+
+      &:first-child {
+        margin-top: 0;
+      }
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
 }
 
-@media (max-width: 600px) {
+// ===============================================
+// FORM FIELD IMPROVEMENTS
+// ===============================================
+.mat-mdc-form-field {
+  // Better spacing for mobile
+  @media (max-width: 767px) {
+    .mat-mdc-form-field-subscript-wrapper {
+      padding: var(--spacing-xs) var(--spacing-sm);
+    }
+  }
+
+  // Larger text for better readability on mobile
+  .mat-mdc-input-element {
+    font-size: var(--text-sm);
+
+    @media (min-width: 768px) {
+      font-size: var(--text-base);
+    }
+  }
+
+  // Better label positioning
+  .mat-mdc-floating-label {
+    font-size: var(--text-sm);
+
+    @media (min-width: 768px) {
+      font-size: var(--text-base);
+    }
+  }
+}
+
+// ===============================================
+// ACCESSIBILITY IMPROVEMENTS
+// ===============================================
+// Focus improvements for form fields
+.mat-mdc-form-field.mat-focused {
+  .mat-mdc-text-field-wrapper {
+    outline: 2px solid var(--mat-sys-primary);
+    outline-offset: 1px;
+  }
+}
+
+// High contrast support
+@media (prefers-contrast: high) {
+  mat-card {
+    border: 2px solid currentColor;
+  }
+
+  .mat-mdc-form-field {
+    .mat-mdc-text-field-wrapper {
+      border: 2px solid currentColor;
+    }
+  }
+}
+
+// ===============================================
+// TABLET SPECIFIC OPTIMIZATIONS
+// ===============================================
+@media (min-width: 768px) and (max-width: 1023px) {
   .reservation-container {
-    padding: 10px;
+    max-width: 700px;
   }
 
   .date-row {
-    flex-direction: column;
-    gap: 0;
+    gap: var(--spacing-md);
   }
 
-  .date-field {
-    margin-bottom: 16px;
+  mat-card-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--spacing-sm);
+
+    .mat-mdc-button,
+    .mat-mdc-raised-button {
+      min-width: 120px;
+    }
+  }
+}
+
+// ===============================================
+// FANCY HEADER STYLING
+// ===============================================
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+
+  .header-icon {
+    font-size: 2rem;
+    width: 2rem;
+    height: 2rem;
+    color: var(--mat-sys-primary);
+
+    @media (max-width: 480px) {
+      font-size: 1.5rem;
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+  }
+
+  .header-text {
+    flex: 1;
+
+    .mat-mdc-card-title {
+      background: linear-gradient(45deg, var(--mat-sys-primary), var(--mat-sys-secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 600;
+    }
+  }
+}
+
+// ===============================================
+// SECTION HEADERS WITH ICONS
+// ===============================================
+.form-section h3 {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+
+  mat-icon {
+    color: var(--mat-sys-primary);
+    font-size: 1.25rem;
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+}
+
+// ===============================================
+// NIGHTS INFO STYLING
+// ===============================================
+.nights-info {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: linear-gradient(135deg, #e3f2fd, #f3e5f5);
+  border-radius: 8px;
+  margin-top: var(--spacing-sm);
+  font-weight: 500;
+  color: #1976d2;
+
+  mat-icon {
+    color: #1976d2;
+    font-size: 1.1rem;
+    width: 1.1rem;
+    height: 1.1rem;
+  }
+}
+
+// ===============================================
+// FANCY SUMMARY CARD
+// ===============================================
+.form-summary {
+  margin-bottom: var(--spacing-lg);
+
+  h3 {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+
+    mat-icon {
+      color: var(--mat-sys-secondary);
+    }
+  }
+}
+
+.summary-card {
+  background: linear-gradient(135deg, #f8f9fa, #ffffff);
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  padding: var(--spacing-lg);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+
+  @media (max-width: 480px) {
+    padding: var(--spacing-md);
+  }
+}
+
+.summary-row {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) 0;
+  border-bottom: 1px solid #f0f0f0;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &.total-row {
+    background: linear-gradient(135deg, #e8f5e8, #f0f8f0);
+    border-radius: 8px;
+    padding: var(--spacing-md);
+    margin-top: var(--spacing-sm);
+    border: 2px solid #4caf50;
+    font-weight: 600;
+  }
+
+  mat-icon {
+    color: var(--mat-sys-primary);
+    font-size: 1.1rem;
+    width: 1.1rem;
+    height: 1.1rem;
+    flex-shrink: 0;
+  }
+
+  .label {
+    min-width: 120px;
+    font-weight: 500;
+    color: #666;
+
+    @media (max-width: 480px) {
+      min-width: 80px;
+      font-size: 0.9rem;
+    }
+  }
+
+  .value {
+    flex: 1;
+    color: #333;
+
+    &.total-price {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #2e7d32;
+    }
+  }
+}
+
+// ===============================================
+// ENHANCED BUTTONS
+// ===============================================
+.form-actions {
+  display: flex;
+  gap: var(--spacing-md);
+  justify-content: flex-end;
+  margin-top: var(--spacing-xl);
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+
+  .submit-button {
+    position: relative;
+    overflow: hidden;
+    font-weight: 600;
+    min-height: 48px;
+
+    &:not(:disabled) {
+      background: linear-gradient(45deg, var(--mat-sys-primary), #1976d2);
+
+      &:hover {
+        background: linear-gradient(45deg, #1976d2, var(--mat-sys-secondary));
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+      }
+    }
+
+    mat-icon {
+      margin-right: var(--spacing-xs);
+    }
+
+    mat-spinner {
+      margin-right: var(--spacing-sm);
+    }
+  }
+
+  button[mat-stroked-button] {
+    min-height: 48px;
+
+    mat-icon {
+      margin-right: var(--spacing-xs);
+    }
+
+    &:hover {
+      background: rgba(var(--mat-sys-primary-rgb), 0.04);
+      transform: translateY(-1px);
+    }
+  }
+}
+
+// ===============================================
+// FORM STATUS (DEVELOPMENT HELPER)
+// ===============================================
+.form-status {
+  margin-top: var(--spacing-lg);
+  padding: var(--spacing-md);
+  background: #f5f5f5;
+  border-radius: 8px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.875rem;
+  color: #666;
+
+  p {
+    margin: var(--spacing-xs) 0;
+  }
+
+  // Hide in production
+  @media (min-width: 1024px) {
+    display: none;
+  }
+}
+
+// ===============================================
+// ANIMATIONS AND TRANSITIONS
+// ===============================================
+.form-section,
+.summary-card,
+.form-actions button {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.form-section:hover {
+  transform: translateY(-2px);
+}
+
+.summary-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+// ===============================================
+// LANDSCAPE MOBILE OPTIMIZATION
+// ===============================================
+@media (max-height: 600px) and (orientation: landscape) {
+  .reservation-container {
+    padding: var(--spacing-sm);
+  }
+
+  .form-section {
+    margin-bottom: var(--spacing-md);
+
+    h3 {
+      margin-bottom: var(--spacing-sm);
+    }
+  }
+
+  .full-width {
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .header-content .header-icon {
+    font-size: 1.25rem;
+    width: 1.25rem;
+    height: 1.25rem;
   }
 }

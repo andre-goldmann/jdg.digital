@@ -1,0 +1,227 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "apaleo Configuration API - not safe for work",
+    "description": "Continuously evolving version - use at your own risk! Configure common settings like logos and texts.",
+    "version": "v0-nsfw"
+  },
+  "paths": {
+    "/configuration/v0-nsfw/logo": {
+      "put": {
+        "tags": [
+          "Logo"
+        ],
+        "summary": "Uploads the logo.",
+        "description": "The logo will be displayed in the upper right corner of the rendered document.\r\nMaximum area for the logo: 800x150px. Images exceeding this area will be resized to fit, while maintaining the aspect ratio of the original image.\r\nImage dimensions: min - 100x50px, max - 1600x800px. Max file size: 10MB.",
+        "operationId": "ConfigurationLogoPut",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "propertyIds",
+            "description": "Comma-separated list of IDs of the properties to add the logo to.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "in": "formData",
+            "name": "formFile",
+            "description": "The file to upload.",
+            "type": "file"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success."
+          },
+          "404": {
+            "description": "The Request-URI could not be found."
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "401": {
+            "description": "You are unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "500": {
+            "description": "An unexpected error occurred."
+          },
+          "503": {
+            "description": "The server is currently unavailable. Please try later."
+          },
+          "422": {
+            "description": "Validation errors in the request body or query params.",
+            "schema": {
+              "$ref": "#/definitions/MessageItemCollection"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "rendering:admin",
+              "rendering:manage-configuration"
+            ]
+          }
+        ]
+      }
+    },
+    "/configuration/v0-nsfw/logo/{propertyId}": {
+      "get": {
+        "tags": [
+          "Logo"
+        ],
+        "summary": "Get the logo by property ID.",
+        "description": "<br>You must have at least one of these scopes: 'rendering:admin, rendering:read-configuration'.",
+        "operationId": "ConfigurationLogoByPropertyIdGet",
+        "produces": [
+          "image/jpg",
+          "image/png",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "propertyId",
+            "description": "The ID of the property.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "file"
+            }
+          },
+          "404": {
+            "description": "The Request-URI could not be found."
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "401": {
+            "description": "You are unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "500": {
+            "description": "An unexpected error occurred."
+          },
+          "503": {
+            "description": "The server is currently unavailable. Please try later."
+          },
+          "422": {
+            "description": "Validation errors in the request body or query params.",
+            "schema": {
+              "$ref": "#/definitions/MessageItemCollection"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "rendering:admin",
+              "rendering:read-configuration"
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Logo"
+        ],
+        "summary": "Removes the logo by property ID.",
+        "description": "<br>You must have at least one of these scopes: 'rendering:admin, rendering:manage-configuration'.",
+        "operationId": "ConfigurationLogoByPropertyIdDelete",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "propertyId",
+            "description": "The ID of the property.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "The Request-URI could not be found."
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "401": {
+            "description": "You are unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "500": {
+            "description": "An unexpected error occurred."
+          },
+          "503": {
+            "description": "The server is currently unavailable. Please try later."
+          },
+          "422": {
+            "description": "Validation errors in the request body or query params.",
+            "schema": {
+              "$ref": "#/definitions/MessageItemCollection"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "rendering:admin",
+              "rendering:manage-configuration"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "MessageItemCollection": {
+      "type": "object",
+      "properties": {
+        "messages": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "readOnly": true
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "securityDefinitions": {
+    "oauth2": {
+      "type": "oauth2",
+      "flow": "implicit",
+      "authorizationUrl": "https://identity.apaleo.com/connect/authorize",
+      "scopes": {
+        "rendering:admin": "Full access to all rendering operations"
+      }
+    }
+  }
+}

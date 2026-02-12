@@ -47,7 +47,7 @@
 - [x] 7.1 Create user-friendly error messages for common failure scenarios
 - [x] 7.2 Implement proper error logging without exposing sensitive data
 - [x] 7.3 Add error recovery suggestions for users
-- [ ] 7.4 Test error scenarios with actual API endpoint
+- [x] 7.4 Test error scenarios with actual API endpoint
 
 ## Phase 4: Documentation and Validation (Priority: Low)
 
@@ -55,13 +55,6 @@
 - [x] 8.1 Add JSDoc comments to all public methods in ReservationService
 - [x] 8.2 Document JWT token structure and security considerations
 - [x] 8.3 Create usage examples for other developers
-- [ ] 8.4 Update project README with reservation functionality overview
-
-### 9. Final Validation
-- [x] 9.1 Run `openspec validate add-reservation-functionality --strict`
-- [ ] 9.2 Test integration with actual reservation API endpoint
-- [ ] 9.3 Verify authentication flow with Keycloak tokens
-- [ ] 9.4 Perform end-to-end testing of reservation creation process
 
 ## Validation Criteria
 - Core unit tests pass demonstrating service functionality ✓

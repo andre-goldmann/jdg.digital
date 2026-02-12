@@ -4,6 +4,7 @@
     "@angular/cdk": "^20.2.10",
     "@angular/material": "^20.2.10",
     "@capacitor/android": "^7.2.0",
+    "@modelcontextprotocol/inspector": "^0.17.2",
     "@modelcontextprotocol/sdk": "^1.8.0",
     "keycloak-angular": "^20.0.0",
     "keycloak-js": "^26.2.1",

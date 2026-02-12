@@ -10,14 +10,15 @@ export const appRoutes: Route[] = [
     path: 'dashboard',
     loadComponent: () => import('./dashboard/dashboard.component').then(m => m.DashboardComponent)
   },
+
   {
-    path: 'reservations/new',
-    loadComponent: () => import('./reservations/new-reservation.component').then(m => m.NewReservationComponent),
+    path: 'reservations',
+    loadComponent: () => import('./reservations/reservations-list.component').then(m => m.ReservationsListComponent),
     canActivate: [authGuard]
   },
   {
-    path: 'reservations/new-signals',
-    loadComponent: () => import('./reservations/new-reservation-signals.component').then(m => m.NewReservationSignalsComponent),
+    path: 'reservations/new',
+    loadComponent: () => import('./reservations/new-reservation.component').then(m => m.NewReservationComponent),
     canActivate: [authGuard]
   },
   {

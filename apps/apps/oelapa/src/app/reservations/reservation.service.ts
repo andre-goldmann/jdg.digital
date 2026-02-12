@@ -1,7 +1,7 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError, timer, from } from 'rxjs';
-import { retryWhen, switchMap, catchError, map } from 'rxjs/operators';
+import { retryWhen, switchMap, catchError, map, timeout } from 'rxjs/operators';
 import { resource } from '@angular/core';
 import { BrowserJwtUtil, JwtPayload } from './jwt.util';
 
@@ -24,13 +24,13 @@ export class ReservationService {
 
   // Signal-based state for reservation requests
   private _currentReservationRequest = signal<ReservationRequest | null>(null);
-  
+
   // Modern resource-based reservation creation
   public reservationResource = resource({
     params: () => this._currentReservationRequest(),
     loader: async ({ params: reservationData }): Promise<ReservationResponse | null> => {
       if (!reservationData) return null;
-      
+
       try {
         this.validateReservationData(reservationData);
         const jwtToken = await this.generateJwtToken();
@@ -108,6 +108,7 @@ export class ReservationService {
             reservationData,
             { headers }
           ).pipe(
+            timeout(environment.apiTimeout),
             retryWhen(errors => this.retryLogic(errors)),
             map(response => {
               console.log('Raw HTTP response:', response);
@@ -220,9 +221,17 @@ export class ReservationService {
    * @private
    */
   private isRetriableError(error: unknown): boolean {
+    // Handle timeout errors - these are retriable
+    if (error instanceof Error && error.name === 'TimeoutError') {
+      return true;
+    }
+
     if (error instanceof HttpErrorResponse) {
-      // Retry on network errors and 5xx server errors
-      return error.status === 0 || (error.status >= 500 && error.status < 600);
+      // Retry on network errors, timeout errors, and 5xx server errors
+      // Do not retry on 4xx client errors (except 429 rate limiting)
+      return error.status === 0 ||
+             error.status === 429 ||
+             (error.status >= 500 && error.status < 600);
     }
     return false;
   }
@@ -270,7 +279,17 @@ export class ReservationService {
    * @private
    */
   private handleError(error: unknown): Observable<never> {
-    console.error('Reservation service error:', error);
+    // Filter sensitive information from error logging
+    const safeError = this.sanitizeErrorForLogging(error);
+    console.error('Reservation service error:', safeError);
+
+    // Handle timeout errors
+    if (error instanceof Error && error.name === 'TimeoutError') {
+      return throwError(() => this.createReservationError(
+        'The reservation request timed out. Please check your connection and try again.',
+        error
+      ));
+    }
 
     if (error instanceof HttpErrorResponse) {
       switch (error.status) {
@@ -289,12 +308,23 @@ export class ReservationService {
             error.error?.message || 'Invalid reservation data.',
             error
           ));
+        case 429:
+          return throwError(() => this.createReservationError(
+            'Too many requests. Please wait a moment and try again.',
+            error
+          ));
         case 0:
           return throwError(() => this.createReservationError(
             'Unable to connect to the reservation service. Please check your internet connection.',
             error
           ));
         default:
+          if (error.status >= 500) {
+            return throwError(() => this.createReservationError(
+              'The reservation service is temporarily unavailable. Please try again later.',
+              error
+            ));
+          }
           return throwError(() => this.createReservationError(
             'An unexpected error occurred. Please try again.',
             error
@@ -306,6 +336,34 @@ export class ReservationService {
       error instanceof Error ? error.message : 'An unknown error occurred',
       error
     ));
+  }
+
+  /**
+   * Sanitizes error objects for logging by removing sensitive information
+   * @param error The error to sanitize
+   * @private
+   */
+  private sanitizeErrorForLogging(error: unknown): unknown {
+    if (error instanceof HttpErrorResponse) {
+      return {
+        status: error.status,
+        statusText: error.statusText,
+        url: error.url,
+        message: error.message,
+        // Exclude potentially sensitive error body
+        error: error.error ? '[Redacted]' : undefined
+      };
+    }
+
+    if (error instanceof Error) {
+      return {
+        name: error.name,
+        message: error.message,
+        stack: error.stack
+      };
+    }
+
+    return error;
   }
 
   /**

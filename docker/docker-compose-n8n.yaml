@@ -64,6 +64,10 @@ services:
       - ollama_data:/root/.ollama
     networks:
       - ai-network
+    ports:
+      - "11434:11434"
+    expose:
+      - "11434:11434"
     #deploy:
     #  resources:
     #    reservations:

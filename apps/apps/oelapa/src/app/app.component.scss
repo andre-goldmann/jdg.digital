@@ -1,118 +1,221 @@
+// ===============================================
+// MAIN APP LAYOUT - MOBILE FIRST
+// ===============================================
 .app-container {
   height: 100vh;
   display: flex;
   flex-direction: column;
+  overflow: hidden; // Prevent body scroll
 }
 
 .sidenav-container {
   flex: 1;
   display: flex;
+  position: relative;
 }
 
 .app-sidenav {
+  // Mobile first - narrow sidenav
   width: 280px;
   border-right: 1px solid #e0e0e0;
   background-color: #fafafa;
+  overflow-y: auto;
+
+  // Tablet and up
+  @media (min-width: 768px) {
+    width: 300px;
+  }
+
+  // Desktop
+  @media (min-width: 1024px) {
+    width: 320px;
+  }
+
+  // Mobile overlay mode
+  @media (max-width: 767px) {
+    width: 85vw;
+    max-width: 300px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
 }
 
 .main-content {
   display: flex;
   flex-direction: column;
   flex: 1;
+  min-width: 0; // Allow flex item to shrink below content size
+  overflow: hidden;
 }
 
+// ===============================================
+// RESPONSIVE TOOLBAR
+// ===============================================
 .app-toolbar {
   position: sticky;
   top: 0;
   z-index: 1000;
-  height: 64px;
+  height: 56px; // Mobile first
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  // Tablet and up
+  @media (min-width: 768px) {
+    height: 64px;
+  }
+
+  // Ensure touch-friendly elements on mobile
+  .mat-mdc-button,
+  .mat-mdc-icon-button {
+    min-height: 48px;
+    min-width: 48px;
+  }
 }
 
 .menu-toggle {
-  margin-right: 1rem;
+  margin-right: var(--spacing-sm);
+
+  @media (min-width: 768px) {
+    margin-right: var(--spacing-md);
+  }
 }
 
 .toolbar-title {
-  font-size: 1.2rem;
+  font-size: 1rem; // Mobile first
   font-weight: 500;
+
+  @media (min-width: 768px) {
+    font-size: 1.2rem;
+  }
+
+  @media (min-width: 1024px) {
+    font-size: 1.25rem;
+  }
+
+  // Hide on very small screens
+  @media (max-width: 480px) {
+    display: none;
+  }
 }
 
 .toolbar-spacer {
   flex: 1 1 auto;
 }
 
+// ===============================================
+// PAGE CONTENT AREA
+// ===============================================
 .page-content {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   background-color: #f5f5f5;
-}
+  position: relative;
 
-/* Mobile styles */
-@media (max-width: 768px) {
-  .app-sidenav {
-    width: 100vw;
-    max-width: 320px;
-  }
-  
-  .app-toolbar {
-    height: 56px;
-  }
-  
-  .toolbar-title {
-    font-size: 1.1rem;
+  // Smooth scrolling
+  scroll-behavior: smooth;
+
+  // Add padding for better mobile experience
+  @media (max-width: 767px) {
+    // Slightly reduce background contrast on mobile
+    background-color: #f8f8f8;
   }
 }
 
-/* High contrast and accessibility */
+// ===============================================
+// ACCESSIBILITY & HIGH CONTRAST
+// ===============================================
 @media (prefers-contrast: high) {
   .app-sidenav {
     border-right: 2px solid #000;
   }
-}
 
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+  .app-toolbar {
+    border-bottom: 2px solid #000;
   }
 }
 
-/* Signal-based form styles */
+@media (prefers-reduced-motion: reduce) {
+  .app-sidenav,
+  .page-content {
+    transition: none !important;
+  }
+}
+
+// ===============================================
+// RESPONSIVE SIGNAL-BASED FORM STYLES
+// ===============================================
 .signal-form {
   max-width: 600px;
-  margin: 20px;
-  padding: 24px;
+  margin: var(--spacing-md);
+  padding: var(--spacing-lg);
   background: white;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  @media (min-width: 768px) {
+    margin: var(--spacing-lg);
+    padding: var(--spacing-xl);
+  }
+
+  @media (max-width: 480px) {
+    margin: var(--spacing-sm);
+    padding: var(--spacing-md);
+    border-radius: 4px;
+  }
 }
 
 .signal-form h2 {
   color: #333;
-  margin-bottom: 24px;
-  font-size: 1.5rem;
+  margin-bottom: var(--spacing-lg);
+  font-size: var(--text-xl);
+
+  @media (min-width: 768px) {
+    font-size: var(--text-2xl);
+  }
+
+  @media (max-width: 480px) {
+    font-size: var(--text-lg);
+    margin-bottom: var(--spacing-md);
+  }
 }
 
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: var(--spacing-md);
+
+  @media (min-width: 768px) {
+    margin-bottom: var(--spacing-lg);
+  }
 }
 
 .form-group label {
   display: block;
-  margin-bottom: 8px;
+  margin-bottom: var(--spacing-xs);
   font-weight: 500;
   color: #555;
+  font-size: var(--text-sm);
+
+  @media (min-width: 768px) {
+    margin-bottom: var(--spacing-sm);
+    font-size: var(--text-base);
+  }
 }
 
 .form-control {
   width: 100%;
-  padding: 12px;
+  padding: var(--spacing-sm) var(--spacing-md);
   border: 1px solid #ddd;
   border-radius: 4px;
-  font-size: 14px;
+  font-size: var(--text-sm);
   transition: border-color 0.2s ease;
+  min-height: 44px; // Touch-friendly
+
+  @media (min-width: 768px) {
+    padding: var(--spacing-md);
+    font-size: var(--text-base);
+  }
+
+  @media (max-width: 767px) {
+    min-height: 48px; // Larger touch targets on mobile
+  }
 }
 
 .form-control:focus {
@@ -127,24 +230,52 @@
 
 .error-message {
   color: #f44336;
-  font-size: 12px;
-  margin-top: 4px;
+  font-size: var(--text-xs);
+  margin-top: var(--spacing-xs);
+
+  @media (min-width: 768px) {
+    font-size: var(--text-sm);
+  }
 }
 
 .form-actions {
   display: flex;
-  gap: 12px;
-  margin-top: 24px;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-lg);
+
+  @media (min-width: 768px) {
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-xl);
+  }
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
 }
 
 .submit-button, .reset-button {
-  padding: 12px 24px;
+  padding: var(--spacing-sm) var(--spacing-lg);
   border: none;
   border-radius: 4px;
-  font-size: 14px;
+  font-size: var(--text-sm);
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
+  min-height: 44px; // Touch-friendly
+
+  @media (min-width: 768px) {
+    padding: var(--spacing-md) var(--spacing-xl);
+    font-size: var(--text-base);
+  }
+
+  @media (max-width: 767px) {
+    min-height: 48px; // Larger touch targets on mobile
+  }
+
+  @media (max-width: 480px) {
+    width: 100%; // Full width buttons on small screens
+  }
 }
 
 .submit-button {
@@ -154,11 +285,13 @@
 
 .submit-button:hover:not(:disabled) {
   background: #1976d2;
+  transform: translateY(-1px);
 }
 
 .submit-button:disabled {
   background: #ccc;
   cursor: not-allowed;
+  transform: none;
 }
 
 .reset-button {
@@ -169,17 +302,24 @@
 
 .reset-button:hover {
   background: #f5f5f5;
+  transform: translateY(-1px);
 }
 
 .form-status {
-  margin-top: 20px;
-  padding: 16px;
+  margin-top: var(--spacing-md);
+  padding: var(--spacing-md);
   background: #f5f5f5;
   border-radius: 4px;
-  font-size: 12px;
+  font-size: var(--text-xs);
   color: #666;
+
+  @media (min-width: 768px) {
+    margin-top: var(--spacing-lg);
+    padding: var(--spacing-lg);
+    font-size: var(--text-sm);
+  }
 }
 
 .form-status p {
-  margin: 4px 0;
+  margin: var(--spacing-xs) 0;
 }

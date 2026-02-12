@@ -1,0 +1,45 @@
+server:
+  port: 8082
+
+spring:
+  ai:
+    mcp:
+      server:
+        name: demo-mcp-server
+        version: 0.0.1
+        protocol: STREAMABLE
+        enabled: true
+        streamable-http:
+          mcp-endpoint: /api/mcp
+          keep-alive-interval: 30s
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:9000/oauth2/jwks
+          issuer-uri: http://localhost:9000
+          audiences: mcp-audience
+
+### for STDIO
+---
+spring:
+  config:
+    activate:
+      on-profile:
+        stdio
+
+  ai:
+    mcp:
+      server:
+        stdio: true
+
+  main:
+    banner-mode: off
+    web-application-type: none
+
+logging:
+  level:
+    root: debug
+logging.pattern.console:
+logging.file.name: mcp-server.log

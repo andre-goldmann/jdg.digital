@@ -56,26 +56,260 @@ body {
 // Include theme styles for all components
 //@include mat.all-component-themes($theme);
 
-// Global styles for the application
+// ===============================================
+// RESPONSIVE BREAKPOINTS
+// ===============================================
+:root {
+  // Breakpoint definitions
+  --bp-mobile: 480px;
+  --bp-tablet: 768px;
+  --bp-desktop: 1024px;
+  --bp-large: 1200px;
+
+  // Responsive spacing scale
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-xxl: 3rem;
+
+  // Responsive font sizes
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+
+  // Container max-widths
+  --container-sm: 100%;
+  --container-md: 100%;
+  --container-lg: 1024px;
+  --container-xl: 1200px;
+}
+
+// ===============================================
+// GLOBAL STYLES WITH MOBILE-FIRST APPROACH
+// ===============================================
+* {
+  box-sizing: border-box;
+}
+
 html, body {
   height: 100%;
   margin: 0;
+  padding: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
+// Mobile-first responsive base font size
+html {
+  font-size: 14px;
+
+  @media (min-width: 768px) {
+    font-size: 16px;
+  }
+}
+
+// ===============================================
+// RESPONSIVE CONTAINER CLASSES
+// ===============================================
+.container {
+  width: 100%;
+  padding-left: var(--spacing-md);
+  padding-right: var(--spacing-md);
+  margin-left: auto;
+  margin-right: auto;
+
+  @media (min-width: 768px) {
+    padding-left: var(--spacing-lg);
+    padding-right: var(--spacing-lg);
+  }
+
+  @media (min-width: 1024px) {
+    max-width: var(--container-lg);
+  }
+
+  @media (min-width: 1200px) {
+    max-width: var(--container-xl);
+  }
+}
+
+// ===============================================
+// RESPONSIVE UTILITY CLASSES
+// ===============================================
+
+// Spacing utilities
+.p-xs { padding: var(--spacing-xs); }
+.p-sm { padding: var(--spacing-sm); }
+.p-md { padding: var(--spacing-md); }
+.p-lg { padding: var(--spacing-lg); }
+.p-xl { padding: var(--spacing-xl); }
+
+.m-xs { margin: var(--spacing-xs); }
+.m-sm { margin: var(--spacing-sm); }
+.m-md { margin: var(--spacing-md); }
+.m-lg { margin: var(--spacing-lg); }
+.m-xl { margin: var(--spacing-xl); }
+
+// Responsive text sizes
+.text-xs { font-size: var(--text-xs); }
+.text-sm { font-size: var(--text-sm); }
+.text-base { font-size: var(--text-base); }
+.text-lg { font-size: var(--text-lg); }
+.text-xl { font-size: var(--text-xl); }
+.text-2xl { font-size: var(--text-2xl); }
+.text-3xl { font-size: var(--text-3xl); }
+
+// Display utilities
+.hidden { display: none; }
+.block { display: block; }
+.inline-block { display: inline-block; }
+.flex { display: flex; }
+.grid { display: grid; }
+
+// Responsive visibility
+.hidden-mobile {
+  @media (max-width: 767px) {
+    display: none !important;
+  }
+}
+
+.hidden-tablet {
+  @media (min-width: 768px) and (max-width: 1023px) {
+    display: none !important;
+  }
+}
+
+.hidden-desktop {
+  @media (min-width: 1024px) {
+    display: none !important;
+  }
+}
+
+.visible-mobile-only {
+  display: none;
+  @media (max-width: 767px) {
+    display: block !important;
+  }
+}
+
+// ===============================================
+// ENHANCED AUTH CONTAINER
+// ===============================================
 .auth-container {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: var(--spacing-md);
+
+  @media (min-width: 768px) {
+    padding: var(--spacing-xl);
+  }
 }
 
 .auth-card {
   max-width: 400px;
   width: 100%;
-  margin: 2rem;
+  margin: 0;
+
+  @media (min-width: 768px) {
+    margin: var(--spacing-lg);
+  }
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+// ===============================================
+// RESPONSIVE GRID SYSTEM
+// ===============================================
+.grid {
+  display: grid;
+  gap: var(--spacing-md);
+
+  &.grid-1 { grid-template-columns: 1fr; }
+  &.grid-2 { grid-template-columns: repeat(2, 1fr); }
+  &.grid-3 { grid-template-columns: repeat(3, 1fr); }
+  &.grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+  // Auto-responsive grid
+  &.grid-auto-fit {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+
+  &.grid-auto-fill {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+
+  @media (max-width: 767px) {
+    &.grid-2,
+    &.grid-3,
+    &.grid-4 {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (min-width: 768px) and (max-width: 1023px) {
+    &.grid-3,
+    &.grid-4 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+}
+
+// ===============================================
+// TOUCH-FRIENDLY IMPROVEMENTS
+// ===============================================
+button, .mat-mdc-button, .mat-mdc-raised-button,
+.mat-mdc-outlined-button, .mat-mdc-fab, .mat-mdc-mini-fab {
+  min-height: 44px; // WCAG recommended touch target size
+
+  @media (max-width: 767px) {
+    min-height: 48px; // Larger touch targets on mobile
+  }
+}
+
+// Form field improvements for mobile
+.mat-mdc-form-field {
+  @media (max-width: 767px) {
+    .mat-mdc-text-field-wrapper {
+      min-height: 48px;
+    }
+  }
+}
+
+// ===============================================
+// ACCESSIBILITY IMPROVEMENTS
+// ===============================================
+// Focus visible improvements
+*:focus-visible {
+  outline: 2px solid #667eea;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+// Reduced motion support
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+// High contrast support
+@media (prefers-contrast: high) {
+  .mat-mdc-card,
+  .mat-mdc-button,
+  .mat-mdc-form-field {
+    border: 2px solid currentColor;
+  }
+}

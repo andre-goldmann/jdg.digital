@@ -11,6 +11,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatMenuModule } from '@angular/material/menu';
 import { LayoutModule } from '@angular/cdk/layout';
 
 const materialModules = [
@@ -26,6 +27,7 @@ const materialModules = [
   MatListModule,
   MatExpansionModule,
   MatDividerModule,
+  MatMenuModule,
   LayoutModule,
 ];
 

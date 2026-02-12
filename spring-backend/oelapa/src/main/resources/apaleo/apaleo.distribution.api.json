@@ -1,0 +1,1565 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "apaleo Distribution API",
+    "description": "The Distribution API is tailored for apps that are integrating distribution channels with apaleo. You can subscribe for availability, rates and inventory (ARI) data, create new bookings and modify existing bookings.",
+    "version": "v1"
+  },
+  "paths": {
+    "/v1/bookings": {
+      "post": {
+        "tags": [
+          "Booking"
+        ],
+        "summary": "Create a booking for one or more reservations.",
+        "description": "Create a booking taking a list of reservations as input<br>You must have this scope: 'distribution:reservations.manage'.",
+        "operationId": "BookingsPost",
+        "consumes": [
+          "application/json-patch+json",
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "The list of reservations you want to create.",
+            "schema": {
+              "$ref": "#/definitions/CreateBookingModel"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "All new reservations were created.",
+            "schema": {
+              "$ref": "#/definitions/BookingResponseModel"
+            }
+          },
+          "404": {
+            "description": "The Request-URI could not be found."
+          },
+          "415": {
+            "description": "Unsupported media type."
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "401": {
+            "description": "You are unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "500": {
+            "description": "An unexpected error occurred."
+          },
+          "503": {
+            "description": "The server is currently unavailable. Please try later."
+          },
+          "422": {
+            "description": "Validation errors in the request body or query params.",
+            "schema": {
+              "$ref": "#/definitions/MessageItemCollection"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "distribution:reservations.manage"
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/bookings/{id}": {
+      "put": {
+        "tags": [
+          "Booking"
+        ],
+        "summary": "Modify a booking with one or more reservations.",
+        "description": "Modify a booking and existing reservations or adds new reservations.\r\nReservations without `id` set will be created, and only reservations with `id` will be modified.<br>You must have this scope: 'distribution:reservations.manage'.",
+        "operationId": "BookingsByIdPut",
+        "consumes": [
+          "application/json-patch+json",
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "Id of the booking.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "The list of reservations you want to modify or add.",
+            "schema": {
+              "$ref": "#/definitions/ModifyBookingModel"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Modification of the booking was successful.",
+            "schema": {
+              "$ref": "#/definitions/BookingResponseModel"
+            }
+          },
+          "404": {
+            "description": "The Request-URI could not be found."
+          },
+          "415": {
+            "description": "Unsupported media type."
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "401": {
+            "description": "You are unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "500": {
+            "description": "An unexpected error occurred."
+          },
+          "503": {
+            "description": "The server is currently unavailable. Please try later."
+          },
+          "422": {
+            "description": "Validation errors in the request body or query params.",
+            "schema": {
+              "$ref": "#/definitions/MessageItemCollection"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "distribution:reservations.manage"
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/reservations/{id}/cancel": {
+      "put": {
+        "tags": [
+          "Reservation"
+        ],
+        "summary": "Cancel a reservation.",
+        "description": "Cancel a specific reservation which is in status 'Confirmed' and where the arrival time is in the future.<br>You must have this scope: 'distribution:reservations.manage'.",
+        "operationId": "ReservationsByIdCancelPut",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "Id of the reservation that should be processed.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Cancellation of the reservation was successful."
+          },
+          "404": {
+            "description": "The Request-URI could not be found."
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "401": {
+            "description": "You are unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "500": {
+            "description": "An unexpected error occurred."
+          },
+          "503": {
+            "description": "The server is currently unavailable. Please try later."
+          },
+          "422": {
+            "description": "Validation errors in the request body or query params.",
+            "schema": {
+              "$ref": "#/definitions/MessageItemCollection"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "distribution:reservations.manage"
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/subscriptions": {
+      "get": {
+        "tags": [
+          "Subscription"
+        ],
+        "summary": "Get subscriptions",
+        "description": "Get a list of all the subscriptions for ARI notifications for your API client.<br>You must have this scope: 'distribution:subscriptions.manage'.",
+        "operationId": "SubscriptionsGet",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/SubscriptionListModel"
+            }
+          },
+          "204": {
+            "description": "There are no subscriptions found."
+          },
+          "404": {
+            "description": "The Request-URI could not be found."
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "401": {
+            "description": "You are unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "500": {
+            "description": "An unexpected error occurred."
+          },
+          "503": {
+            "description": "The server is currently unavailable. Please try later."
+          },
+          "422": {
+            "description": "Validation errors in the request body or query params.",
+            "schema": {
+              "$ref": "#/definitions/MessageItemCollection"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "distribution:subscriptions.manage"
+            ]
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Subscription"
+        ],
+        "summary": "Create a new subscription",
+        "description": "Create a new subscription for receiving ARI notifications.<br>You must have this scope: 'distribution:subscriptions.manage'.",
+        "operationId": "SubscriptionsPost",
+        "consumes": [
+          "application/json-patch+json",
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "The definition of the subscription.",
+            "schema": {
+              "$ref": "#/definitions/CreateSubscriptionModel"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/SubscriptionCreatedModel"
+            }
+          },
+          "404": {
+            "description": "The Request-URI could not be found."
+          },
+          "415": {
+            "description": "Unsupported media type."
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "401": {
+            "description": "You are unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "500": {
+            "description": "An unexpected error occurred."
+          },
+          "503": {
+            "description": "The server is currently unavailable. Please try later."
+          },
+          "422": {
+            "description": "Validation errors in the request body or query params.",
+            "schema": {
+              "$ref": "#/definitions/MessageItemCollection"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "distribution:subscriptions.manage"
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/subscriptions/{id}": {
+      "get": {
+        "tags": [
+          "Subscription"
+        ],
+        "summary": "Get a subscription",
+        "description": "Get the specific subscription for ARI notifications for your API client.<br>You must have this scope: 'distribution:subscriptions.manage'.",
+        "operationId": "SubscriptionsByIdGet",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The id of the subscription.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/SubscriptionModel"
+            }
+          },
+          "404": {
+            "description": "The Request-URI could not be found."
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "401": {
+            "description": "You are unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "500": {
+            "description": "An unexpected error occurred."
+          },
+          "503": {
+            "description": "The server is currently unavailable. Please try later."
+          },
+          "422": {
+            "description": "Validation errors in the request body or query params.",
+            "schema": {
+              "$ref": "#/definitions/MessageItemCollection"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "distribution:subscriptions.manage"
+            ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Subscription"
+        ],
+        "summary": "Modify a subscription",
+        "description": "Use this call to modify a subscription.<br>You must have this scope: 'distribution:subscriptions.manage'.",
+        "operationId": "SubscriptionsByIdPut",
+        "consumes": [
+          "application/json-patch+json",
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The id of the subscription.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "The definition of the subscription.",
+            "schema": {
+              "$ref": "#/definitions/ModifySubscriptionModel"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "Modification of the subscription was successful."
+          },
+          "404": {
+            "description": "The Request-URI could not be found."
+          },
+          "415": {
+            "description": "Unsupported media type."
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "401": {
+            "description": "You are unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "500": {
+            "description": "An unexpected error occurred."
+          },
+          "503": {
+            "description": "The server is currently unavailable. Please try later."
+          },
+          "422": {
+            "description": "Validation errors in the request body or query params.",
+            "schema": {
+              "$ref": "#/definitions/MessageItemCollection"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "distribution:subscriptions.manage"
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Subscription"
+        ],
+        "summary": "Delete a subscription",
+        "description": "Use this call to delete a subscription. No more ARI notifications will be sent.<br>You must have this scope: 'distribution:subscriptions.manage'.",
+        "operationId": "SubscriptionsByIdDelete",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The id of the subscription.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deletion of the subscription was successful."
+          },
+          "404": {
+            "description": "The Request-URI could not be found."
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "401": {
+            "description": "You are unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "500": {
+            "description": "An unexpected error occurred."
+          },
+          "503": {
+            "description": "The server is currently unavailable. Please try later."
+          },
+          "422": {
+            "description": "Validation errors in the request body or query params.",
+            "schema": {
+              "$ref": "#/definitions/MessageItemCollection"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "distribution:subscriptions.manage"
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/subscriptions/{id}/trigger-full-sync": {
+      "put": {
+        "tags": [
+          "Subscription"
+        ],
+        "summary": "Trigger full ARI sync",
+        "description": "Use this call to trigger full ARI sync. Once it's accepted, the sync will be performed.<br>You must have this scope: 'distribution:subscriptions.manage'.",
+        "operationId": "SubscriptionsByIdTrigger-full-syncPut",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The id of the subscription.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "202": {
+            "description": "Trigger full ARI sync was accepted."
+          },
+          "404": {
+            "description": "The Request-URI could not be found."
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "401": {
+            "description": "You are unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "500": {
+            "description": "An unexpected error occurred."
+          },
+          "503": {
+            "description": "The server is currently unavailable. Please try later."
+          },
+          "422": {
+            "description": "Validation errors in the request body or query params.",
+            "schema": {
+              "$ref": "#/definitions/MessageItemCollection"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "distribution:subscriptions.manage"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "AmountModel": {
+      "required": [
+        "amount",
+        "currency"
+      ],
+      "type": "object",
+      "properties": {
+        "amount": {
+          "format": "double",
+          "type": "number"
+        },
+        "currency": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "BookerModel": {
+      "required": [
+        "lastName"
+      ],
+      "type": "object",
+      "properties": {
+        "title": {
+          "description": "Title of the booker",
+          "enum": [
+            "Mr",
+            "Ms",
+            "Dr",
+            "Prof",
+            "Mrs",
+            "Other"
+          ],
+          "type": "string"
+        },
+        "gender": {
+          "description": "Gender of the booker",
+          "enum": [
+            "Female",
+            "Male",
+            "Other",
+            "Unknown"
+          ],
+          "type": "string"
+        },
+        "firstName": {
+          "description": "First name of the booker",
+          "type": "string"
+        },
+        "middleInitial": {
+          "description": "Middle initial of the booker",
+          "type": "string"
+        },
+        "lastName": {
+          "description": "Last name of the booker",
+          "minLength": 1,
+          "type": "string"
+        },
+        "email": {
+          "description": "Email address of the booker",
+          "type": "string"
+        },
+        "phone": {
+          "description": "Phone number of the booker",
+          "type": "string"
+        },
+        "nationalityCountryCode": {
+          "description": "The booker's nationality, in ISO 3166-1 alpha-2 code",
+          "type": "string"
+        },
+        "address": {
+          "$ref": "#/definitions/PersonAddressModel"
+        },
+        "company": {
+          "$ref": "#/definitions/PersonCompanyModel"
+        },
+        "preferredLanguage": {
+          "description": "Preferred contact two-letter language code (ISO 639-1)",
+          "type": "string"
+        },
+        "birthDate": {
+          "description": "Birth date",
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "BookingResponseModel": {
+      "required": [
+        "id",
+        "reservations"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Booking id",
+          "minLength": 1,
+          "type": "string"
+        },
+        "reservations": {
+          "description": "List of ids for newly created reservations",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ReservationResponseModel"
+          }
+        }
+      },
+      "additionalProperties": false,
+      "example": "{\n  \"id\": \"XPGMSXGF\",\n  \"reservations\": [\n    {\n      \"id\": \"XPGMSXGF-1\",\n      \"externalId\": \"812864414\"\n    },\n    {\n      \"id\": \"XPGMSXGF-2\",\n      \"externalId\": \"812864415\"\n    }\n  ]\n}"
+    },
+    "CommissionModel": {
+      "required": [
+        "commissionAmount"
+      ],
+      "type": "object",
+      "properties": {
+        "commissionAmount": {
+          "$ref": "#/definitions/AmountModel"
+        },
+        "beforeCommissionAmount": {
+          "$ref": "#/definitions/AmountModel"
+        }
+      },
+      "additionalProperties": false
+    },
+    "CreateBookingModel": {
+      "required": [
+        "booker",
+        "channelCode",
+        "reservations"
+      ],
+      "type": "object",
+      "properties": {
+        "paymentAccount": {
+          "$ref": "#/definitions/PaymentAccountModel"
+        },
+        "creditCard": {
+          "$ref": "#/definitions/CreditCardModel"
+        },
+        "booker": {
+          "$ref": "#/definitions/BookerModel"
+        },
+        "comment": {
+          "description": "Additional information and comments",
+          "type": "string"
+        },
+        "bookerComment": {
+          "description": "Additional information and comment by the booker",
+          "type": "string"
+        },
+        "channelCode": {
+          "description": "Channel code",
+          "enum": [
+            "BookingCom",
+            "ChannelManager",
+            "Expedia",
+            "Homelike",
+            "Hrs",
+            "Ibe",
+            "AltoVita",
+            "DesVu"
+          ],
+          "type": "string"
+        },
+        "source": {
+          "description": "Source of the reservation",
+          "type": "string"
+        },
+        "reservations": {
+          "description": "List of reservations to create",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CreateReservationModel"
+          }
+        },
+        "transactionReference": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "example": "{\n  \"paymentAccount\": {\n    \"accountNumber\": \"1111\",\n    \"accountHolder\": \"John Doe\",\n    \"expiryMonth\": \"10\",\n    \"expiryYear\": \"2020\",\n    \"paymentMethod\": \"visa\",\n    \"payerEmail\": \"s.hopper@test.com\",\n    \"payerReference\": \"4ea6462b-cca3-4c17-a035-c7b5132db83c\",\n    \"isVirtual\": false\n  },\n  \"creditCard\": {\n    \"cardNumber\": \"4111111111111111\",\n    \"cvc\": \"737\",\n    \"cardHolder\": \"John Doe\",\n    \"expiryMonth\": \"03\",\n    \"expiryYear\": \"2030\",\n    \"cardType\": \"visa\",\n    \"payerEmail\": \"s.hopper@test.com\",\n    \"isVirtual\": true\n  },\n  \"booker\": {\n    \"title\": \"Mr\",\n    \"firstName\": \"Jon\",\n    \"middleInitial\": \"D\",\n    \"lastName\": \"Doe\",\n    \"email\": \"john.d@doe.com\",\n    \"phone\": \"+4989123343\",\n    \"nationalityCountryCode\": \"DE\",\n    \"address\": {\n      \"addressLine1\": \"My Street 1\",\n      \"addressLine2\": \"c/o Company\",\n      \"postalCode\": \"12453\",\n      \"city\": \"MyCity\",\n      \"countryCode\": \"GB\",\n      \"regionCode\": \"GB-ENG\"\n    },\n    \"company\": {\n      \"name\": \"Super Company\",\n      \"taxId\": \"DE2261672890\"\n    },\n    \"preferredLanguage\": \"DE\",\n    \"birthDate\": \"1990-11-12T00:00:00Z\"\n  },\n  \"channelCode\": \"ChannelManager\",\n  \"source\": \"Orbitz\",\n  \"reservations\": [\n    {\n      \"services\": [\n        {\n          \"serviceId\": \"MUC-BRKF\",\n          \"dates\": [\n            {\n              \"serviceDate\": \"2025-11-19T00:00:00Z\",\n              \"amount\": {\n                \"amount\": 20.0,\n                \"currency\": \"EUR\"\n              }\n            }\n          ]\n        }\n      ],\n      \"arrival\": \"2025-11-18T00:00:00Z\",\n      \"departure\": \"2025-11-20T00:00:00Z\",\n      \"adults\": 1,\n      \"guestComment\": \"I need a wake up service\",\n      \"externalId\": \"812864414\",\n      \"primaryGuest\": {\n        \"title\": \"Mr\",\n        \"firstName\": \"Jon\",\n        \"middleInitial\": \"D\",\n        \"lastName\": \"Doe\",\n        \"email\": \"john.d@doe.com\",\n        \"phone\": \"+4989123343\",\n        \"address\": {\n          \"addressLine1\": \"My Street 1\",\n          \"addressLine2\": \"c/o Company\",\n          \"postalCode\": \"12453\",\n          \"city\": \"MyCity\",\n          \"countryCode\": \"GB\",\n          \"regionCode\": \"GB-ENG\"\n        },\n        \"nationalityCountryCode\": \"DE\",\n        \"identificationNumber\": \"31195855\",\n        \"identificationType\": \"PassportNumber\",\n        \"company\": {\n          \"name\": \"Company Co.\",\n          \"taxId\": \"DE2261672891\"\n        },\n        \"preferredLanguage\": \"DE\",\n        \"birthDate\": \"1990-11-12T00:00:00Z\"\n      },\n      \"travelPurpose\": \"Business\",\n      \"corporateCode\": \"APALEO\",\n      \"prePaymentAmount\": {\n        \"amount\": 70.0,\n        \"currency\": \"EUR\"\n      },\n      \"timeSlices\": [\n        {\n          \"ratePlanId\": \"MUC-NONREF_DBL\",\n          \"totalAmount\": {\n            \"amount\": 120.0,\n            \"currency\": \"EUR\"\n          }\n        },\n        {\n          \"ratePlanId\": \"MUC-NONREF_DBL\",\n          \"totalAmount\": {\n            \"amount\": 125.0,\n            \"currency\": \"EUR\"\n          }\n        }\n      ],\n      \"childrenAges\": [\n        6\n      ],\n      \"externalReferences\": {\n        \"globalDistributionSystemId\": \"A2PA6WHY\",\n        \"onlineTravelAgencyId\": \"5247241379\",\n        \"onlineBookingToolId\": \"APA_HQL-C26181420|WAW-MUN-BC2-1U1\",\n        \"channelManagerId\": \"123295310\",\n        \"centralReservationSystemId\": \"91200088\"\n      },\n      \"taxRemittanceResponsibility\": \"Ota\"\n    }\n  ],\n  \"transactionReference\": \"564578124534890J\"\n}"
+    },
+    "CreateReservationModel": {
+      "required": [
+        "adults",
+        "arrival",
+        "departure",
+        "externalId",
+        "timeSlices"
+      ],
+      "type": "object",
+      "properties": {
+        "services": {
+          "description": "Additional services (extras, add-ons) that should be added to the reservation",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ServiceModel"
+          }
+        },
+        "arrival": {
+          "description": "Date of arrival, in ISO 8601",
+          "type": "string"
+        },
+        "departure": {
+          "description": "Date of departure, in ISO 8601",
+          "type": "string"
+        },
+        "adults": {
+          "format": "int32",
+          "description": "Number of adults",
+          "type": "integer"
+        },
+        "guestComment": {
+          "description": "Additional information and comment by the guest",
+          "type": "string"
+        },
+        "externalId": {
+          "description": "The id from the OTA, GDS or other system the booking was made from.\r\nThis id should contain the confirmation number the guest was provided with to enable the hotel staff to find the reservation based on that information",
+          "minLength": 1,
+          "type": "string"
+        },
+        "primaryGuest": {
+          "$ref": "#/definitions/GuestModel"
+        },
+        "additionalGuests": {
+          "description": "Additional guests of the reservation.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GuestModel"
+          }
+        },
+        "travelPurpose": {
+          "description": "The purpose of the trip, leisure or business",
+          "enum": [
+            "Business",
+            "Leisure"
+          ],
+          "type": "string"
+        },
+        "pricingType": {
+          "description": "The type of prices, before taxes, before taxes with VAT or after taxes",
+          "enum": [
+            "BeforeTaxesWithVat",
+            "BeforeTaxes",
+            "AfterTaxes"
+          ],
+          "type": "string"
+        },
+        "corporateCode": {
+          "description": "Corporate code provided during creation. Used to find offers during amend.",
+          "type": "string"
+        },
+        "prePaymentAmount": {
+          "$ref": "#/definitions/AmountModel"
+        },
+        "timeSlices": {
+          "description": "Gross prices including services and taxes for each time slice. They will be applied to the reservation timeslices\r\nin the order specified from arrival to departure",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TimeSliceModel"
+          }
+        },
+        "childrenAges": {
+          "description": "The ages of the children",
+          "type": "array",
+          "items": {
+            "format": "int32",
+            "type": "integer"
+          }
+        },
+        "commission": {
+          "$ref": "#/definitions/CommissionModel"
+        },
+        "externalReferences": {
+          "$ref": "#/definitions/ExternalReferencesModel"
+        },
+        "taxRemittanceResponsibility": {
+          "description": "Specifies who is responsible for remitting taxes to local authorities for a reservation:\r\n- Hotel: The property (hotel) is responsible for remitting all applicable taxes.\r\n- OTA: The OTA (Online Travel Agency) remits at least one of the applicable taxes.\r\nIf the value is not provided, the OTA does not provide any information about tax remittance and the default behavior is assumed.",
+          "enum": [
+            "Hotel",
+            "Ota"
+          ],
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "CreateSubscriptionModel": {
+      "required": [
+        "channelCode",
+        "enabled",
+        "endpointUrl",
+        "numberOfDays",
+        "propertyId",
+        "ratePlanIds"
+      ],
+      "type": "object",
+      "properties": {
+        "propertyId": {
+          "description": "Property id",
+          "minLength": 1,
+          "type": "string"
+        },
+        "channelCode": {
+          "description": "Channel code",
+          "enum": [
+            "BookingCom",
+            "ChannelManager",
+            "Expedia",
+            "Homelike",
+            "Hrs",
+            "Ibe",
+            "AltoVita",
+            "DesVu"
+          ],
+          "type": "string"
+        },
+        "endpointUrl": {
+          "description": "Webhook url where the ARI notification is sent to. Please ensure the webhook URL uses some\r\nmeans of authorization by having a token as query parameter in the URL.",
+          "minLength": 1,
+          "type": "string"
+        },
+        "ratePlanIds": {
+          "description": "Rate plans that should be included into the ARI push notification",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "numberOfDays": {
+          "format": "int32",
+          "description": "Number of days from today into the future that should be included in the ARI data push notification",
+          "type": "integer"
+        },
+        "enabled": {
+          "description": "Whether subscription is enabled. No automatic notifications are sent if the subscription is not enabled",
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false,
+      "example": "{\n  \"propertyId\": \"MUC\",\n  \"channelCode\": \"ChannelManager\",\n  \"endpointUrl\": \"https://my-domain.com/notifications?token=hsu38hdsh82hskal342s\",\n  \"ratePlanIds\": [\n    \"MUC-NONREF_DBL\",\n    \"MUC-NONREF_SGL\"\n  ],\n  \"numberOfDays\": 365,\n  \"enabled\": true\n}"
+    },
+    "CreditCardModel": {
+      "required": [
+        "cardHolder",
+        "cardNumber",
+        "cardType",
+        "expiryMonth",
+        "expiryYear"
+      ],
+      "type": "object",
+      "properties": {
+        "cardNumber": {
+          "description": "The credit card number",
+          "minLength": 1,
+          "type": "string"
+        },
+        "cvc": {
+          "description": "The security code of the credit card",
+          "type": "string"
+        },
+        "cardHolder": {
+          "description": "The name of the credit card holder",
+          "minLength": 1,
+          "type": "string"
+        },
+        "expiryMonth": {
+          "description": "The expiration month of the credit card",
+          "minLength": 1,
+          "pattern": "^\\d{1,2}$",
+          "type": "string"
+        },
+        "expiryYear": {
+          "description": "The expiration year of the credit card",
+          "minLength": 1,
+          "pattern": "^\\d{4}$",
+          "type": "string"
+        },
+        "cardType": {
+          "description": "The type of the credit card",
+          "minLength": 1,
+          "type": "string"
+        },
+        "payerEmail": {
+          "description": "The email address of the shopper / customer",
+          "type": "string"
+        },
+        "isVirtual": {
+          "description": "Indicates if the card is a virtual credit card. If not specified it defaults to 'false'",
+          "type": "boolean"
+        },
+        "activationTime": {
+          "description": "Date and time when credit card gets activated, in ISO 8601",
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ExternalReferencesModel": {
+      "type": "object",
+      "properties": {
+        "globalDistributionSystemId": {
+          "description": "The ID of the global distribution system.",
+          "type": "string"
+        },
+        "onlineTravelAgencyId": {
+          "description": "The ID of the online travel agency.",
+          "type": "string"
+        },
+        "onlineBookingToolId": {
+          "description": "The ID of the online booking tool.",
+          "type": "string"
+        },
+        "channelManagerId": {
+          "description": "The ID of the channel manager.",
+          "type": "string"
+        },
+        "centralReservationSystemId": {
+          "description": "The ID of the central reservation system.",
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "GuestModel": {
+      "required": [
+        "lastName"
+      ],
+      "type": "object",
+      "properties": {
+        "title": {
+          "description": "Title of the guest",
+          "enum": [
+            "Mr",
+            "Ms",
+            "Dr",
+            "Prof",
+            "Mrs",
+            "Other"
+          ],
+          "type": "string"
+        },
+        "gender": {
+          "description": "Gender of the guest",
+          "enum": [
+            "Female",
+            "Male",
+            "Other",
+            "Unknown"
+          ],
+          "type": "string"
+        },
+        "firstName": {
+          "description": "First name of the guest",
+          "type": "string"
+        },
+        "middleInitial": {
+          "description": "Middle initial of the guest",
+          "type": "string"
+        },
+        "lastName": {
+          "description": "Last name of the guest",
+          "minLength": 1,
+          "type": "string"
+        },
+        "email": {
+          "description": "Email address of the guest",
+          "type": "string"
+        },
+        "phone": {
+          "description": "Phone number of the guest",
+          "type": "string"
+        },
+        "address": {
+          "$ref": "#/definitions/PersonAddressModel"
+        },
+        "nationalityCountryCode": {
+          "description": "The guest's nationality, in ISO 3166-1 alpha-2 code",
+          "type": "string"
+        },
+        "identificationNumber": {
+          "description": "The guest's identification number for the given identificationType.",
+          "type": "string"
+        },
+        "identificationType": {
+          "description": "The type of the identificationNumber",
+          "enum": [
+            "SocialInsuranceNumber",
+            "PassportNumber"
+          ],
+          "type": "string"
+        },
+        "company": {
+          "$ref": "#/definitions/PersonCompanyModel"
+        },
+        "preferredLanguage": {
+          "description": "Preferred contact two-letter language code (ISO 639-1)",
+          "type": "string"
+        },
+        "birthDate": {
+          "description": "Birth date",
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "MessageItemCollection": {
+      "type": "object",
+      "properties": {
+        "messages": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "readOnly": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "ModifyBookingModel": {
+      "type": "object",
+      "properties": {
+        "creditCard": {
+          "$ref": "#/definitions/CreditCardModel"
+        },
+        "booker": {
+          "$ref": "#/definitions/BookerModel"
+        },
+        "comment": {
+          "description": "Additional information and comments",
+          "type": "string"
+        },
+        "bookerComment": {
+          "description": "Additional information and comment by the booker",
+          "type": "string"
+        },
+        "reservations": {
+          "description": "List of reservations to modify/add",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ReservationModel"
+          }
+        }
+      },
+      "additionalProperties": false,
+      "example": "{\n  \"creditCard\": {\n    \"cardNumber\": \"4111111111111111\",\n    \"cvc\": \"737\",\n    \"cardHolder\": \"John Doe J.\",\n    \"expiryMonth\": \"03\",\n    \"expiryYear\": \"2030\",\n    \"cardType\": \"visa\",\n    \"payerEmail\": \"s.hopper@test.com\",\n    \"isVirtual\": true\n  },\n  \"booker\": {\n    \"title\": \"Mr\",\n    \"firstName\": \"Jon\",\n    \"middleInitial\": \"D\",\n    \"lastName\": \"Doe\",\n    \"email\": \"john.d@doe.com\",\n    \"phone\": \"+4989123343\",\n    \"nationalityCountryCode\": \"DE\",\n    \"address\": {\n      \"addressLine1\": \"My Street 1\",\n      \"addressLine2\": \"c/o Company\",\n      \"postalCode\": \"12453\",\n      \"city\": \"MyCity\",\n      \"countryCode\": \"GB\",\n      \"regionCode\": \"GB-ENG\"\n    },\n    \"company\": {\n      \"name\": \"Super Company\",\n      \"taxId\": \"DE2261672890\"\n    },\n    \"preferredLanguage\": \"DE\",\n    \"birthDate\": \"1990-11-12T00:00:00Z\"\n  },\n  \"reservations\": [\n    {\n      \"services\": [\n        {\n          \"serviceId\": \"MUC-BRKF\",\n          \"dates\": [\n            {\n              \"serviceDate\": \"2025-11-19T00:00:00Z\",\n              \"amount\": {\n                \"amount\": 20.0,\n                \"currency\": \"EUR\"\n              }\n            }\n          ]\n        }\n      ],\n      \"arrival\": \"2025-11-18T00:00:00Z\",\n      \"departure\": \"2025-11-21T00:00:00Z\",\n      \"adults\": 1,\n      \"guestComment\": \"I need a wake up service\",\n      \"externalId\": \"812864414\",\n      \"primaryGuest\": {\n        \"title\": \"Mr\",\n        \"firstName\": \"Jon\",\n        \"middleInitial\": \"D\",\n        \"lastName\": \"Doe\",\n        \"email\": \"john.d@doe.com\",\n        \"phone\": \"+4989123343\",\n        \"address\": {\n          \"addressLine1\": \"My Street 1\",\n          \"addressLine2\": \"c/o Company\",\n          \"postalCode\": \"12453\",\n          \"city\": \"MyCity\",\n          \"countryCode\": \"GB\",\n          \"regionCode\": \"GB-ENG\"\n        },\n        \"nationalityCountryCode\": \"DE\",\n        \"identificationNumber\": \"31195855\",\n        \"identificationType\": \"PassportNumber\",\n        \"company\": {\n          \"name\": \"Company Co.\",\n          \"taxId\": \"DE2261672891\"\n        },\n        \"preferredLanguage\": \"DE\",\n        \"birthDate\": \"1990-11-12T00:00:00Z\"\n      },\n      \"travelPurpose\": \"Business\",\n      \"timeSlices\": [\n        {\n          \"ratePlanId\": \"MUC-NONREF_DBL\",\n          \"totalAmount\": {\n            \"amount\": 120.0,\n            \"currency\": \"EUR\"\n          }\n        },\n        {\n          \"ratePlanId\": \"MUC-NONREF_DBL\",\n          \"totalAmount\": {\n            \"amount\": 125.0,\n            \"currency\": \"EUR\"\n          }\n        },\n        {\n          \"ratePlanId\": \"MUC-NONREF_DBL\",\n          \"totalAmount\": {\n            \"amount\": 130.0,\n            \"currency\": \"EUR\"\n          }\n        }\n      ],\n      \"childrenAges\": [\n        6\n      ],\n      \"externalReferences\": {\n        \"globalDistributionSystemId\": \"A2PA6WHY\",\n        \"onlineTravelAgencyId\": \"5247241379\",\n        \"onlineBookingToolId\": \"APA_HQL-C26181420|WAW-MUN-BC2-1U1\",\n        \"channelManagerId\": \"123295310\",\n        \"centralReservationSystemId\": \"91200088\"\n      }\n    }\n  ]\n}"
+    },
+    "ModifySubscriptionModel": {
+      "required": [
+        "enabled",
+        "endpointUrl",
+        "numberOfDays",
+        "ratePlanIds"
+      ],
+      "type": "object",
+      "properties": {
+        "endpointUrl": {
+          "description": "Webhook url where the ARI notification is sent to. Please ensure the webhook URL uses some\r\nmeans of authorization by having a token as query parameter in the URL.",
+          "minLength": 1,
+          "type": "string"
+        },
+        "ratePlanIds": {
+          "description": "Rate plans that should be included into the ARI push notification",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "numberOfDays": {
+          "format": "int32",
+          "description": "Number of days from today into the future that should be included in the ARI data push notification.\r\nPlease be aware that when you decrease the number of days included in the ARI data for an active\r\nsubscription you need to ensure that the days not included anymore either get deleted or closed on the\r\nchannel as otherwise they will not be updated anymore",
+          "type": "integer"
+        },
+        "enabled": {
+          "description": "Whether subscription is enabled. No automatic notifications are sent if the subscription is not enabled",
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false,
+      "example": "{\n  \"endpointUrl\": \"https://my-domain.com/notifications?token=hsu38hdsh82hskal342s\",\n  \"ratePlanIds\": [\n    \"MUC-NONREF_DBL\",\n    \"MUC-NONREF_SGL\"\n  ],\n  \"numberOfDays\": 365,\n  \"enabled\": true\n}"
+    },
+    "PaymentAccountModel": {
+      "type": "object",
+      "properties": {
+        "accountNumber": {
+          "description": "The account number (e.g. masked credit card number or last 4 digits)",
+          "type": "string"
+        },
+        "accountHolder": {
+          "description": "The account holder (e.g. card holder)",
+          "type": "string"
+        },
+        "expiryMonth": {
+          "description": "The credit card's expiration month",
+          "type": "string"
+        },
+        "expiryYear": {
+          "description": "The credit card's expiration year",
+          "type": "string"
+        },
+        "paymentMethod": {
+          "description": "The payment method (e.g. visa)",
+          "type": "string"
+        },
+        "payerEmail": {
+          "description": "The email address of the shopper / customer",
+          "type": "string"
+        },
+        "payerReference": {
+          "description": "The reference used to uniquely identify the shopper (e.g. user ID or account ID). Used for recurring payments",
+          "type": "string"
+        },
+        "isVirtual": {
+          "description": "Indicates if the payment account is a virtual credit card. If not specified it defaults to 'false'",
+          "type": "boolean"
+        },
+        "inactiveReason": {
+          "description": "A reason why account is inactive",
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "PersonAddressModel": {
+      "type": "object",
+      "properties": {
+        "addressLine1": {
+          "type": "string"
+        },
+        "addressLine2": {
+          "type": "string"
+        },
+        "postalCode": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "countryCode": {
+          "description": "The country code, in ISO 3166-1 alpha-2",
+          "type": "string"
+        },
+        "regionCode": {
+          "description": "Full ISO 3166-2 return code, e.g. US-CA",
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "PersonCompanyModel": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Name of the company",
+          "type": "string"
+        },
+        "taxId": {
+          "description": "Tax or Vat ID of the company",
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ReservationModel": {
+      "required": [
+        "adults",
+        "arrival",
+        "departure",
+        "externalId",
+        "timeSlices"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Id of the reservation",
+          "type": "string"
+        },
+        "services": {
+          "description": "Additional services (extras, add-ons) that should be added to the reservation",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ServiceModel"
+          }
+        },
+        "arrival": {
+          "description": "Date of arrival, in ISO 8601",
+          "type": "string"
+        },
+        "departure": {
+          "description": "Date of departure, in ISO 8601",
+          "type": "string"
+        },
+        "adults": {
+          "format": "int32",
+          "description": "Number of adults",
+          "type": "integer"
+        },
+        "guestComment": {
+          "description": "Additional information and comment by the guest",
+          "type": "string"
+        },
+        "externalId": {
+          "description": "The id from the OTA, GDS or other system the booking was made from.\r\nThis id should contain the confirmation number the guest was provided with to enable the hotel staff to find the reservation based on that information",
+          "minLength": 1,
+          "type": "string"
+        },
+        "primaryGuest": {
+          "$ref": "#/definitions/GuestModel"
+        },
+        "additionalGuests": {
+          "description": "Additional guests of the reservation.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GuestModel"
+          }
+        },
+        "travelPurpose": {
+          "description": "The purpose of the trip, leisure or business",
+          "enum": [
+            "Business",
+            "Leisure"
+          ],
+          "type": "string"
+        },
+        "pricingType": {
+          "description": "The type of prices, before taxes, before taxes with VAT or after taxes",
+          "enum": [
+            "BeforeTaxesWithVat",
+            "BeforeTaxes",
+            "AfterTaxes"
+          ],
+          "type": "string"
+        },
+        "timeSlices": {
+          "description": "Gross prices including services and taxes for each time slice. They will be applied to the reservation timeslices\r\nin the order specified from arrival to departure",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TimeSliceModel"
+          }
+        },
+        "childrenAges": {
+          "description": "The ages of the children",
+          "type": "array",
+          "items": {
+            "format": "int32",
+            "type": "integer"
+          }
+        },
+        "commission": {
+          "$ref": "#/definitions/CommissionModel"
+        },
+        "taxRemittanceResponsibility": {
+          "description": "Specifies who is responsible for remitting taxes to local authorities for a reservation:\r\n- Hotel: The property (hotel) is responsible for remitting all applicable taxes.\r\n- OTA: The OTA (Online Travel Agency) remits at least one of the applicable taxes.\r\nIf the value is not provided, the OTA does not provide any information about tax remittance and the default behavior is assumed.",
+          "enum": [
+            "Hotel",
+            "Ota"
+          ],
+          "type": "string"
+        },
+        "externalReferences": {
+          "$ref": "#/definitions/ExternalReferencesModel"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ReservationResponseModel": {
+      "required": [
+        "externalId",
+        "id"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Id of the reservation",
+          "minLength": 1,
+          "type": "string"
+        },
+        "externalId": {
+          "description": "External id of the reservation",
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ServiceDateModel": {
+      "required": [
+        "serviceDate"
+      ],
+      "type": "object",
+      "properties": {
+        "serviceDate": {
+          "description": "The date the service is delivered, in ISO 8601",
+          "type": "string"
+        },
+        "count": {
+          "format": "int32",
+          "description": "The number of services to book for this date. It defaults to the service offer count when not specified.",
+          "type": "integer"
+        },
+        "amount": {
+          "$ref": "#/definitions/AmountModel"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ServiceModel": {
+      "required": [
+        "serviceId"
+      ],
+      "type": "object",
+      "properties": {
+        "serviceId": {
+          "description": "The service id",
+          "minLength": 1,
+          "type": "string"
+        },
+        "count": {
+          "format": "int32",
+          "description": "The number of services to book for each service date. It defaults to the service offer count when not specified.",
+          "type": "integer"
+        },
+        "amount": {
+          "$ref": "#/definitions/AmountModel"
+        },
+        "dates": {
+          "description": "The optional dates you want to book the service for; if not specified the default service pattern will be used (e.g. whole stay).",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ServiceDateModel"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "SubscriptionCreatedModel": {
+      "required": [
+        "id"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Subscription id",
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "example": "{\n  \"id\": \"M97E2OKD\"\n}"
+    },
+    "SubscriptionListModel": {
+      "required": [
+        "subscriptions"
+      ],
+      "type": "object",
+      "properties": {
+        "subscriptions": {
+          "description": "The subscriptions for ARI notifications",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SubscriptionModel"
+          }
+        }
+      },
+      "additionalProperties": false,
+      "example": "{\n  \"subscriptions\": [\n    {\n      \"id\": \"M97E2OKD\",\n      \"propertyId\": \"MUC\",\n      \"channelCode\": \"ChannelManager\",\n      \"endpointUrl\": \"https://my-domain.com/notifications?token=hsu38hdsh82hskal342s\",\n      \"ratePlanIds\": [\n        \"MUC-NONREF_DBL\",\n        \"MUC-NONREF_SGL\"\n      ],\n      \"numberOfDays\": 365,\n      \"enabled\": true\n    }\n  ]\n}"
+    },
+    "SubscriptionModel": {
+      "required": [
+        "channelCode",
+        "enabled",
+        "endpointUrl",
+        "id",
+        "numberOfDays",
+        "propertyId",
+        "ratePlanIds"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Subscription id",
+          "minLength": 1,
+          "type": "string"
+        },
+        "propertyId": {
+          "description": "Property id",
+          "minLength": 1,
+          "type": "string"
+        },
+        "channelCode": {
+          "description": "Channel code",
+          "enum": [
+            "BookingCom",
+            "ChannelManager",
+            "Expedia",
+            "Homelike",
+            "Hrs",
+            "Ibe",
+            "AltoVita",
+            "DesVu"
+          ],
+          "type": "string"
+        },
+        "endpointUrl": {
+          "description": "Webhook url where the ARI notification is sent to. Please ensure the webhook URL uses some\r\nmeans of authorization by having a token as query parameter in the URL.",
+          "minLength": 1,
+          "type": "string"
+        },
+        "ratePlanIds": {
+          "description": "Rate plans that should be included into the ARI push notification",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "numberOfDays": {
+          "format": "int32",
+          "description": "Number of days from today into the future that should be included in the ARI data push notification",
+          "type": "integer"
+        },
+        "enabled": {
+          "description": "Whether subscription is enabled. No automatic notifications are sent if the subscription is not enabled",
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false,
+      "example": "{\n  \"id\": \"M97E2OKD\",\n  \"propertyId\": \"MUC\",\n  \"channelCode\": \"ChannelManager\",\n  \"endpointUrl\": \"https://my-domain.com/notifications?token=hsu38hdsh82hskal342s\",\n  \"ratePlanIds\": [\n    \"MUC-NONREF_DBL\",\n    \"MUC-NONREF_SGL\"\n  ],\n  \"numberOfDays\": 365,\n  \"enabled\": true\n}"
+    },
+    "TimeSliceModel": {
+      "required": [
+        "ratePlanId",
+        "totalAmount"
+      ],
+      "type": "object",
+      "properties": {
+        "ratePlanId": {
+          "description": "The rate plan id",
+          "minLength": 1,
+          "type": "string"
+        },
+        "totalAmount": {
+          "$ref": "#/definitions/AmountModel"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "securityDefinitions": {
+    "oauth2": {
+      "type": "oauth2",
+      "flow": "implicit",
+      "authorizationUrl": "https://identity.apaleo.com/connect/authorize",
+      "scopes": {
+        "distribution:reservations.manage": "Create/Modify/Cancel reservations",
+        "distribution:subscriptions.manage": "Create/Modify/Delete subscriptions"
+      }
+    }
+  }
+}

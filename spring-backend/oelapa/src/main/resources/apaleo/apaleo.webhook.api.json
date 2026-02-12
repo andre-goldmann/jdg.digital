@@ -1,0 +1,610 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Webhook API",
+    "description": "The Webhook API allows apps to ...",
+    "version": "v1"
+  },
+  "paths": {
+    "/v1/pinger": {
+      "post": {
+        "tags": [
+          "HealthCheck"
+        ],
+        "description": "<br>You need to be authorized (no particular scope required)",
+        "operationId": "PingerPost",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "url",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "The Request-URI could not be found."
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "401": {
+            "description": "You are unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "500": {
+            "description": "An unexpected error occurred."
+          },
+          "503": {
+            "description": "The server is currently unavailable. Please try later."
+          },
+          "422": {
+            "description": "Validation errors in the request body or query params.",
+            "schema": {
+              "$ref": "#/definitions/MessageItemCollection"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [ ]
+          }
+        ]
+      }
+    },
+    "/v1/subscriptions": {
+      "get": {
+        "tags": [
+          "Subscriptions"
+        ],
+        "summary": "Get all subscriptions created for the current account and client",
+        "description": "<br>You need to be authorized (no particular scope required)",
+        "operationId": "SubscriptionsGet",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SubscriptionResponseModel"
+              }
+            }
+          },
+          "404": {
+            "description": "The Request-URI could not be found."
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "401": {
+            "description": "You are unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "500": {
+            "description": "An unexpected error occurred."
+          },
+          "503": {
+            "description": "The server is currently unavailable. Please try later."
+          },
+          "422": {
+            "description": "Validation errors in the request body or query params.",
+            "schema": {
+              "$ref": "#/definitions/MessageItemCollection"
+            }
+          },
+          "204": {
+            "description": "No subscriptions found."
+          }
+        },
+        "security": [
+          {
+            "oauth2": [ ]
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Subscriptions"
+        ],
+        "summary": "Creates subscription",
+        "description": "Creating webhook subscriptions through swagger is disabled.\r\nIn order to create a subscription you must do it directly from your application.\r\nTo learn more visit: https://apaleo.dev/guides/start/webhook/\r\n            \r\nAfter creating the subscription, apaleo sends a ping to the endpoint.\r\nIf the response is not OK, the subscription will not be enabled and error returned",
+        "operationId": "SubscriptionsPost",
+        "consumes": [
+          "application/json-patch+json",
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Subscription details",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateSubscriptionRequestModel"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/CreateSubscriptionResponseModel"
+            }
+          },
+          "422": {
+            "description": "Unprocessable Content",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponseModel"
+            }
+          },
+          "404": {
+            "description": "The Request-URI could not be found."
+          },
+          "415": {
+            "description": "Unsupported media type."
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "401": {
+            "description": "You are unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "500": {
+            "description": "An unexpected error occurred."
+          },
+          "503": {
+            "description": "The server is currently unavailable. Please try later."
+          }
+        },
+        "security": [
+          {
+            "oauth2": [ ]
+          }
+        ]
+      }
+    },
+    "/v1/subscriptions/{id}": {
+      "get": {
+        "tags": [
+          "Subscriptions"
+        ],
+        "description": "<br>You need to be authorized (no particular scope required)",
+        "operationId": "SubscriptionsByIdGet",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/SubscriptionResponseModel"
+            }
+          },
+          "404": {
+            "description": "The Request-URI could not be found."
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "401": {
+            "description": "You are unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "500": {
+            "description": "An unexpected error occurred."
+          },
+          "503": {
+            "description": "The server is currently unavailable. Please try later."
+          },
+          "422": {
+            "description": "Validation errors in the request body or query params.",
+            "schema": {
+              "$ref": "#/definitions/MessageItemCollection"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [ ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Subscriptions"
+        ],
+        "summary": "Updates subscription",
+        "description": "Update a subscription by subscription id.",
+        "operationId": "SubscriptionsByIdPut",
+        "consumes": [
+          "application/json-patch+json",
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "Subscription id",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Subscription details",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ReplaceSubscriptionModel"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "404": {
+            "description": "The Request-URI could not be found."
+          },
+          "415": {
+            "description": "Unsupported media type."
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "401": {
+            "description": "You are unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "500": {
+            "description": "An unexpected error occurred."
+          },
+          "503": {
+            "description": "The server is currently unavailable. Please try later."
+          },
+          "422": {
+            "description": "Validation errors in the request body or query params.",
+            "schema": {
+              "$ref": "#/definitions/MessageItemCollection"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [ ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Subscriptions"
+        ],
+        "summary": "Deletes subscription.",
+        "description": "<br>You need to be authorized (no particular scope required)",
+        "operationId": "SubscriptionsByIdDelete",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "Subscription's ID",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "404": {
+            "description": "The Request-URI could not be found."
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "401": {
+            "description": "You are unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "500": {
+            "description": "An unexpected error occurred."
+          },
+          "503": {
+            "description": "The server is currently unavailable. Please try later."
+          },
+          "422": {
+            "description": "Validation errors in the request body or query params.",
+            "schema": {
+              "$ref": "#/definitions/MessageItemCollection"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [ ]
+          }
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "CreateSubscriptionRequestModel": {
+      "required": [
+        "endpointUrl"
+      ],
+      "type": "object",
+      "properties": {
+        "endpointUrl": {
+          "description": "Endpoint to which notifications will be sent to",
+          "minLength": 1,
+          "type": "string"
+        },
+        "topics": {
+          "description": "Subscribe to events from the provided topics",
+          "type": "array",
+          "items": {
+            "enum": [
+              "Reservation",
+              "Folio",
+              "Invoice",
+              "RatePlan",
+              "Group",
+              "Block",
+              "Unit",
+              "NightAudit",
+              "Fiscalization",
+              "Booking",
+              "Company",
+              "UnitGroup",
+              "Maintenance",
+              "Account",
+              "Property",
+              "CityTax",
+              "Service",
+              "UnitAttributeDefinition",
+              "PaymentTransaction"
+            ],
+            "type": "string"
+          }
+        },
+        "events": {
+          "description": "Events for which you want to receive notifications",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "propertyIds": {
+          "description": "List of Ids for the properties for which the subscription is configured\r\nIf the list is empty then the webhooks will be delivered for all properties.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false,
+      "example": "{\n  \"endpointUrl\": \"https://example.com\",\n  \"events\": [\n    \"booking/created\",\n    \"booking/changed\",\n    \"reservation/*\"\n  ],\n  \"propertyIds\": [\n    \"MUC\",\n    \"BER\"\n  ]\n}"
+    },
+    "CreateSubscriptionResponseModel": {
+      "description": "The reason behind this model which is basically the same old SubscriptionCreatedResponseModel\r\nis that in the old implementation of notifications, the Id property was called SubscriptionId,\r\nand in order to keep consistency with the Apaleo environment\r\nthe property should be called Id for the new implementation of webhooks.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "format": "uuid",
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ErrorResponseModel": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "enum": [
+            "HealthcheckFailed",
+            "EnabledForAnotherEndpoint",
+            "InvalidPropertyId"
+          ],
+          "type": "string"
+        },
+        "message": {
+          "type": "string",
+          "readOnly": true
+        }
+      },
+      "additionalProperties": false,
+      "example": "{\n  \"type\": \"HealthcheckFailed\",\n  \"message\": \"Could not enable subscription for non responsive endpoint\"\n}"
+    },
+    "MessageItemCollection": {
+      "type": "object",
+      "properties": {
+        "messages": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "readOnly": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "ReplaceSubscriptionModel": {
+      "required": [
+        "endpointUrl"
+      ],
+      "type": "object",
+      "properties": {
+        "endpointUrl": {
+          "description": "Endpoint to which notifications will be sent to",
+          "minLength": 1,
+          "type": "string"
+        },
+        "topics": {
+          "description": "Subscribe to events from the provided topics",
+          "type": "array",
+          "items": {
+            "enum": [
+              "Reservation",
+              "Folio",
+              "Invoice",
+              "RatePlan",
+              "Group",
+              "Block",
+              "Unit",
+              "NightAudit",
+              "Fiscalization",
+              "Booking",
+              "Company",
+              "UnitGroup",
+              "Maintenance",
+              "Account",
+              "Property",
+              "CityTax",
+              "Service",
+              "UnitAttributeDefinition",
+              "PaymentTransaction"
+            ],
+            "type": "string"
+          }
+        },
+        "events": {
+          "description": "Events for which you want to receive notifications",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "propertyIds": {
+          "description": "List of Ids for the properties for which the subscription is configured\r\nIf the list is empty then the webhooks will be delivered for all properties.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false,
+      "example": "{\n  \"endpointUrl\": \"https://www.example.com\",\n  \"events\": [\n    \"booking/created\",\n    \"booking/changed\",\n    \"reservation/*\"\n  ],\n  \"propertyIds\": [\n    \"MUC\",\n    \"BER\"\n  ]\n}"
+    },
+    "SubscriptionResponseModel": {
+      "required": [
+        "created",
+        "endpointUrl",
+        "id"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "topics": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "Reservation",
+              "Folio",
+              "Invoice",
+              "RatePlan",
+              "Group",
+              "Block",
+              "Unit",
+              "NightAudit",
+              "Fiscalization",
+              "Booking",
+              "Company",
+              "UnitGroup",
+              "Maintenance",
+              "Account",
+              "Property",
+              "CityTax",
+              "Service",
+              "UnitAttributeDefinition",
+              "PaymentTransaction"
+            ],
+            "type": "string"
+          }
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "endpointUrl": {
+          "format": "uri",
+          "type": "string"
+        },
+        "created": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "propertyIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "securityDefinitions": {
+    "oauth2": {
+      "type": "oauth2",
+      "flow": "implicit",
+      "authorizationUrl": "https://identity.apaleo.com/connect/authorize",
+      "scopes": {
+        "notifications:admin": "Create/Modify/Delete subscriptions (Admin)"
+      }
+    }
+  }
+}

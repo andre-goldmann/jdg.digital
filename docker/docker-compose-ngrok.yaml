@@ -1,0 +1,30 @@
+services:
+
+  # The ngrok tunnel service
+  ngrok-angular:
+    image: ngrok/ngrok:latest
+    restart: unless-stopped
+    command:
+      - "http"
+      - "192.168.0.183:4200" # Points to your IDE's dev server
+    environment:
+      - NGROK_AUTHTOKEN=${NGROK_AUTHTOKEN}
+    ports:
+      - "4041:4040"  # To access the ngrok local dashboard
+    # This extra setting is sometimes needed for Linux users
+    extra_hosts:
+      - "192.168.0.183:host-gateway"
+
+  ngrok-n8n:
+    image: ngrok/ngrok:latest
+    restart: unless-stopped
+    command:
+      - "http"
+      - "192.168.0.183:5678" # Points to your IDE's dev server
+    environment:
+      - NGROK_AUTHTOKEN=${NGROK_AUTHTOKEN}
+    ports:
+      - "4042:4040"  # To access the ngrok local dashboard
+    # This extra setting is sometimes needed for Linux users
+    extra_hosts:
+      - "192.168.0.183:host-gateway"

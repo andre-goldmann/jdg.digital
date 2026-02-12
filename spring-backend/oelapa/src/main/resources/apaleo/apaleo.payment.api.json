@@ -1,0 +1,1339 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "apaleo Payment API - V1",
+    "description": "The Payment service lets you access the configuration of your merchant account and allows you to read and download settlement reports, invoices and transactions logs.",
+    "version": "v1"
+  },
+  "paths": {
+    "/payment/v1/configuration/properties": {
+      "get": {
+        "tags": [
+          "Configuration"
+        ],
+        "summary": "Get list of property configurations",
+        "description": "Get list of property configurations in the current account.<br>You must have at least one of these scopes: 'payment:configuration.read, payment:configuration.manage, payment:admin'.",
+        "operationId": "PaymentConfigurationPropertiesGet",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Return all property configurations.",
+            "schema": {
+              "$ref": "#/definitions/PropertyConfigurationListModel"
+            }
+          },
+          "204": {
+            "description": "There are no property configurations found."
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "401": {
+            "description": "You are unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "404": {
+            "description": "The Request-URI could not be found."
+          },
+          "500": {
+            "description": "An unexpected error occurred."
+          },
+          "503": {
+            "description": "The server is currently unavailable. Please try later."
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "payment:configuration.read",
+              "payment:configuration.manage",
+              "payment:admin"
+            ]
+          }
+        ]
+      }
+    },
+    "/payment/v1/configuration/properties/{propertyId}": {
+      "get": {
+        "tags": [
+          "Configuration"
+        ],
+        "summary": "Get the configuration for the specified property in the current account",
+        "description": "<br>You must have at least one of these scopes: 'payment:configuration.read, payment:configuration.manage, payment:admin'.",
+        "operationId": "PaymentConfigurationPropertiesByPropertyIdGet",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "propertyId",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/PropertyConfigurationModel"
+            }
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "401": {
+            "description": "You are unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "404": {
+            "description": "The Request-URI could not be found."
+          },
+          "500": {
+            "description": "An unexpected error occurred."
+          },
+          "503": {
+            "description": "The server is currently unavailable. Please try later."
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "payment:configuration.read",
+              "payment:configuration.manage",
+              "payment:admin"
+            ]
+          }
+        ]
+      }
+    },
+    "/payment/v1/invoices": {
+      "get": {
+        "tags": [
+          "Invoices"
+        ],
+        "summary": "Gets the list of all invoices (the metadata only, not the files).",
+        "description": "Get the list of all invoices (the metadata only, not the files)<br>You must have at least one of these scopes: 'payment:invoices.read, payment:admin'.",
+        "operationId": "PaymentInvoicesGet",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "merchantAccountCodes",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "propertyIds",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "pageNumber",
+            "description": "Page number, starting from 1 and defaulting to 1. Results in 204 if there are no items on that page.",
+            "type": "integer",
+            "default": 1
+          },
+          {
+            "in": "query",
+            "name": "pageSize",
+            "description": "Page size. If this is not set, the pageNumber will be ignored and all values returned.",
+            "type": "integer",
+            "default": 100
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "schema": {
+              "$ref": "#/definitions/InvoiceListModel"
+            }
+          },
+          "204": {
+            "description": "No invoices found."
+          },
+          "422": {
+            "description": "Validation errors in the request body.\r\n            \r\n1000 - Generic validation error"
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "401": {
+            "description": "You are unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "404": {
+            "description": "The Request-URI could not be found."
+          },
+          "500": {
+            "description": "An unexpected error occurred."
+          },
+          "503": {
+            "description": "The server is currently unavailable. Please try later."
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "payment:invoices.read",
+              "payment:admin"
+            ]
+          }
+        ]
+      }
+    },
+    "/payment/v1/invoices/{id}/pdf": {
+      "get": {
+        "tags": [
+          "Invoices"
+        ],
+        "summary": "Gets an invoice PDF file.",
+        "description": "Gets an invoice PDF file for a specific invoice.<br>You must have at least one of these scopes: 'payment:invoices.read, payment:admin'.",
+        "operationId": "PaymentInvoicesByIdPdfGet",
+        "produces": [
+          "application/pdf"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The invoice Id to get the invoice for.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "schema": {
+              "type": "file"
+            }
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "401": {
+            "description": "You are unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "404": {
+            "description": "The Request-URI could not be found."
+          },
+          "500": {
+            "description": "An unexpected error occurred."
+          },
+          "503": {
+            "description": "The server is currently unavailable. Please try later."
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "payment:invoices.read",
+              "payment:admin"
+            ]
+          }
+        ]
+      }
+    },
+    "/payment/v1/payment-transaction-actions/{id}/cancel": {
+      "put": {
+        "tags": [
+          "PaymentTransactionActions"
+        ],
+        "summary": "Cancels the outstanding payment authorization using the supplied apaleo payment transaction id or authorization PSP reference",
+        "description": "<br>You must have at least one of these scopes: 'payment:admin, payment:transactions.manage'.",
+        "operationId": "PaymentPayment-transaction-actionsByIdCancelPut",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "Apaleo payment transaction id or PSP reference",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/CancelPaymentModel"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          },
+          "422": {
+            "description": "Transaction is not cancellable",
+            "schema": {
+              "$ref": "#/definitions/MessageItemCollection"
+            }
+          },
+          "415": {
+            "description": "Unsupported media type."
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "401": {
+            "description": "You are unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "404": {
+            "description": "The Request-URI could not be found."
+          },
+          "500": {
+            "description": "An unexpected error occurred."
+          },
+          "503": {
+            "description": "The server is currently unavailable. Please try later."
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "payment:admin",
+              "payment:transactions.manage"
+            ]
+          }
+        ]
+      }
+    },
+    "/payment/v1/payment-transactions/by-terminal": {
+      "post": {
+        "tags": [
+          "PaymentTransactions"
+        ],
+        "summary": "Request a AutoExpire payment authorization performed on a card terminal",
+        "description": "Will be deprecated soon! Please, use ```/v1/payment-transactions/by-terminal/autoexpire``` instead.\r\n            \r\nInitialize a payment authorization on a given card terminal. The API is waiting for the transaction on the terminal\r\nto either finish or time out after 120 seconds.\r\nPoll the transactions api\r\n```/payment/v1/transactions?merchantReference={MerchantReference}&pageNumber=1&pageSize=100```\r\nbased on the merchant reference for the status of the payment.<br>You must have at least one of these scopes: 'payment:admin, payment:transactions.manage'.",
+        "operationId": "PaymentPayment-transactionsBy-terminalPost",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "flow",
+            "description": "Purpose of payment transaction, must be AutoExpire",
+            "type": "string",
+            "enum": [
+              "None",
+              "AutoExpire",
+              "BlockNHold"
+            ]
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/RequestTerminalPaymentAuthorizationModel"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "422": {
+            "description": "The request is automatically cancelled after 120 seconds if no action is taken on the terminal.\r\n            \r\nValidation errors in the request body.\r\n            \r\n1000 - Generic validation error\r\n            \r\n1001 - The payment provider is not properly configured\r\n            \r\n2600 - Payment request failed",
+            "schema": {
+              "$ref": "#/definitions/MessageItemCollection"
+            }
+          },
+          "415": {
+            "description": "Unsupported media type."
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "401": {
+            "description": "You are unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "404": {
+            "description": "The Request-URI could not be found."
+          },
+          "500": {
+            "description": "An unexpected error occurred."
+          },
+          "503": {
+            "description": "The server is currently unavailable. Please try later."
+          }
+        },
+        "deprecated": true,
+        "security": [
+          {
+            "oauth2": [
+              "payment:admin",
+              "payment:transactions.manage"
+            ]
+          }
+        ]
+      }
+    },
+    "/payment/v1/payment-transactions/by-terminal/autoexpire": {
+      "post": {
+        "tags": [
+          "PaymentTransactions"
+        ],
+        "summary": "Request a AutoExpire payment authorization performed on a card terminal",
+        "description": "Initialize a payment authorization on a given card terminal. The API is waiting for the transaction on the terminal\r\nto either finish or time out after 120 seconds.\r\nPoll the transactions api\r\n```/payment/v1/transactions?merchantReference={MerchantReference}&pageNumber=1&pageSize=100```\r\nbased on the merchant reference for the status of the payment.<br>You must have at least one of these scopes: 'payment:admin, payment:transactions.manage'.",
+        "operationId": "PaymentPayment-transactionsBy-terminalAutoexpirePost",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/RequestTerminalPaymentAutoExpireModel"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/PaymentTransactionCreatedModel"
+            }
+          },
+          "422": {
+            "description": "The request is automatically cancelled after 120 seconds if no action is taken on the terminal.\r\n            \r\nValidation errors in the request body.\r\n            \r\n1000 - Generic validation error\r\n            \r\n1001 - The payment provider is not properly configured\r\n            \r\n2600 - Payment request failed",
+            "schema": {
+              "$ref": "#/definitions/MessageItemCollection"
+            }
+          },
+          "415": {
+            "description": "Unsupported media type."
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "401": {
+            "description": "You are unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "404": {
+            "description": "The Request-URI could not be found."
+          },
+          "500": {
+            "description": "An unexpected error occurred."
+          },
+          "503": {
+            "description": "The server is currently unavailable. Please try later."
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "payment:admin",
+              "payment:transactions.manage"
+            ]
+          }
+        ]
+      }
+    },
+    "/payment/v1/reports/settlements": {
+      "get": {
+        "tags": [
+          "Reports"
+        ],
+        "summary": "Gets the list of all settlements (the metadata only, not the files).",
+        "description": "Get the list of all settlements (the metadata only, not the files)<br>You must have at least one of these scopes: 'payment:reports.read, payment:admin'.",
+        "operationId": "PaymentReportsSettlementsGet",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "merchantAccountCodes",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "propertyIds",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "pageNumber",
+            "description": "Page number, starting from 1 and defaulting to 1. Results in 204 if there are no items on that page.",
+            "type": "integer",
+            "default": 1
+          },
+          {
+            "in": "query",
+            "name": "pageSize",
+            "description": "Page size. If this is not set, the pageNumber will be ignored and all values returned.",
+            "type": "integer",
+            "default": 100
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "schema": {
+              "$ref": "#/definitions/SettlementListModel"
+            }
+          },
+          "204": {
+            "description": "No settlements found."
+          },
+          "422": {
+            "description": "Validation errors in the request body.\r\n            \r\n1000 - Generic validation error"
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "401": {
+            "description": "You are unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "404": {
+            "description": "The Request-URI could not be found."
+          },
+          "500": {
+            "description": "An unexpected error occurred."
+          },
+          "503": {
+            "description": "The server is currently unavailable. Please try later."
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "payment:reports.read",
+              "payment:admin"
+            ]
+          }
+        ]
+      }
+    },
+    "/payment/v1/reports/settlements/{id}/csv": {
+      "get": {
+        "tags": [
+          "Reports"
+        ],
+        "summary": "Gets a settlement CSV file.",
+        "description": "Gets a settlement CSV file for a specific settlement.<br>You must have at least one of these scopes: 'payment:reports.read, payment:admin'.",
+        "operationId": "PaymentReportsSettlementsByIdCsvGet",
+        "produces": [
+          "application/csv",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The settlement Id to get the settlement for.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "schema": {
+              "type": "file"
+            }
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "401": {
+            "description": "You are unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "404": {
+            "description": "The Request-URI could not be found."
+          },
+          "500": {
+            "description": "An unexpected error occurred."
+          },
+          "503": {
+            "description": "The server is currently unavailable. Please try later."
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "payment:reports.read",
+              "payment:admin"
+            ]
+          }
+        ]
+      }
+    },
+    "/payment/v1/reports/settlements/{id}/xlsx": {
+      "get": {
+        "tags": [
+          "Reports"
+        ],
+        "summary": "Gets a settlement XLSX file",
+        "description": "Gets a settlement XLSX file for a specific settlement.<br>You must have at least one of these scopes: 'payment:reports.read, payment:admin'.",
+        "operationId": "PaymentReportsSettlementsByIdXlsxGet",
+        "produces": [
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The settlement Id to get the settlement for.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "schema": {
+              "type": "file"
+            }
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "401": {
+            "description": "You are unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "404": {
+            "description": "The Request-URI could not be found."
+          },
+          "500": {
+            "description": "An unexpected error occurred."
+          },
+          "503": {
+            "description": "The server is currently unavailable. Please try later."
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "payment:reports.read",
+              "payment:admin"
+            ]
+          }
+        ]
+      }
+    },
+    "/payment/v1/transactions/{pspReference}": {
+      "get": {
+        "tags": [
+          "Transactions"
+        ],
+        "summary": "Load a payment transaction",
+        "description": "Load a payment transaction for a specific PSP reference.<br>You must have at least one of these scopes: 'payment:transactions.read, payment:admin'.",
+        "operationId": "PaymentTransactionsByPspReferenceGet",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "pspReference",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/PaymentTransactionModel"
+            }
+          },
+          "422": {
+            "description": "Validation errors in the request body.\r\n            \r\n1000 - Generic validation error"
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "401": {
+            "description": "You are unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "404": {
+            "description": "The Request-URI could not be found."
+          },
+          "500": {
+            "description": "An unexpected error occurred."
+          },
+          "503": {
+            "description": "The server is currently unavailable. Please try later."
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "payment:transactions.read",
+              "payment:admin"
+            ]
+          }
+        ]
+      }
+    },
+    "/payment/v1/transactions": {
+      "get": {
+        "tags": [
+          "Transactions"
+        ],
+        "summary": "Load payment transaction based on filter",
+        "description": "Load payment transactions for specific filter parameters<br>You must have at least one of these scopes: 'payment:transactions.read, payment:admin'.",
+        "operationId": "PaymentTransactionsGet",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "merchantReference",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "pspReference",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "pageNumber",
+            "description": "Page number, starting from 1 and defaulting to 1. Results in 204 if there are no items on that page.",
+            "type": "integer",
+            "default": 1
+          },
+          {
+            "in": "query",
+            "name": "pageSize",
+            "description": "Page size. If this is not set, the pageNumber will be ignored and all values returned.",
+            "type": "integer",
+            "default": 100
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "schema": {
+              "$ref": "#/definitions/PaymentTransactionListModel"
+            }
+          },
+          "204": {
+            "description": "No transactions found."
+          },
+          "422": {
+            "description": "Validation errors in the request body.\r\n            \r\n1000 - Generic validation error"
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "401": {
+            "description": "You are unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "404": {
+            "description": "The Request-URI could not be found."
+          },
+          "500": {
+            "description": "An unexpected error occurred."
+          },
+          "503": {
+            "description": "The server is currently unavailable. Please try later."
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "payment:transactions.read",
+              "payment:admin"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "CancelPaymentModel": {
+      "type": "object",
+      "properties": {
+        "reference": {
+          "description": "Optional reference value",
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "example": "{\n  \"reference\": \"Some reference value\"\n}"
+    },
+    "InvoiceListModel": {
+      "required": [
+        "count",
+        "invoices"
+      ],
+      "type": "object",
+      "properties": {
+        "invoices": {
+          "description": "The list of invoices",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/InvoiceModel"
+          }
+        },
+        "count": {
+          "format": "int64",
+          "description": "Total count of items",
+          "type": "integer"
+        }
+      },
+      "additionalProperties": false,
+      "example": "{\n  \"invoices\": [\n    {\n      \"id\": \"GIRVAKJD\",\n      \"merchantAccountCode\": \"ApaleoGmbHCOM\",\n      \"invoiceNumber\": \"APA12345\",\n      \"type\": \"PaymentProcessing\",\n      \"invoiceDate\": \"2025-11-15\"\n    },\n    {\n      \"id\": \"XVIRSAKJ\",\n      \"merchantAccountCode\": \"ApaleoGmbHPOS\",\n      \"invoiceNumber\": \"APA12378\",\n      \"type\": \"TerminalSale\",\n      \"invoiceDate\": \"2025-11-15\"\n    }\n  ],\n  \"count\": 2\n}"
+    },
+    "InvoiceModel": {
+      "required": [
+        "id",
+        "invoiceDate",
+        "invoiceNumber",
+        "merchantAccountCode",
+        "type"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "merchantAccountCode": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "invoiceNumber": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "PaymentProcessing",
+            "TerminalService",
+            "TerminalSale"
+          ],
+          "type": "string"
+        },
+        "invoiceDate": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "example": "{\n  \"id\": \"GIRVAKJD\",\n  \"merchantAccountCode\": \"ApaleoGmbHCOM\",\n  \"invoiceNumber\": \"APA12345\",\n  \"type\": \"PaymentProcessing\",\n  \"invoiceDate\": \"2025-11-15\"\n}"
+    },
+    "MessageItem": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "text": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "MessageItemCollection": {
+      "type": "object",
+      "properties": {
+        "messages": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "readOnly": true
+        },
+        "messagesWithCodes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MessageItem"
+          },
+          "readOnly": true
+        }
+      },
+      "additionalProperties": false,
+      "example": "{\n  \"messages\": [\n    \"Authorization failed: Refused: 05 : Do not honor - 0 Unknown.\"\n  ],\n  \"messagesWithCodes\": [\n    {\n      \"code\": 2001,\n      \"text\": \"Authorization failed: Refused: 05 : Do not honor - 0 Unknown.\"\n    }\n  ]\n}"
+    },
+    "MonetaryAmountModel": {
+      "required": [
+        "amount",
+        "currency"
+      ],
+      "type": "object",
+      "properties": {
+        "currency": {
+          "description": "The ISO 3 letter code of the currency of the given amount",
+          "maxLength": 3,
+          "minLength": 3,
+          "type": "string"
+        },
+        "amount": {
+          "format": "double",
+          "description": "The amount",
+          "type": "number"
+        }
+      },
+      "additionalProperties": false
+    },
+    "MonetaryValueAmountModel": {
+      "required": [
+        "currency"
+      ],
+      "type": "object",
+      "properties": {
+        "currency": {
+          "description": "The ISO 3 letter code of the currency of the given amount",
+          "maxLength": 3,
+          "minLength": 3,
+          "type": "string"
+        },
+        "value": {
+          "format": "double",
+          "description": "The amount - <b>DEPRECATED: Use Amount instead. When Value is not used any more fully replace MonetaryValueAmountModel with MonetaryAmountModel.</b>",
+          "type": "number"
+        },
+        "amount": {
+          "format": "double",
+          "description": "The amount",
+          "type": "number"
+        }
+      },
+      "additionalProperties": false
+    },
+    "MonetaryValueModel": {
+      "required": [
+        "currency",
+        "value"
+      ],
+      "type": "object",
+      "properties": {
+        "currency": {
+          "description": "The ISO 3 letter code of the currency of the given amount",
+          "maxLength": 3,
+          "minLength": 3,
+          "type": "string"
+        },
+        "value": {
+          "format": "double",
+          "description": "The amount",
+          "type": "number"
+        }
+      },
+      "additionalProperties": false
+    },
+    "PaymentJournalEntryModel": {
+      "required": [
+        "amount",
+        "dateTime",
+        "eventCode",
+        "isSuccess",
+        "pspReference",
+        "reason",
+        "refusalReason"
+      ],
+      "type": "object",
+      "properties": {
+        "pspReference": {
+          "description": "The PSP reference of this transaction",
+          "minLength": 1,
+          "type": "string"
+        },
+        "amount": {
+          "$ref": "#/definitions/MonetaryValueModel"
+        },
+        "eventCode": {
+          "description": "The event code for this entry",
+          "minLength": 1,
+          "type": "string"
+        },
+        "dateTime": {
+          "format": "date-time",
+          "description": "The date and time of the entry",
+          "type": "string"
+        },
+        "isSuccess": {
+          "description": "Status of this entry",
+          "type": "boolean"
+        },
+        "reason": {
+          "description": "Reason for Failed status",
+          "minLength": 1,
+          "type": "string"
+        },
+        "refusalReason": {
+          "description": "Reason for Refusal reason",
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "PaymentTransactionCreatedModel": {
+      "required": [
+        "id"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "The apaleo payment transaction id of the payment transaction that was created",
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "PaymentTransactionListModel": {
+      "required": [
+        "count",
+        "transactions"
+      ],
+      "type": "object",
+      "properties": {
+        "transactions": {
+          "description": "The list of payment transactions",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PaymentTransactionModel"
+          }
+        },
+        "count": {
+          "format": "int64",
+          "description": "Total count of items",
+          "type": "integer"
+        }
+      },
+      "additionalProperties": false,
+      "example": "{\n  \"transactions\": [\n    {\n      \"pspReference\": \"8815360785594505\",\n      \"amount\": {\n        \"currency\": \"EUR\",\n        \"value\": 190.0\n      },\n      \"merchantReference\": \"something\",\n      \"merchantAccountCode\": \"MyHotelCOM\",\n      \"terminalId\": \"T400-1234567\",\n      \"originalFolioId\": \"XKCDER-1-1\",\n      \"propertyId\": \"BER\",\n      \"journal\": [\n        {\n          \"pspReference\": \"8815360785594505\",\n          \"amount\": {\n            \"currency\": \"EUR\",\n            \"value\": 190.0\n          },\n          \"eventCode\": \"AUTHORISATION\",\n          \"dateTime\": \"2025-11-16T11:44:44.0799174Z\",\n          \"isSuccess\": false,\n          \"reason\": \"Refused\",\n          \"refusalReason\": \"05 : Do not honor\"\n        },\n        {\n          \"pspReference\": \"862623095673169A\",\n          \"amount\": {\n            \"currency\": \"EUR\",\n            \"value\": 100.0\n          },\n          \"eventCode\": \"CAPTURE\",\n          \"dateTime\": \"2025-11-16T11:45:44.079922Z\",\n          \"isSuccess\": true\n        },\n        {\n          \"pspReference\": \"862623087842791E\",\n          \"amount\": {\n            \"currency\": \"EUR\",\n            \"value\": 90.0\n          },\n          \"eventCode\": \"CAPTURE\",\n          \"dateTime\": \"2025-11-16T11:46:44.0799226Z\",\n          \"isSuccess\": true\n        },\n        {\n          \"pspReference\": \"862623087842791E\",\n          \"amount\": {\n            \"currency\": \"EUR\",\n            \"value\": 70.0\n          },\n          \"eventCode\": \"CAPTURE\",\n          \"dateTime\": \"2025-11-16T11:47:44.0799231Z\",\n          \"isSuccess\": true,\n          \"reason\": \"Insufficient balance on payment\"\n        },\n        {\n          \"pspReference\": \"862623094473133B\",\n          \"amount\": {\n            \"currency\": \"EUR\",\n            \"value\": 10.0\n          },\n          \"eventCode\": \"REFUND\",\n          \"dateTime\": \"2025-11-16T12:16:44.0799236Z\",\n          \"isSuccess\": false\n        }\n      ]\n    }\n  ],\n  \"count\": 1\n}"
+    },
+    "PaymentTransactionModel": {
+      "required": [
+        "amount",
+        "merchantAccountCode",
+        "merchantReference",
+        "originalFolioId",
+        "propertyId",
+        "pspReference"
+      ],
+      "type": "object",
+      "properties": {
+        "pspReference": {
+          "description": "The PSP reference of this transaction",
+          "minLength": 1,
+          "type": "string"
+        },
+        "amount": {
+          "$ref": "#/definitions/MonetaryValueModel"
+        },
+        "merchantReference": {
+          "description": "The reference provided when the payment transaction was initiated",
+          "minLength": 1,
+          "type": "string"
+        },
+        "merchantAccountCode": {
+          "description": "The merchant account on the payment processor this transaction is registered for. This transaction will\r\nshow up in the settlement report for this merchant account and be paid out to the bank account registered\r\nfor this merchant",
+          "minLength": 1,
+          "type": "string"
+        },
+        "terminalId": {
+          "description": "Terminal Id used to perform this payment, when a POS payment",
+          "type": "string"
+        },
+        "originalFolioId": {
+          "description": "The folio id in apaleo core that this payment was originally done for",
+          "minLength": 1,
+          "type": "string"
+        },
+        "propertyId": {
+          "description": "The property id in apaleo core that this payment belongs to",
+          "minLength": 1,
+          "type": "string"
+        },
+        "journal": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PaymentJournalEntryModel"
+          }
+        }
+      },
+      "additionalProperties": false,
+      "example": "{\n  \"pspReference\": \"8815360785594505\",\n  \"amount\": {\n    \"currency\": \"EUR\",\n    \"value\": 190.0\n  },\n  \"merchantReference\": \"something\",\n  \"merchantAccountCode\": \"MyHotelCOM\",\n  \"terminalId\": \"T400-1234567\",\n  \"originalFolioId\": \"XKCDER-1-1\",\n  \"propertyId\": \"BER\",\n  \"journal\": [\n    {\n      \"pspReference\": \"8815360785594505\",\n      \"amount\": {\n        \"currency\": \"EUR\",\n        \"value\": 190.0\n      },\n      \"eventCode\": \"AUTHORISATION\",\n      \"dateTime\": \"2025-11-16T11:44:44.0758137Z\",\n      \"isSuccess\": false,\n      \"reason\": \"Refused\",\n      \"refusalReason\": \"05 : Do not honor\"\n    },\n    {\n      \"pspReference\": \"862623095673169A\",\n      \"amount\": {\n        \"currency\": \"EUR\",\n        \"value\": 100.0\n      },\n      \"eventCode\": \"CAPTURE\",\n      \"dateTime\": \"2025-11-16T11:45:44.0758211Z\",\n      \"isSuccess\": true\n    },\n    {\n      \"pspReference\": \"862623087842791E\",\n      \"amount\": {\n        \"currency\": \"EUR\",\n        \"value\": 90.0\n      },\n      \"eventCode\": \"CAPTURE\",\n      \"dateTime\": \"2025-11-16T11:46:44.0758216Z\",\n      \"isSuccess\": true\n    },\n    {\n      \"pspReference\": \"862623087842791E\",\n      \"amount\": {\n        \"currency\": \"EUR\",\n        \"value\": 70.0\n      },\n      \"eventCode\": \"CAPTURE\",\n      \"dateTime\": \"2025-11-16T11:47:44.075822Z\",\n      \"isSuccess\": true,\n      \"reason\": \"Insufficient balance on payment\"\n    },\n    {\n      \"pspReference\": \"862623094473133B\",\n      \"amount\": {\n        \"currency\": \"EUR\",\n        \"value\": 10.0\n      },\n      \"eventCode\": \"REFUND\",\n      \"dateTime\": \"2025-11-16T12:16:44.0758224Z\",\n      \"isSuccess\": false\n    }\n  ]\n}"
+    },
+    "PropertyConfigurationListModel": {
+      "required": [
+        "properties"
+      ],
+      "type": "object",
+      "properties": {
+        "properties": {
+          "description": "The list of property configurations",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PropertyConfigurationModel"
+          }
+        }
+      },
+      "additionalProperties": false,
+      "example": "{\n  \"properties\": [\n    {\n      \"propertyId\": \"MUC\",\n      \"ecommerceMerchantAccountCode\": \"MyHotelCOM\",\n      \"posMerchantAccountCode\": \"MyHotelPOS\",\n      \"subMerchantId\": \"SUBMERCHANTID01\",\n      \"isLive\": false,\n      \"terminals\": [\n        {\n          \"id\": \"P400Plus-27545332\",\n          \"name\": \"Reception 1\"\n        },\n        {\n          \"id\": \"P400Plus-63647827\",\n          \"name\": \"Reception 2\"\n        }\n      ],\n      \"enabled\": true\n    }\n  ]\n}"
+    },
+    "PropertyConfigurationModel": {
+      "required": [
+        "ecommerceMerchantAccountCode",
+        "ecommerceOnly",
+        "isLive",
+        "propertyId",
+        "subMerchantId"
+      ],
+      "type": "object",
+      "properties": {
+        "propertyId": {
+          "description": "The property id",
+          "minLength": 1,
+          "type": "string"
+        },
+        "ecommerceMerchantAccountCode": {
+          "description": "The Adyen e-commerce merchant code for this property",
+          "minLength": 1,
+          "type": "string"
+        },
+        "posMerchantAccountCode": {
+          "description": "The Adyen pos merchant code for this property",
+          "type": "string"
+        },
+        "subMerchantId": {
+          "description": "As payment facilitator we need to identify each of our sub merchants by a unique ID.\r\nThe sub merchant ID has to be provided per legal entity.",
+          "minLength": 1,
+          "type": "string"
+        },
+        "isLive": {
+          "description": "Determines if the configuration is for a live or for a test property",
+          "type": "boolean"
+        },
+        "ecommerceOnly": {
+          "description": "Determines if the configuration has only eCommerce support",
+          "type": "boolean"
+        },
+        "terminals": {
+          "description": "The list of configured terminals for this property",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TerminalModel"
+          }
+        },
+        "enabled": {
+          "description": "Determines if the property configuration is enabled",
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false,
+      "example": "{\n  \"propertyId\": \"MUC\",\n  \"ecommerceMerchantAccountCode\": \"MyHotelCOM\",\n  \"posMerchantAccountCode\": \"MyHotelPOS\",\n  \"subMerchantId\": \"SUBMERCHANTID01\",\n  \"isLive\": false,\n  \"ecommerceOnly\": false,\n  \"terminals\": [\n    {\n      \"id\": \"P400Plus-27545332\",\n      \"name\": \"Reception 1\"\n    },\n    {\n      \"id\": \"P400Plus-63647827\",\n      \"name\": \"Reception 2\"\n    }\n  ],\n  \"enabled\": true\n}"
+    },
+    "RequestTerminalPaymentAuthorizationModel": {
+      "required": [
+        "amount",
+        "merchantReference",
+        "propertyId",
+        "terminalId"
+      ],
+      "type": "object",
+      "properties": {
+        "propertyId": {
+          "description": "The id of the property",
+          "minLength": 1,
+          "type": "string"
+        },
+        "terminalId": {
+          "description": "The id of the card terminal that you want to trigger the transaction on. It needs to be configured for\r\nthe property you are performing this transaction for",
+          "minLength": 1,
+          "type": "string"
+        },
+        "amount": {
+          "$ref": "#/definitions/MonetaryValueAmountModel"
+        },
+        "merchantReference": {
+          "description": "A payment unique reference",
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "example": "{\n  \"propertyId\": \"MUC\",\n  \"terminalId\": \"P400Plus-27545332\",\n  \"amount\": {\n    \"currency\": \"EUR\",\n    \"amount\": 68.0\n  },\n  \"merchantReference\": \"864c3b9e-4820-407b-a31e-6713f5effcb3\"\n}"
+    },
+    "RequestTerminalPaymentAutoExpireModel": {
+      "required": [
+        "amount",
+        "merchantReference",
+        "propertyId",
+        "terminalId"
+      ],
+      "type": "object",
+      "properties": {
+        "amount": {
+          "$ref": "#/definitions/MonetaryAmountModel"
+        },
+        "propertyId": {
+          "description": "The id of the property",
+          "type": "string"
+        },
+        "terminalId": {
+          "description": "The id of the card terminal that you want to trigger the transaction on. It needs to be configured for\r\nthe property you are performing this transaction for",
+          "minLength": 1,
+          "type": "string"
+        },
+        "merchantReference": {
+          "description": "A payment unique reference",
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "example": "{\n  \"amount\": {\n    \"currency\": \"EUR\",\n    \"amount\": 68.0\n  },\n  \"propertyId\": \"MUC\",\n  \"terminalId\": \"P400Plus-27545332\",\n  \"merchantReference\": \"864c3b9e-4820-407b-a31e-6713f5effcb3\"\n}"
+    },
+    "SettlementListModel": {
+      "required": [
+        "count",
+        "settlements"
+      ],
+      "type": "object",
+      "properties": {
+        "settlements": {
+          "description": "The list of settlements",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SettlementModel"
+          }
+        },
+        "count": {
+          "format": "int64",
+          "description": "Total count of items",
+          "type": "integer"
+        }
+      },
+      "additionalProperties": false,
+      "example": "{\n  \"settlements\": [\n    {\n      \"id\": \"GIRVAKJD\",\n      \"merchantAccountCode\": \"ApaleoGmbHCOM\",\n      \"batchNumber\": 1,\n      \"date\": \"2025-11-16T13:29:44+01:00\"\n    },\n    {\n      \"id\": \"WVLKNKJX\",\n      \"merchantAccountCode\": \"ApaleoGmbHCOM\",\n      \"batchNumber\": 2,\n      \"date\": \"2025-11-16T13:29:44+01:00\"\n    }\n  ],\n  \"count\": 2\n}"
+    },
+    "SettlementModel": {
+      "required": [
+        "batchNumber",
+        "date",
+        "id",
+        "merchantAccountCode"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "merchantAccountCode": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "batchNumber": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "date": {
+          "format": "date-time",
+          "description": "<br />A date and time (without fractional second part) in UTC or with UTC offset as defined in <a href=\"https://en.wikipedia.org/wiki/ISO_8601\">ISO8601:2004</a>",
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "example": "{\n  \"id\": \"GIRVAKJD\",\n  \"merchantAccountCode\": \"ApaleoGmbHCOM\",\n  \"batchNumber\": 1,\n  \"date\": \"2025-11-16T13:29:44+01:00\"\n}"
+    },
+    "TerminalModel": {
+      "required": [
+        "id",
+        "name"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "The unique terminal id as it can be seen in the Adyen Fleet Manager",
+          "minLength": 1,
+          "type": "string"
+        },
+        "name": {
+          "description": "The name of the terminal used for displaying",
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "securityDefinitions": {
+    "oauth2": {
+      "type": "oauth2",
+      "flow": "implicit",
+      "authorizationUrl": "https://identity.apaleo.com/connect/authorize",
+      "scopes": {
+        "payment:admin": "Full access"
+      }
+    }
+  }
+}

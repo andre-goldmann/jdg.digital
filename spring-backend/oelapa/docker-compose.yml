@@ -1,0 +1,24 @@
+services:
+  sonarqube:
+    image: sonarqube:lts-community
+    environment:
+      SONAR_JDBC_URL: jdbc:postgresql://localhost:5432/n8n/sonar?currentSchema=sonar
+      SONAR_JDBC_USERNAME: postgres
+      SONAR_JDBC_PASSWORD: pwd
+      SONAR_JDBC_SHEMA: sonar
+      SONAR_ES_BOOTSTRAP_MEMORY: 4g
+    ports:
+      - "6000:9000"  # Map host port 6000 to container port 9000
+    volumes:
+      - sonarqube_conf:/opt/sonarqube/conf
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_extensions:/opt/sonarqube/extensions
+      - sonarqube_logs:/opt/sonarqube/logs
+      - sonarqube_temp:/opt/sonarqube/temp
+
+volumes:
+  sonarqube_conf:
+  sonarqube_data:
+  sonarqube_extensions:
+  sonarqube_logs:
+  sonarqube_temp:

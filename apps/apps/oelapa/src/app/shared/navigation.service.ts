@@ -18,7 +18,7 @@ export class NavigationService {
   private configService = inject(ConfigurationService);
 
   // Signal-based state management
-  private _isExpanded = signal<boolean>(true);
+  private _isExpanded = signal<boolean>(false); // Start closed by default
   private _activeRoute = signal<string>('');
 
   // Read-only signals for consumers
@@ -46,7 +46,7 @@ export class NavigationService {
     }))
   );
 
-  // Complete navigation state  
+  // Complete navigation state
   public navigationState$: Observable<NavigationState> = combineLatest([
     this.isExpanded$,
     this.isMobile$,
@@ -73,9 +73,14 @@ export class NavigationService {
     // Initialize with current route
     this._activeRoute.set(this.router.url);
 
-    // Auto-collapse on mobile
+    // Menu starts closed by default on all screen sizes
+    // Users can manually open it using the menu button
+    this._isExpanded.set(false);
+
+    // Auto-close menu after navigation on mobile devices
     this.isMobile$.subscribe(isMobile => {
-      if (isMobile) {
+      if (isMobile && this._isExpanded()) {
+        // On mobile, close menu when switching to mobile or on route change
         this._isExpanded.set(false);
       }
     });
@@ -173,15 +178,15 @@ export class NavigationService {
       if (!item.roles || item.roles.length === 0) {
         return true;
       }
-      
+
       // Show items if user has any of the required roles
       const hasRequiredRole = item.roles.some(role => userRoles.includes(role));
-      
+
       if (hasRequiredRole && item.children) {
         // Filter children as well
         item.children = this.filterMenuItemsByRoles(item.children, userRoles);
       }
-      
+
       return hasRequiredRole;
     });
   }
@@ -197,7 +202,7 @@ export class NavigationService {
     ).subscribe((menuItems: MenuItem[]) => {
       menuItems.forEach((item: MenuItem) => {
         if (item.children) {
-          item.expanded = item.children.some((child: MenuItem) => 
+          item.expanded = item.children.some((child: MenuItem) =>
             child.route && activeRoute.startsWith(child.route)
           );
         }
@@ -212,13 +217,13 @@ export class NavigationService {
     if (item.route && activeRoute === item.route) {
       return true;
     }
-    
+
     if (item.children) {
-      return item.children.some(child => 
+      return item.children.some(child =>
         child.route && activeRoute.startsWith(child.route)
       );
     }
-    
+
     return false;
   }
 

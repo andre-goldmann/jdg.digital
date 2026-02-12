@@ -1,81 +1,248 @@
+// ===============================================
+// AUTH CONTAINER - MOBILE FIRST
+// ===============================================
 .auth-container {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 1rem;
+  padding: var(--spacing-md);
+
+  @media (min-width: 768px) {
+    padding: var(--spacing-lg);
+  }
+
+  // Very small screens
+  @media (max-width: 320px) {
+    padding: var(--spacing-sm);
+  }
 }
 
 .auth-card {
   max-width: 400px;
   width: 100%;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  border-radius: 16px;
+  border-radius: 12px; // Slightly less rounded on mobile
+
+  @media (min-width: 768px) {
+    border-radius: 16px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  }
+
+  @media (max-width: 480px) {
+    border-radius: 8px;
+    // Full width on very small screens with some margin
+    margin: 0 var(--spacing-xs);
+  }
 }
 
+// ===============================================
+// CARD HEADER
+// ===============================================
 .auth-card mat-card-header {
   text-align: center;
-  padding-bottom: 1rem;
+  padding-bottom: var(--spacing-md);
+
+  @media (min-width: 768px) {
+    padding-bottom: var(--spacing-lg);
+  }
 }
 
 .auth-card h1 {
   margin: 0;
   color: #333;
   font-weight: 500;
+  font-size: var(--text-xl);
+
+  @media (min-width: 768px) {
+    font-size: var(--text-2xl);
+  }
+
+  @media (max-width: 480px) {
+    font-size: var(--text-lg);
+  }
 }
 
+// ===============================================
+// LOGIN CONTENT
+// ===============================================
 .login-content {
   text-align: center;
-  padding: 1rem 0;
+  padding: var(--spacing-md) 0;
+
+  @media (min-width: 768px) {
+    padding: var(--spacing-lg) 0;
+  }
 }
 
 .login-description {
-  margin-bottom: 2rem;
+  margin-bottom: var(--spacing-xl);
   color: #666;
-  font-size: 1rem;
-  line-height: 1.5;
+  font-size: var(--text-sm);
+  line-height: 1.6;
+
+  @media (min-width: 768px) {
+    margin-bottom: var(--spacing-xxl);
+    font-size: var(--text-base);
+  }
+
+  @media (max-width: 480px) {
+    margin-bottom: var(--spacing-lg);
+    font-size: var(--text-xs);
+  }
 }
 
 .full-width {
   width: 100%;
 }
 
+// ===============================================
+// LOGIN BUTTON - TOUCH FRIENDLY
+// ===============================================
 .login-button {
-  height: 48px;
-  font-size: 16px;
+  height: 48px; // Mobile first
+  font-size: var(--text-sm);
   font-weight: 500;
-  margin-top: 1rem;
-  
+  margin-top: var(--spacing-md);
+  border-radius: 8px;
+
+  @media (min-width: 768px) {
+    height: 56px;
+    font-size: var(--text-base);
+    margin-top: var(--spacing-lg);
+    border-radius: 12px;
+  }
+
+  // Extra large touch targets for mobile
+  @media (max-width: 767px) {
+    height: 52px;
+    font-size: var(--text-base);
+  }
+
   mat-icon {
-    margin-right: 8px;
+    margin-right: var(--spacing-sm);
+
+    @media (min-width: 768px) {
+      margin-right: var(--spacing-md);
+    }
   }
 }
 
+// ===============================================
+// FOOTER TEXT
+// ===============================================
 .footer-text {
   text-align: center;
   color: #666;
-  font-size: 0.875rem;
-  margin: 1rem 0 0 0;
+  font-size: var(--text-xs);
+  margin: var(--spacing-md) 0 0 0;
+  line-height: 1.4;
+
+  @media (min-width: 768px) {
+    font-size: var(--text-sm);
+    margin: var(--spacing-lg) 0 0 0;
+  }
 }
 
+// ===============================================
+// CARD CONTENT PADDING
+// ===============================================
 mat-card-content {
-  padding: 1.5rem;
+  padding: var(--spacing-md);
+
+  @media (min-width: 768px) {
+    padding: var(--spacing-xl);
+  }
+
+  @media (max-width: 480px) {
+    padding: var(--spacing-md) var(--spacing-sm);
+  }
 }
 
 mat-card-footer {
-  padding: 0 1.5rem 1.5rem;
+  padding: 0 var(--spacing-md) var(--spacing-md);
+
+  @media (min-width: 768px) {
+    padding: 0 var(--spacing-xl) var(--spacing-xl);
+  }
+
+  @media (max-width: 480px) {
+    padding: 0 var(--spacing-sm) var(--spacing-md);
+  }
 }
 
-// Accessibility improvements
-button:focus {
+// ===============================================
+// ACCESSIBILITY & INTERACTION
+// ===============================================
+// Focus improvements
+button:focus-visible {
   outline: 2px solid #667eea;
   outline-offset: 2px;
+  border-radius: 4px;
 }
 
-// Hover effects
-.login-button:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-  transition: all 0.2s ease;
+// Enhanced hover effects (only on non-touch devices)
+@media (hover: hover) and (pointer: fine) {
+  .login-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    transition: all 0.2s ease;
+  }
+}
+
+// Touch device optimizations
+@media (hover: none) {
+  .login-button {
+    // Remove transform effects on touch devices
+    transition: background-color 0.2s ease;
+
+    &:active {
+      transform: scale(0.98);
+      transition: transform 0.1s ease;
+    }
+  }
+}
+
+// High contrast support
+@media (prefers-contrast: high) {
+  .auth-card {
+    border: 2px solid #333;
+  }
+
+  .login-button {
+    border: 2px solid currentColor;
+  }
+}
+
+// Reduced motion support
+@media (prefers-reduced-motion: reduce) {
+  .login-button {
+    transition: none;
+
+    &:hover {
+      transform: none;
+    }
+  }
+}
+
+// ===============================================
+// LANDSCAPE MOBILE OPTIMIZATION
+// ===============================================
+@media (max-height: 600px) and (orientation: landscape) {
+  .auth-container {
+    padding: var(--spacing-sm);
+  }
+
+  .login-content {
+    padding: var(--spacing-sm) 0;
+  }
+
+  .login-description {
+    margin-bottom: var(--spacing-md);
+  }
+
+  mat-card-content {
+    padding: var(--spacing-sm);
+  }
 }

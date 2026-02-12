@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Im Norden Europas</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; }
+        .page-title { font-size: 2.5em; font-weight: bold; margin-bottom: 10px; }
+        .section-title { font-size: 1.5em; font-weight: bold; margin-top: 20px; margin-bottom: 10px; }
+        .exercise { margin-bottom: 20px; border: 1px solid #ccc; padding: 15px; border-radius: 5px; }
+        .exercise h3 { margin-top: 0; }
+        .map-container { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+        .map { width: 60%; }
+        .legend { width: 35%; border: 1px solid #eee; padding: 10px; font-size: 0.9em; }
+        .legend div { display: flex; align-items: center; margin-bottom: 5px; }
+        .legend-box { width: 20px; height: 15px; border: 1px solid #ccc; margin-right: 5px; }
+        .input-field { border: none; border-bottom: 1px solid black; padding: 2px 0; width: 150px; margin-left: 5px; }
+        .list-item { margin-bottom: 10px; }
+        .grid-container { display: grid; grid-template-columns: repeat(11, 30px); gap: 2px; margin-top: 10px; }
+        .grid-cell { width: 30px; height: 30px; border: 1px solid #ccc; display: flex; justify-content: center; align-items: center; font-weight: bold; }
+        .grid-label { grid-column: 1; text-align: right; padding-right: 5px; }
+        .grid-input { background-color: #f0f0f0; } /* Simulates pre-filled cells */
+        .grid-number { width: 20px; height: 20px; display: flex; justify-content: center; align-items: center; font-size: 0.8em; margin-right: 5px; }
+        .solution-word { margin-top: 20px; font-weight: bold; }
+
+        /* Specific styling for the filled-in answers */
+        .filled-in { font-weight: bold; color: black; border-bottom: 1px solid black; }
+        .grid-answer { background-color: lightyellow; } /* To highlight pre-filled grid answers */
+    </style>
+</head>
+<body>
+
+<div style="float: right; font-size: 3em; font-weight: bold;">3</div>
+<div style="font-size: 1.2em; margin-bottom: 5px;">Im Norden Europas</div>
+<div class="page-title">Im Norden Europas</div>
+
+<div class="exercise">
+    <h3>1 Arbeite mit der Karte.</h3>
+    <ol type="a">
+        <li>Ermittle mithilfe des Atlas die in der Karte eingetragenen Meere bzw. Meeresteile.</li>
+        <li>Benenne die Staaten und ihre Hauptstädte in der Legende.</li>
+    </ol>
+
+    <div class="map-container">
+        <div class="map">
+            <img src="your-map-image-url.png" alt="Map of Northern Europe" style="width: 100%; height: auto; border: 1px solid #ccc;">
+            <small style="display: block; text-align: right;">© Klett</small>
+            <div class="legend" style="width: auto; margin-top: 10px; border: none; padding: 0;">
+                <div style="display: flex; flex-wrap: wrap; justify-content: space-between;">
+                    <div style="display: flex; align-items: center; margin-right: 15px;">
+                        <span style="font-weight: bold;">A</span><span class="legend-box" style="background-color: #eee;"></span>Meere und Meeresteile
+                    </div>
+                    <div style="display: flex; align-items: center; margin-right: 15px;">
+                        <span style="font-weight: bold;">C</span><span class="legend-box" style="background-color: #eee;"></span>Hauptstädte
+                    </div>
+                    <div style="display: flex; align-items: center; margin-right: 15px;">
+                        <span style="font-weight: bold;">D</span><span class="legend-box" style="background-color: #f0f0f0;"></span>Talldland (0 - 700 m)
+                    </div>
+                    <div style="display: flex; align-items: center; margin-right: 15px;">
+                        <span class="legend-box" style="background-color: lightgray;"></span>Hügelland (200 - 500 m)
+                    </div>
+                    <div style="display: flex; align-items: center;">
+                        <span class="legend-box" style="background-color: gray;"></span>Mittelgebirge (500 - 1000 m)
+                    </div>
+                    <div style="display: flex; align-items: center;">
+                        <span class="legend-box" style="background-color: darkgray;"></span>Hochgebirge (über 1000 m)
+                    </div>
+                    <div style="display: flex; align-items: center; margin-top: 10px;">
+                        <span class="legend-box" style="background-color: transparent; border: none;"></span>0<span style="width: 50px; height: 1px; background-color: black; margin: 0 5px;"></span>150<span style="width: 50px; height: 1px; background-color: black; margin: 0 5px;"></span>300 km
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="width: 35%;">
+            <h4>Meere und Meeresteile:</h4>
+            <div class="list-item">A <span class="filled-in">Europäisches Nordmeer</span></div>
+            <div class="list-item">B <span class="filled-in">Atlantischer Ozean</span></div>
+            <div class="list-item">C <span class="filled-in">Nordsee</span></div>
+            <div class="list-item">D <span class="filled-in">Skagerrak</span></div>
+            <div class="list-item">E <span class="filled-in">Kattegat</span></div>
+            <div class="list-item">F <span class="filled-in">Ostsee</span></div>
+            <div class="list-item">G <span class="filled-in">Bottnischer Meerbusen</span></div>
+
+            <h4 style="margin-top: 20px;">Staaten:</h4>
+            <div class="list-item">IS <span class="filled-in">Island</span></div>
+            <div class="list-item">N <span class="filled-in">Norwegen</span></div>
+            <div class="list-item">S <span class="filled-in">Schweden</span></div>
+            <div class="list-item">FIN <span class="filled-in">Finnland</span></div>
+            <div class="list-item">DK <span class="filled-in">Dänemark</span></div>
+        </div>
+
+        <div style="width: 35%;">
+            <h4>Hauptstädte:</h4>
+            <div class="list-item">1 <span class="filled-in">Reykjavik</span></div>
+            <div class="list-item">2 <span class="filled-in">Oslo</span></div>
+            <div class="list-item">3 <span class="filled-in">Stockholm</span></div>
+            <div class="list-item">4 <span class="filled-in">Helsinki</span></div>
+            <div class="list-item">5 <span class="filled-in">Kopenhagen</span></div>
+        </div>
+    </div>
+</div>
+
+<div class="exercise">
+    <h3>2 Finde das Lösungswort für eine besondere Naturerscheinung.</h3>
+    <ol>
+        <li value="1">Hauptstadt unseres nördlichen Nachbarn</li>
+        <li value="2">die nordeuropäische Hauptstadt mit dem kürzesten Namen</li>
+        <li value="3">einziger Inselstaat im Norden Europas</li>
+        <li value="4">Teil der Nordsee zwischen Norwegen und Dänemark</li>
+        <li value="5">nördlichster Punkt Europas</li>
+        <li value="6">Land der tausend Seen</li>
+        <li value="7">Meerenge der westlichen Ostsee zwischen Schweden und Jütland</li>
+        <li value="8">Hauptstadt von Schweden</li>
+        <li value="9">Land mit der längsten Ostseeküste</li>
+        <li value="10">Gewässer zwischen Island und Norwegen</li>
+    </ol>
+
+    <div class="grid-container" style="grid-template-columns: 30px repeat(10, 30px);">
+        <div class="grid-number">1</div><div class="grid-cell grid-answer">K</div><div class="grid-cell grid-answer">O</div><div class="grid-cell grid-answer">P</div><div class="grid-cell grid-answer">E</div><div class="grid-cell grid-answer">N</div><div class="grid-cell grid-answer">H</div><div class="grid-cell grid-answer">A</div><div class="grid-cell grid-answer">G</div><div class="grid-cell grid-answer">E</div><div class="grid-cell grid-answer">N</div>
+        <div class="grid-number">2</div><div class="grid-cell grid-answer">O</div><div class="grid-cell grid-answer">S</div><div class="grid-cell grid-answer">L</div><div class="grid-cell grid-answer">O</div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+        <div class="grid-number">3</div><div class="grid-cell grid-answer">I</div><div class="grid-cell grid-answer">S</div><div class="grid-cell grid-answer">L</div><div class="grid-cell grid-answer">A</div><div class="grid-cell grid-answer">N</div><div class="grid-cell grid-answer">D</div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+        <div class="grid-number">4</div><div class="grid-cell grid-answer">S</div><div class="grid-cell grid-answer">K</div><div class="grid-cell grid-answer">A</div><div class="grid-cell grid-answer">G</div><div class="grid-cell grid-answer">E</div><div class="grid-cell grid-answer">R</div><div class="grid-cell grid-answer">R</div><div class="grid-cell grid-answer">A</div><div class="grid-cell grid-answer">K</div><div class="grid-cell"></div>
+        <div class="grid-number">5</div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+        <div class="grid-number">6</div><div class="grid-cell grid-answer">F</div><div class="grid-cell grid-answer">I</div><div class="grid-cell grid-answer">N</div><div class="grid-cell grid-answer">N</div><div class="grid-cell grid-answer">L</div><div class="grid-cell grid-answer">A</div><div class="grid-cell grid-answer">N</div><div class="grid-cell grid-answer">D</div><div class="grid-cell"></div><div class="grid-cell"></div>
+        <div class="grid-number">7</div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+        <div class="grid-number">8</div><div class="grid-cell grid-answer">S</div><div class="grid-cell grid-answer">T</div><div class="grid-cell grid-answer">O</div><div class="grid-cell grid-answer">C</div><div class="grid-cell grid-answer">K</div><div class="grid-cell grid-answer">H</div><div class="grid-cell grid-answer">O</div><div class="grid-cell grid-answer">L</div><div class="grid-cell grid-answer">M</div><div class="grid-cell"></div>
+        <div class="grid-number">9</div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+        <div class="grid-number">10</div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+    </div>
+
+    <div class="solution-word">
+        Lösungswort: <span class="input-field" style="width: 250px;"></span>
+    </div>
+</div>
+
+<div style="float: right;">7</div>
+
+</body>
+</html>

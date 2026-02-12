@@ -1,100 +1,299 @@
 <div class="dashboard-container">
-  <div class="dashboard-content">
-    <mat-card class="welcome-card">
-      <mat-card-header>
-        <mat-card-title>Welcome to OELAPA</mat-card-title>
-        <mat-card-subtitle>Property Management System</mat-card-subtitle>
-      </mat-card-header>
-
-      <mat-card-content>
-        @if (authState$ | async; as authState) {
-          @if (authState.isAuthenticated && authState.user) {
-            <div class="user-details">
-              <h3>User Information</h3>
-              <p><strong>Name:</strong> {{ authState.user.firstName }} {{ authState.user.lastName }}</p>
-              <p><strong>Username:</strong> {{ authState.user.username }}</p>
-              <p><strong>Email:</strong> {{ authState.user.email }}</p>
-              <p><strong>Roles:</strong> {{ authState.user.roles.join(', ') || 'No roles assigned' }}</p>
-            </div>
-          } @else {
+  @if (authState$ | async; as authState) {
+    @if (!authState.isAuthenticated) {
+      <!-- Guest welcome section -->
+      <div class="guest-welcome-section">
+        <mat-card class="welcome-card">
+          <mat-card-header>
+            <mat-card-title>Welcome to OELAPA</mat-card-title>
+            <mat-card-subtitle>Property Management System</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
             <div class="guest-welcome">
               <h3>Welcome, Guest!</h3>
-              <p>You are browsing as a guest. To access advanced features like reservations, please log in.</p>
+              <p>Please log in to access the property management dashboard and all available features.</p>
               <button mat-raised-button color="primary" (click)="authService.login()">
                 <mat-icon>login</mat-icon>
                 Log In
               </button>
             </div>
-          }
+          </mat-card-content>
+        </mat-card>
+      </div>
+    } @else {
+      <!-- Authenticated user dashboard -->
+      <div class="dashboard-grid">
+        <!-- Row 1 -->
+        <mat-card class="dashboard-widget">
+          <mat-card-header>
+            <mat-icon mat-card-avatar>analytics</mat-icon>
+            <mat-card-title>General manager report</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p>Analyse key performance indicators for your property such as occupancy and RevPAR.</p>
+            <p class="help-text">Filter the results to show only data for a certain part of your business. You can, for example, exclude day use business or complementary rate plans.</p>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-raised-button color="accent" (click)="navigateToGMReport()">Check GM report</button>
+          </mat-card-actions>
+        </mat-card>
 
-          <div class="features-section">
-            <h3>Available Features</h3>
-            <div class="feature-grid">
-              <mat-card class="feature-card" (click)="navigateToReservations()">
-                <mat-card-header>
-                  <mat-icon mat-card-avatar>hotel</mat-icon>
-                  <mat-card-title>Reservations</mat-card-title>
-                </mat-card-header>
-                <mat-card-content>
-                  Manage bookings and guest reservations
-                  @if (!authState.isAuthenticated) {
-                    <small class="login-required">* Login required</small>
-                  }
-                </mat-card-content>
-                <mat-card-actions>
-                  <button mat-button color="primary">
-                    @if (authState.isAuthenticated) {
-                      Create New Reservation
-                    } @else {
-                      Login to Create Reservation
-                    }
-                  </button>
-                </mat-card-actions>
-              </mat-card>
+        <mat-card class="dashboard-widget">
+          <mat-card-header>
+            <mat-icon mat-card-avatar>trending_up</mat-icon>
+            <mat-card-title>Revenues reports</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p>Get an overview of your hotel's financial performance for any time period.</p>
+            <p class="help-text">See gross and net revenues for any time period, broken down by type and VAT.</p>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-raised-button color="accent" (click)="navigateToRevenues()">View revenues</button>
+          </mat-card-actions>
+        </mat-card>
 
-              <mat-card class="feature-card">
-                <mat-card-header>
-                  <mat-icon mat-card-avatar>home</mat-icon>
-                  <mat-card-title>Properties</mat-card-title>
-                </mat-card-header>
-                <mat-card-content>
-                  Manage units and property inventory
-                  @if (!authState.isAuthenticated) {
-                    <small class="login-required">* Login required</small>
-                  }
-                </mat-card-content>
-              </mat-card>
+        <mat-card class="dashboard-widget">
+          <mat-card-header>
+            <mat-icon mat-card-avatar>receipt_long</mat-icon>
+            <mat-card-title>Cashier report</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            @for (entry of cashierEntries(); track entry.guestName) {
+              <div class="cashier-entries">
+                <div class="cashier-entry">
+                  <span class="guest-name">{{ entry.guestName }}</span>
+                  <span class="amount">{{ entry.amount }}: {{ entry.currency }}</span>
+                </div>
+                <div class="entry-details">
+                  <span class="date">{{ entry.date }}</span>
+                  <span class="time">{{ entry.time }}</span>
+                </div>
+              </div>
+            } @empty {
+              <div class="no-entries">
+                <p class="help-text">No cashier entries for today.</p>
+              </div>
+            }
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-raised-button color="accent" (click)="exportCashierPDF()">Export PDF</button>
+          </mat-card-actions>
+        </mat-card>
 
-              <mat-card class="feature-card">
-                <mat-card-header>
-                  <mat-icon mat-card-avatar>receipt</mat-icon>
-                  <mat-card-title>Invoicing</mat-card-title>
-                </mat-card-header>
-                <mat-card-content>
-                  Handle billing and financial transactions
-                  @if (!authState.isAuthenticated) {
-                    <small class="login-required">* Login required</small>
-                  }
-                </mat-card-content>
-              </mat-card>
-
-              <mat-card class="feature-card">
-                <mat-card-header>
-                  <mat-icon mat-card-avatar>analytics</mat-icon>
-                  <mat-card-title>Reports</mat-card-title>
-                </mat-card-header>
-                <mat-card-content>
-                  View analytics and generate reports
-                  @if (!authState.isAuthenticated) {
-                    <small class="login-required">* Login required</small>
-                  }
-                </mat-card-content>
-              </mat-card>
+        <mat-card class="dashboard-widget">
+          <mat-card-header>
+            <mat-icon mat-card-avatar>hotel</mat-icon>
+            <mat-card-title>Reservations</mat-card-title>
+            <mat-card-subtitle>Arrivals</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="metrics-grid">
+              <div class="metric clickable-metric"
+                   (click)="navigateToArrivingReservations()"
+                   tabindex="0"
+                   role="button"
+                   [attr.aria-label]="'View ' + reservationMetrics().arriving + ' arriving reservations'"
+                   matRipple>
+                <span class="metric-value">{{ reservationMetrics().arriving }}</span>
+                <span class="metric-label">Arriving</span>
+              </div>
+              <div class="metric clickable-metric"
+                   (click)="navigateToCheckedInReservations()"
+                   tabindex="0"
+                   role="button"
+                   [attr.aria-label]="'View ' + reservationMetrics().checkedIn + ' checked-in reservations'"
+                   matRipple>
+                <span class="metric-value">{{ reservationMetrics().checkedIn }}</span>
+                <span class="metric-label">Checked-in</span>
+              </div>
             </div>
-          </div>
-        }
-      </mat-card-content>
-    </mat-card>
-  </div>
+            <div class="departures-section">
+              <h4>Departures</h4>
+              <div class="metrics-grid">
+                <div class="metric clickable-metric"
+                     (click)="navigateToWaitingReservations()"
+                     tabindex="0"
+                     role="button"
+                     [attr.aria-label]="'View ' + reservationMetrics().waiting + ' waiting reservations'"
+                     matRipple>
+                  <span class="metric-value">{{ reservationMetrics().waiting }}</span>
+                  <span class="metric-label">Waiting</span>
+                </div>
+                <div class="metric clickable-metric"
+                     (click)="navigateToCheckedOutReservations()"
+                     tabindex="0"
+                     role="button"
+                     [attr.aria-label]="'View ' + reservationMetrics().checkedOut + ' checked-out reservations'"
+                     matRipple>
+                  <span class="metric-value">{{ reservationMetrics().checkedOut }}</span>
+                  <span class="metric-label">Checked-out</span>
+                </div>
+                <div class="metric">
+                  <span class="metric-value">{{ reservationMetrics().total }}</span>
+                  <span class="metric-label">Total</span>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+          <mat-card-actions>
+            <div class="primary-actions">
+              <button mat-raised-button color="accent" (click)="navigateToReservations()">View all reservations</button>
+              <button mat-button color="primary" (click)="navigateToNewReservation()">
+                <mat-icon>add</mat-icon>
+                New reservation
+              </button>
+            </div>
+            <div class="quick-actions">
+              <button mat-stroked-button
+                      (click)="navigateToArrivingReservations()"
+                      matTooltip="View today's arriving guests">
+                <mat-icon>flight_land</mat-icon>
+                Today's Arrivals
+              </button>
+              <button mat-stroked-button
+                      (click)="navigateToWaitingReservations()"
+                      matTooltip="View guests waiting for checkout">
+                <mat-icon>schedule</mat-icon>
+                Pending Checkout
+              </button>
+              <button mat-stroked-button
+                      (click)="navigateToPendingReservations()"
+                      matTooltip="View pending confirmations">
+                <mat-icon>pending</mat-icon>
+                Pending
+              </button>
+              <button mat-stroked-button
+                      (click)="navigateToTodaysReservations()"
+                      matTooltip="View all today's reservations">
+                <mat-icon>today</mat-icon>
+                Today's Activity
+              </button>
+            </div>
+            <div class="advanced-actions">
+              <button mat-button [matMenuTriggerFor]="quickFiltersMenu"
+                      matTooltip="Quick filter options">
+                <mat-icon>filter_list</mat-icon>
+                Quick Filters
+                <mat-icon>expand_more</mat-icon>
+              </button>
+              <mat-menu #quickFiltersMenu="matMenu">
+                <button mat-menu-item (click)="navigateToThisWeekReservations()">
+                  <mat-icon>date_range</mat-icon>
+                  <span>This Week's Reservations</span>
+                </button>
+                <button mat-menu-item (click)="navigateToNoShowReservations()">
+                  <mat-icon>person_off</mat-icon>
+                  <span>No-Show Reservations</span>
+                </button>
+                <button mat-menu-item (click)="navigateToCancelledReservations()">
+                  <mat-icon>cancel</mat-icon>
+                  <span>Cancelled Reservations</span>
+                </button>
+                <mat-divider></mat-divider>
+                <button mat-menu-item (click)="navigateToLargeGroupReservations()">
+                  <mat-icon>groups</mat-icon>
+                  <span>Large Groups (4+ guests)</span>
+                </button>
+                <button mat-menu-item (click)="navigateToSuiteReservations()">
+                  <mat-icon>hotel_class</mat-icon>
+                  <span>Suite Reservations</span>
+                </button>
+                <button mat-menu-item (click)="navigateToSpecialRequestsReservations()">
+                  <mat-icon>star</mat-icon>
+                  <span>Special Requests</span>
+                </button>
+              </mat-menu>
+
+              <button mat-button [matMenuTriggerFor]="reportsMenu"
+                      matTooltip="Quick reports">
+                <mat-icon>assessment</mat-icon>
+                Reports
+                <mat-icon>expand_more</mat-icon>
+              </button>
+              <mat-menu #reportsMenu="matMenu">
+                <button mat-menu-item (click)="navigateToOccupancyReport()">
+                  <mat-icon>pie_chart</mat-icon>
+                  <span>Occupancy Report</span>
+                </button>
+                <button mat-menu-item (click)="navigateToRevenueReport()">
+                  <mat-icon>attach_money</mat-icon>
+                  <span>Revenue Report</span>
+                </button>
+                <button mat-menu-item (click)="navigateToGuestReport()">
+                  <mat-icon>people</mat-icon>
+                  <span>Guest Report</span>
+                </button>
+              </mat-menu>
+            </div>
+          </mat-card-actions>
+        </mat-card>
+
+        <!-- Row 2 -->
+        <mat-card class="dashboard-widget">
+          <mat-card-header>
+            <mat-icon mat-card-avatar>view_module</mat-icon>
+            <mat-card-title>Room rack</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p>Calendar view of your rooms and reservations.</p>
+            <p class="help-text">See which guests are arriving or checked-in, assign and change rooms, and schedule maintenances.</p>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-raised-button color="accent" (click)="navigateToRoomRack()">View room rack</button>
+          </mat-card-actions>
+        </mat-card>
+
+        <mat-card class="dashboard-widget">
+          <mat-card-header>
+            <mat-icon mat-card-avatar>cleaning_services</mat-icon>
+            <mat-card-title>Housekeeping</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p>View or print a list of all rooms for housekeeping.</p>
+            <p class="help-text">Update the room's condition and mark them as clean or dirty.</p>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-raised-button color="accent" (click)="navigateToHousekeeping()">View housekeeping</button>
+          </mat-card-actions>
+        </mat-card>
+
+        <mat-card class="dashboard-widget">
+          <mat-card-header>
+            <mat-icon mat-card-avatar>account_balance</mat-icon>
+            <mat-card-title>Financial reports</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p>For full financial reports, use our export functionality or accounting section.</p>
+            <p class="help-text">Get a full log of all your transactions, or aggregated reports by day, week or month.</p>
+            <div class="learn-more">
+              <span>Learn more in </span>
+              <a href="#" class="help-link">Introduction to Accounting guide</a>
+            </div>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-raised-button color="accent" (click)="navigateToAccounting()">Accounting</button>
+          </mat-card-actions>
+        </mat-card>
+
+        <mat-card class="dashboard-widget">
+          <mat-card-header>
+            <mat-icon mat-card-avatar>rate_review</mat-icon>
+            <mat-card-title>Rate plans</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p>Manage the rate plans for your property e.g. hourly, day or overnight plans.</p>
+            <p class="help-text">Define prices, booking periods, restrictions and promo codes.</p>
+            <div class="learn-more">
+              <span>Learn more in </span>
+              <a href="#" class="help-link">Rate Plan guide</a>
+            </div>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-raised-button color="accent" (click)="navigateToRatePlans()">View rate plans</button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    }
+  }
 </div>
 

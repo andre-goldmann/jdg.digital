@@ -67,7 +67,12 @@
   "editor.trimAutoWhitespace": true,
   "prettier.configPath": ".prettierrc",
   "prettier.requireConfig": true,
-  "chat.mcp.discovery.enabled": true,
+  "chat.mcp.discovery.enabled": {
+    "claude-desktop": true,
+    "windsurf": true,
+    "cursor-global": true,
+    "cursor-workspace": true
+  },
   "mcp": {
     "inputs": [
       {

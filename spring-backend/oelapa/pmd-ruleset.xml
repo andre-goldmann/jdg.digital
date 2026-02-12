@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<ruleset name="Oelapa PMD Rules"
+         xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 
+         https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
+
+    <description>
+        PMD Ruleset for Oelapa Spring Backend Project
+        TODO: Configure detailed rules based on project.md specifications
+    </description>
+
+    <!-- Basic Best Practices -->
+    <rule ref="category/java/bestpractices.xml">
+        <!-- Exclude rules that may conflict with Spring Boot patterns -->
+        <exclude name="JUnitTestsShouldIncludeAssert"/>
+    </rule>
+
+    <!-- Code Style -->
+    <rule ref="category/java/codestyle.xml">
+        <!-- Configure variable naming -->
+        <exclude name="ShortVariable"/>
+        <exclude name="LongVariable"/>
+    </rule>
+
+    <!-- Design -->
+    <rule ref="category/java/design.xml">
+        <!-- Adjust complexity thresholds -->
+        <exclude name="TooManyMethods"/>
+    </rule>
+
+    <!-- Error Prone -->
+    <rule ref="category/java/errorprone.xml"/>
+
+    <!-- Performance -->
+    <rule ref="category/java/performance.xml"/>
+
+    <!-- Security -->
+    <rule ref="category/java/security.xml"/>
+
+</ruleset>

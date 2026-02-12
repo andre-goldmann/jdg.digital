@@ -1,0 +1,263 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "apaleo Automation API",
+    "description": "Configure and manage automated jobs (check-in, check-out, etc.).",
+    "version": "v1"
+  },
+  "paths": {
+    "/api/v1/properties/{propertyId}": {
+      "get": {
+        "tags": [
+          "Properties"
+        ],
+        "description": "<br>You must have this scope: 'scheduler:automation.read'.",
+        "operationId": "ApiPropertiesByPropertyIdGet",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "propertyId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/SettingsResponse"
+            }
+          },
+          "404": {
+            "description": "The Request-URI could not be found."
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "401": {
+            "description": "You are unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "500": {
+            "description": "An unexpected error occurred."
+          },
+          "503": {
+            "description": "The server is currently unavailable. Please try later."
+          },
+          "422": {
+            "description": "Validation errors in the request body or query params.",
+            "schema": {
+              "$ref": "#/definitions/MessageItemCollection"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "scheduler:automation.read"
+            ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Properties"
+        ],
+        "description": "<br>You must have this scope: 'scheduler:automation.manage'.",
+        "operationId": "ApiPropertiesByPropertyIdPut",
+        "consumes": [
+          "application/json-patch+json",
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "propertyId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/UpsertSettingsRequest"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "The Request-URI could not be found."
+          },
+          "415": {
+            "description": "Unsupported media type."
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "401": {
+            "description": "You are unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "500": {
+            "description": "An unexpected error occurred."
+          },
+          "503": {
+            "description": "The server is currently unavailable. Please try later."
+          },
+          "422": {
+            "description": "Validation errors in the request body or query params.",
+            "schema": {
+              "$ref": "#/definitions/MessageItemCollection"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "scheduler:automation.manage"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "MessageItemCollection": {
+      "type": "object",
+      "properties": {
+        "messages": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "readOnly": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "NightAuditSettingsModel": {
+      "required": [
+        "enabledAt",
+        "setReservationsToNoShow"
+      ],
+      "type": "object",
+      "properties": {
+        "enabledAt": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "setReservationsToNoShow": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "PostMaintenanceUnitConditionsModel": {
+      "type": "object",
+      "properties": {
+        "outOfService": {
+          "enum": [
+            "Clean",
+            "CleanToBeInspected",
+            "Dirty"
+          ],
+          "type": "string"
+        },
+        "outOfOrder": {
+          "enum": [
+            "Clean",
+            "CleanToBeInspected",
+            "Dirty"
+          ],
+          "type": "string"
+        },
+        "outOfInventory": {
+          "enum": [
+            "Clean",
+            "CleanToBeInspected",
+            "Dirty"
+          ],
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SettingsResponse": {
+      "required": [
+        "propertyId"
+      ],
+      "type": "object",
+      "properties": {
+        "propertyId": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "checkInEnabled": {
+          "type": "boolean"
+        },
+        "checkOutEnabled": {
+          "type": "boolean"
+        },
+        "nightAuditSettingsModel": {
+          "$ref": "#/definitions/NightAuditSettingsModel"
+        },
+        "postMaintenanceUnitConditions": {
+          "$ref": "#/definitions/PostMaintenanceUnitConditionsModel"
+        }
+      },
+      "additionalProperties": false,
+      "example": "{\n  \"propertyId\": \"MUC\",\n  \"checkInEnabled\": true,\n  \"checkOutEnabled\": false,\n  \"nightAuditSettingsModel\": {\n    \"enabledAt\": \"05:15\",\n    \"setReservationsToNoShow\": false\n  },\n  \"postMaintenanceUnitConditions\": {\n    \"outOfService\": \"Clean\",\n    \"outOfOrder\": \"Dirty\",\n    \"outOfInventory\": \"CleanToBeInspected\"\n  }\n}"
+    },
+    "UpsertSettingsRequest": {
+      "required": [
+        "checkInEnabled",
+        "checkOutEnabled"
+      ],
+      "type": "object",
+      "properties": {
+        "checkInEnabled": {
+          "type": "boolean"
+        },
+        "checkOutEnabled": {
+          "type": "boolean"
+        },
+        "nightAuditSettingsModel": {
+          "$ref": "#/definitions/NightAuditSettingsModel"
+        },
+        "postMaintenanceUnitConditions": {
+          "$ref": "#/definitions/PostMaintenanceUnitConditionsModel"
+        }
+      },
+      "additionalProperties": false,
+      "example": "{\n  \"checkInEnabled\": true,\n  \"checkOutEnabled\": false,\n  \"nightAuditSettingsModel\": {\n    \"enabledAt\": \"05:15\",\n    \"setReservationsToNoShow\": false\n  },\n  \"postMaintenanceUnitConditions\": {\n    \"outOfService\": \"Clean\",\n    \"outOfOrder\": \"Dirty\",\n    \"outOfInventory\": \"CleanToBeInspected\"\n  }\n}"
+    }
+  },
+  "securityDefinitions": {
+    "oauth2": {
+      "type": "oauth2",
+      "flow": "implicit",
+      "authorizationUrl": "https://identity.apaleo.com/connect/authorize",
+      "scopes": {
+        "scheduler:automation.manage": "Enable, configure, or disable automation options",
+        "scheduler:automation.read": "Read automation options"
+      }
+    }
+  }
+}

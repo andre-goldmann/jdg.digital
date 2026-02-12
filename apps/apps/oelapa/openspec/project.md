@@ -57,6 +57,7 @@ The purpose of this project is to develop an open-source, API-first Property Man
 - Branch names: feature/*, bugfix/*, hotfix/*
 - Naming conventions: camelCase for variables, PascalCase for components and classes, snake_case for database schema
 - Windows Development: Commands optimized for PowerShell and Windows file system conventions
+- **Design System:** All UI implementations must follow the OELAPA Design Principles documented in `/design-principles.md`
 
 ### Architecture Patterns
 - **Monorepo Organization:** Nx workspace managing multiple applications and shared libraries for scalable development
@@ -69,6 +70,7 @@ The purpose of this project is to develop an open-source, API-first Property Man
 - **Automation:** n8n integration for tasks such as invoice generation, payment reminders, and data sync with external CRMs.
 - **AI-Assisted Development:** Angular MCP for code generation, best practices, and architectural guidance
 - **Test Automation:** Playwright MCP for advanced E2E test scenarios and browser automation
+- **UI/UX Architecture:** Angular Material-based design system following hospitality-first principles defined in `/design-principles.md`
 
 ### Testing Strategy
 - **Unit Tests:** JUnit 5 (backend), Jest (frontend)
@@ -101,6 +103,9 @@ The core domain aligns with Apaleo's open PMS approach, ensuring interoperabilit
 - GDPR-compliant data model for guest management.
 - Automation with n8n limited to non-sensitive operations.
 - All authentication flows must be OAuth2/JWT compatible.
+- **Design Consistency:** All frontend implementations must adhere to the design principles in `/design-principles.md`
+- **Accessibility:** WCAG AA+ compliance mandatory for hospitality industry accessibility requirements
+- **Mobile-First:** Responsive design supporting tablet/mobile usage for housekeeping and management workflows
 
 ## External Dependencies
 - **Nx:** Monorepo build system and development tools for scalable workspace management

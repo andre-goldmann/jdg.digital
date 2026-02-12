@@ -1,0 +1,1059 @@
+<div class="reservations-list-container apoleo-layout" data-testid="reservations-container">
+  <!-- Apoleo Header Section -->
+  <div class="apoleo-header" data-testid="reservations-header">
+    <div class="title-and-warning">
+      <h2 class="page-title" id="reservations-title">Reservations</h2>
+      
+      <!-- Validation Warnings Badge -->
+      <button *ngIf="hasWarnings()" 
+              class="warning-badge"
+              data-testid="warning-badge"
+              (click)="filterWarningsOnly()"
+              aria-label="Show {{ getWarningCount() }} reservations with validation warnings">
+        <span class="validation-label">VALIDATION</span>
+        <span class="warning-count">{{ getWarningCount() }} Warnings</span>
+      </button>
+    </div>
+    
+    <!-- Apoleo Action Buttons -->
+    <div class="apoleo-action-bar" role="toolbar" aria-label="Reservation management actions">
+      <button mat-raised-button color="primary" class="new-booking-btn"
+              data-testid="new-booking-btn"
+              (click)="createNewReservation()"
+              aria-label="Create a new booking">
+        <mat-icon>add_circle_outline</mat-icon>
+        New booking
+      </button>
+      
+      <button mat-button class="action-btn"
+              data-testid="group-bookings-btn"
+              (click)="showGroupBookings()"
+              aria-label="Show group bookings">
+        <mat-icon>group</mat-icon>
+        <span>Show group bookings</span>
+      </button>
+      
+      <button mat-button class="action-btn"
+              data-testid="export-btn"
+              (click)="exportReservations()"
+              aria-label="Export reservations data">
+        <mat-icon>download</mat-icon>
+        <span>Export</span>
+      </button>
+      
+      <button mat-button class="action-btn"
+              data-testid="print-btn"
+              (click)="printReservations()"
+              aria-label="Print registration form">
+        <mat-icon>print</mat-icon>
+        <span>Print registration form</span>
+      </button>
+      
+      <button mat-button class="action-btn"
+              data-testid="occupancy-btn"
+              (click)="showOccupancy()"
+              aria-label="View occupancy report">
+        <mat-icon>assessment</mat-icon>
+        <span>Occupancy</span>
+      </button>
+      
+      <button mat-button class="action-btn"
+              data-testid="help-btn"
+              (click)="showHelp()"
+              aria-label="Open help documentation">
+        <mat-icon>help_outline</mat-icon>
+        <span>Help</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Search Section -->
+  <div class="search-section apoleo-search" role="search" aria-labelledby="search-title">
+    <h3 id="search-title" class="sr-only">Search and Filter Reservations</h3>
+    <div class="search-row" role="group" aria-label="Search controls">
+      <div class="search-field-container">
+        <mat-form-field appearance="outline" class="search-field apoleo-search-field">
+          <mat-label>Search reservations</mat-label>
+          <input matInput [formControl]="searchControl" 
+                 data-testid="search-input"
+                 placeholder="Search by guest, booker, company, confirmation #"
+                 (keydown.enter)="onSearchEnter()"
+                 (focus)="onSearchFocus()"
+                 (blur)="onSearchBlur()"
+                 [class.has-value]="searchControl.value"
+                 id="search-input"
+                 aria-describedby="search-hint"
+                 [attr.aria-label]="'Search reservations. Current search: ' + (searchControl.value || 'none')"
+                 autocomplete="off">
+          <mat-icon matSuffix aria-hidden="true">search</mat-icon>
+          <button matSuffix mat-icon-button 
+                  *ngIf="searchControl.value" 
+                  (click)="clearSearch()"
+                  aria-label="Clear search input"
+                  tabindex="0">
+          <mat-icon aria-hidden="true">close</mat-icon>
+        </button>
+        </mat-form-field>
+        <small class="search-hint">Search by guest, booker, company, confirmation #</small>
+        
+        <!-- Search Suggestions Dropdown -->
+        <div class="search-suggestions" 
+             *ngIf="showSearchSuggestions() && searchSuggestions().length > 0"
+             role="listbox"
+             aria-label="Search suggestions">
+          <div class="suggestion-item"
+               *ngFor="let suggestion of searchSuggestions(); let i = index"
+               (click)="selectSearchSuggestion(suggestion)"
+               role="option"
+               [attr.aria-label]="'Select suggestion: ' + suggestion"
+               [attr.aria-selected]="false"
+               tabindex="0"
+               (keydown.enter)="selectSearchSuggestion(suggestion)">
+            <mat-icon class="suggestion-icon">search</mat-icon>
+            <span class="suggestion-text">{{ suggestion }}</span>
+          </div>
+        </div>
+      </div>
+      
+      <div id="search-hint" class="sr-only">Use Enter to search, or type to search automatically. Search by guest, booker, company, or confirmation number.</div>
+      
+      <button mat-button (click)="clearAllFilters()" 
+              *ngIf="hasActiveFilters()" 
+              class="clear-filters-btn"
+              aria-label="Clear all active filters"
+              [attr.aria-describedby]="hasActiveFilters() ? 'active-filters-hint' : null">
+        <mat-icon aria-hidden="true">clear</mat-icon>
+        Clear All Filters
+      </button>
+      <div id="active-filters-hint" class="sr-only" *ngIf="hasActiveFilters()">
+        Multiple filters are currently active. Click to remove all filters.
+      </div>
+    </div>
+
+    <!-- Active Filter Chips (Apoleo Badge Style) -->
+    <div class="active-filters apoleo-badges" *ngIf="hasActiveFilters()">
+      <span class="filter-label">Active filters:</span>
+      
+      <!-- Search Term Badge -->
+      <span class="filter-badge" *ngIf="searchTerm()">
+        Search: "{{ searchTerm() }}"
+        <button mat-icon-button 
+                class="badge-remove" 
+                (click)="clearSearch()"
+                aria-label="Clear search filter">
+          <mat-icon>close</mat-icon>
+        </button>
+      </span>
+
+      <!-- Status Filter Badges -->
+      <span class="filter-badge" 
+            *ngFor="let status of statusFilterControl.value">
+        {{ status | titlecase }}
+        <button mat-icon-button 
+                class="badge-remove" 
+                (click)="removeStatusFilter(status)"
+                [attr.aria-label]="'Remove ' + status + ' filter'">
+          <mat-icon>close</mat-icon>
+        </button>
+      </span>
+
+      <!-- Date Range Badges -->
+      <span class="filter-badge" *ngIf="checkInStartControl.value">
+        From: {{ formatDate(checkInStartControl.value!.toISOString()) }}
+        <button mat-icon-button 
+                class="badge-remove" 
+                (click)="clearDateFilter('start')"
+                aria-label="Clear start date filter">
+          <mat-icon>close</mat-icon>
+        </button>
+      </span>
+
+      <span class="filter-badge" *ngIf="checkInEndControl.value">
+        To: {{ formatDate(checkInEndControl.value!.toISOString()) }}
+        <button mat-icon-button 
+                class="badge-remove" 
+                (click)="clearDateFilter('end')"
+                aria-label="Clear end date filter">
+          <mat-icon>close</mat-icon>
+        </button>
+      </span>
+
+      <!-- Guest Count Badges -->
+      <span class="filter-badge" *ngIf="minGuestsControl.value">
+        Min guests: {{ minGuestsControl.value }}
+        <button mat-icon-button 
+                class="badge-remove" 
+                (click)="clearGuestFilter('min')"
+                aria-label="Clear minimum guest filter">
+          <mat-icon>close</mat-icon>
+        </button>
+      </span>
+
+      <span class="filter-badge" *ngIf="maxGuestsControl.value">
+        Max guests: {{ maxGuestsControl.value }}
+        <button mat-icon-button 
+                class="badge-remove" 
+                (click)="clearGuestFilter('max')"
+                aria-label="Clear maximum guest filter">
+          <mat-icon>close</mat-icon>
+        </button>
+      </span>
+
+      <!-- Amount Badges -->
+      <span class="filter-badge" *ngIf="minAmountControl.value">
+        Min: {{ formatCurrency(minAmountControl.value) }}
+        <button mat-icon-button 
+                class="badge-remove" 
+                (click)="clearAmountFilter('min')"
+                aria-label="Clear minimum amount filter">
+          <mat-icon>close</mat-icon>
+        </button>
+      </span>
+
+      <span class="filter-badge" *ngIf="maxAmountControl.value">
+        Max: {{ formatCurrency(maxAmountControl.value) }}
+        <button mat-icon-button 
+                class="badge-remove" 
+                (click)="clearAmountFilter('max')"
+                aria-label="Clear maximum amount filter">
+          <mat-icon>close</mat-icon>
+        </button>
+      </span>
+    </div>
+  </div>
+
+  <!-- Filters Panel -->
+  <mat-expansion-panel [expanded]="showFilters()" 
+                       class="filters-panel"
+                       id="filters-panel"
+                       role="region"
+                       aria-labelledby="filters-title">
+    <mat-expansion-panel-header>
+      <mat-panel-title id="filters-title">Advanced Filters</mat-panel-title>
+    </mat-expansion-panel-header>
+    
+    <div class="filters-content" role="group" aria-labelledby="filters-title">
+      <div class="filter-row">
+        <!-- Status Filter -->
+        <mat-form-field appearance="outline">
+          <mat-label>Filter by Status</mat-label>
+          <mat-select [formControl]="statusFilterControl" 
+                      multiple
+                      aria-label="Select reservation statuses to filter by"
+                      [attr.aria-describedby]="statusFilterControl.value?.length ? 'status-filter-description' : null">
+            <mat-option>
+              <em>None selected</em>
+            </mat-option>
+            <mat-option value="all" (click)="selectAllStatuses()" aria-label="Select all status options">
+              <strong>Select All</strong>
+            </mat-option>
+            <mat-divider></mat-divider>
+            <mat-option *ngFor="let status of availableStatuses" 
+                        [value]="status"
+                        [attr.aria-label]="'Filter by ' + (status | titlecase) + ' status, ' + getStatusCount(status) + ' reservations'">
+              <div class="status-option">
+                <mat-chip [color]="getStatusChipColor(status)" 
+                          class="status-preview"
+                          aria-hidden="true">
+                  {{ status | titlecase }}
+                </mat-chip>
+                <span class="status-count" aria-hidden="true">({{ getStatusCount(status) }})</span>
+              </div>
+            </mat-option>
+          </mat-select>
+          <mat-hint *ngIf="statusFilterControl.value?.length">
+            {{ statusFilterControl.value?.length || 0 }} status(es) selected
+          </mat-hint>
+        </mat-form-field>
+        <div id="status-filter-description" class="sr-only" *ngIf="statusFilterControl.value?.length">
+          Currently filtering by {{ statusFilterControl.value?.length }} status types
+        </div>
+
+        <!-- Check-in Date Range -->
+        <mat-form-field appearance="outline">
+          <mat-label>Check-in From</mat-label>
+          <input matInput [matDatepicker]="startPicker" [formControl]="checkInStartControl" 
+                 placeholder="Select start date" 
+                 title="Check-in start date"
+                 [max]="checkInEndControl.value"
+                 aria-label="Check-in start date filter"
+                 [attr.aria-describedby]="checkInStartControl.value ? 'checkin-start-selected' : 'checkin-start-hint'">
+          <mat-datepicker-toggle matSuffix [for]="startPicker" aria-label="Open calendar for start date"></mat-datepicker-toggle>
+          <mat-datepicker #startPicker startView="month"></mat-datepicker>
+          <mat-hint id="checkin-start-hint">Filter reservations from this date</mat-hint>
+          <div id="checkin-start-selected" class="sr-only" *ngIf="checkInStartControl.value">
+            Start date selected: {{ checkInStartControl.value | date:'mediumDate' }}
+          </div>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Check-in To</mat-label>
+          <input matInput [matDatepicker]="endPicker" [formControl]="checkInEndControl"
+                 placeholder="Select end date" 
+                 title="Check-in end date"
+                 [min]="checkInStartControl.value"
+                 aria-label="Check-in end date filter"
+                 [attr.aria-describedby]="checkInEndControl.value ? 'checkin-end-selected' : 'checkin-end-hint'">
+          <mat-datepicker-toggle matSuffix [for]="endPicker" aria-label="Open calendar for end date"></mat-datepicker-toggle>
+          <mat-datepicker #endPicker startView="month"></mat-datepicker>
+          <mat-hint id="checkin-end-hint">Filter reservations until this date</mat-hint>
+          <div id="checkin-end-selected" class="sr-only" *ngIf="checkInEndControl.value">
+            End date selected: {{ checkInEndControl.value | date:'mediumDate' }}
+          </div>
+        </mat-form-field>
+
+        <!-- Quick Date Range Buttons -->
+        <div class="quick-date-filters" role="group" aria-labelledby="quick-filters-label">
+          <span class="quick-filter-label" id="quick-filters-label">Quick filters:</span>
+          <button mat-button (click)="setDateRange('today')" 
+                  class="quick-date-btn"
+                  aria-label="Set date filter to today only">
+            Today
+          </button>
+          <button mat-button (click)="setDateRange('thisWeek')" 
+                  class="quick-date-btn"
+                  aria-label="Set date filter to current week">
+            This Week
+          </button>
+          <button mat-button (click)="setDateRange('thisMonth')" 
+                  class="quick-date-btn"
+                  aria-label="Set date filter to current month">
+            This Month
+          </button>
+          <button mat-button (click)="setDateRange('nextMonth')" 
+                  class="quick-date-btn"
+                  aria-label="Set date filter to next month">
+            Next Month
+          </button>
+        </div>
+      </div>
+
+      <div class="filter-row">
+        <!-- Guest Count Range -->
+        <mat-form-field appearance="outline">
+          <mat-label>Min Guests</mat-label>
+          <input matInput type="number" [formControl]="minGuestsControl" min="1"
+                 placeholder="Minimum guests" 
+                 title="Minimum number of guests"
+                 aria-label="Minimum number of guests filter"
+                 aria-describedby="min-guests-hint">
+          <mat-hint id="min-guests-hint">Filter reservations with at least this many guests</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Max Guests</mat-label>
+          <input matInput type="number" [formControl]="maxGuestsControl" min="1"
+                 placeholder="Maximum guests" 
+                 title="Maximum number of guests"
+                 aria-label="Maximum number of guests filter"
+                 aria-describedby="max-guests-hint">
+          <mat-hint id="max-guests-hint">Filter reservations with at most this many guests</mat-hint>
+        </mat-form-field>
+
+        <!-- Amount Range -->
+        <mat-form-field appearance="outline">
+          <mat-label>Min Amount</mat-label>
+          <input matInput type="number" [formControl]="minAmountControl" min="0" step="0.01"
+                 placeholder="0.00" 
+                 title="Minimum total amount"
+                 aria-label="Minimum reservation amount filter in dollars"
+                 aria-describedby="min-amount-hint">
+          <span matPrefix>$</span>
+          <mat-hint id="min-amount-hint">Filter reservations with at least this total amount</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Max Amount</mat-label>
+          <input matInput type="number" [formControl]="maxAmountControl" min="0" step="0.01"
+                 placeholder="0.00" 
+                 title="Maximum total amount"
+                 aria-label="Maximum reservation amount filter in dollars"
+                 aria-describedby="max-amount-hint">
+          <span matPrefix>$</span>
+          <mat-hint id="max-amount-hint">Filter reservations with at most this total amount</mat-hint>
+        </mat-form-field>
+      </div>
+    </div>
+  </mat-expansion-panel>
+
+  <!-- Results Summary -->
+  <div class="results-summary" *ngIf="totalFilteredCount() > 0">
+    <span>Showing {{ (currentPage() - 1) * pageSize() + 1 }} - 
+          {{ getEndRange() }} 
+          of {{ totalFilteredCount() }} reservations</span>
+    
+    <mat-form-field appearance="outline" class="page-size-selector">
+      <mat-label>Items per page</mat-label>
+      <mat-select [value]="pageSize()" (selectionChange)="onPageSizeChange($event.value)">
+        <mat-option *ngFor="let size of pageSizeOptions" [value]="size">
+          {{ size }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <!-- Loading Indicator -->
+  <div class="loading-container" *ngIf="loading()">
+    <!-- Loading Skeleton -->
+    <div class="skeleton-table">
+      <div class="skeleton-header">
+        <div class="skeleton-row">
+          <div class="skeleton-cell small"></div>
+          <div class="skeleton-cell medium"></div>
+          <div class="skeleton-cell large"></div>
+          <div class="skeleton-cell medium"></div>
+          <div class="skeleton-cell medium"></div>
+          <div class="skeleton-cell small"></div>
+          <div class="skeleton-cell small"></div>
+          <div class="skeleton-cell medium"></div>
+          <div class="skeleton-cell medium"></div>
+          <div class="skeleton-cell small"></div>
+        </div>
+      </div>
+      <div class="skeleton-body">
+        <div class="skeleton-row" *ngFor="let i of [1,2,3,4,5,6,7,8]">
+          <div class="skeleton-cell small">
+            <div class="skeleton-shimmer"></div>
+          </div>
+          <div class="skeleton-cell medium">
+            <div class="skeleton-shimmer"></div>
+          </div>
+          <div class="skeleton-cell large">
+            <div class="skeleton-shimmer"></div>
+          </div>
+          <div class="skeleton-cell medium">
+            <div class="skeleton-shimmer"></div>
+          </div>
+          <div class="skeleton-cell medium">
+            <div class="skeleton-shimmer"></div>
+          </div>
+          <div class="skeleton-cell small">
+            <div class="skeleton-shimmer"></div>
+          </div>
+          <div class="skeleton-cell small">
+            <div class="skeleton-shimmer"></div>
+          </div>
+          <div class="skeleton-cell medium">
+            <div class="skeleton-shimmer status-skeleton"></div>
+          </div>
+          <div class="skeleton-cell medium">
+            <div class="skeleton-shimmer"></div>
+          </div>
+          <div class="skeleton-cell small">
+            <div class="skeleton-shimmer"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="loading-text">
+      <mat-spinner diameter="24"></mat-spinner>
+      <span>Loading reservations...</span>
+    </div>
+  </div>
+
+  <!-- Error State -->
+  <div class="error-container" data-testid="error-message" *ngIf="hasError() && !loading()">
+    <div class="error-content">
+      <mat-icon class="error-icon">error_outline</mat-icon>
+      <h3 class="error-title">Something went wrong</h3>
+      <p class="error-message">{{ getErrorMessage() }}</p>
+      
+      <div class="error-actions">
+        <button mat-raised-button color="primary" (click)="retryOperation()">
+          <mat-icon>refresh</mat-icon>
+          Try Again
+        </button>
+        <button mat-button (click)="dismissError()">
+          <mat-icon>close</mat-icon>
+          Dismiss
+        </button>
+      </div>
+      
+      <div class="error-details" *ngIf="isOffline()">
+        <mat-icon class="offline-icon">wifi_off</mat-icon>
+        <span>You are currently offline</span>
+      </div>
+      
+      <div class="last-sync-info" *ngIf="lastSuccessfulSync()">
+        <span class="sync-label">Last updated:</span>
+        <time [attr.datetime]="lastSuccessfulSync().toISOString()">
+          {{ formatDate(lastSuccessfulSync().toISOString()) }}
+        </time>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reservations Table -->
+  <div class="table-container" *ngIf="!loading() && !shouldUseVirtualScrolling()" role="region" aria-labelledby="table-title">
+    <h3 id="table-title" class="sr-only">Reservations Data Table</h3>
+    <table mat-table [dataSource]="paginatedReservations().items" 
+           matSort (matSortChange)="sortData($event)" 
+           class="reservations-table"
+           data-testid="reservations-table"
+           [attr.data-mobile]="isMobile()"
+           [attr.data-tablet]="isTablet()"
+           role="table"
+           aria-label="Reservations list with sorting and filtering capabilities"
+           [attr.aria-rowcount]="totalFilteredCount() + 1"
+           [attr.aria-describedby]="hasActiveFilters() ? 'table-filter-status' : 'table-description'">
+      
+      <div id="table-description" class="sr-only">
+        Sortable table showing {{ totalFilteredCount() }} reservations. Use arrow keys to navigate.
+      </div>
+      <div id="table-filter-status" class="sr-only" *ngIf="hasActiveFilters()">
+        Table is currently filtered. Showing {{ totalFilteredCount() }} of {{ reservationStats().totalReservations }} total reservations.
+      </div>
+      
+      <!-- Apoleo Status Icon Column -->
+      <ng-container matColumnDef="statusIcon">
+        <th mat-header-cell *matHeaderCellDef class="status-icon-column" role="columnheader">
+          <span class="sr-only">Status Indicator</span>
+        </th>
+        <td mat-cell *matCellDef="let reservation" class="status-icon-column" role="gridcell">
+          <mat-icon *ngIf="!reservation.hasWarnings" class="status-icon normal" data-testid="status-icon-normal">home</mat-icon>
+          <!-- Task 12.1 & 12.4: Clickable warning icon with severity tooltip -->
+          <mat-icon *ngIf="reservation.hasWarnings" 
+                    class="status-icon warning" 
+                    data-testid="status-icon-warning"
+                    [class.warning-high]="getWarningSeverity(reservation) === 'high'"
+                    [class.warning-medium]="getWarningSeverity(reservation) === 'medium'"
+                    [matTooltip]="getWarningTooltip(reservation)"
+                    (click)="toggleWarningExpansion(reservation.id)"
+                    role="button"
+                    tabindex="0"
+                    aria-label="Click to expand warning details">
+            error
+          </mat-icon>
+        </td>
+      </ng-container>
+
+      <!-- Reservation ID Column -->
+      <ng-container matColumnDef="reservationId">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header 
+            role="columnheader" 
+            [attr.aria-sort]="getSortDirection('reservationId')"
+            aria-label="Reservation ID, sortable column">
+          Reservation ID
+        </th>
+        <td mat-cell *matCellDef="let reservation" class="reservation-id" role="gridcell">
+          {{ reservation.reservationId }}
+        </td>
+      </ng-container>
+
+      <!-- Guest Name Column (Apoleo style with guest details) -->
+      <ng-container matColumnDef="guestName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header
+            role="columnheader"
+            [attr.aria-sort]="getSortDirection('guestName')"
+            aria-label="Guest name, sortable column">
+          Name
+        </th>
+        <td mat-cell *matCellDef="let reservation" class="guest-name-apoleo" role="gridcell">
+          <div class="guest-name-main">{{ reservation.guestName }}</div>
+          <div class="guest-details">{{ formatGuestDetails(reservation) }}</div>
+        </td>
+      </ng-container>
+
+      <!-- Arrival Column (Apoleo) -->
+      <ng-container matColumnDef="arrival">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header role="columnheader">Arrival</th>
+        <td mat-cell *matCellDef="let reservation" role="gridcell">
+          {{ formatDateTime(reservation.checkInDate) }}
+        </td>
+      </ng-container>
+
+      <!-- Departure Column (Apoleo) -->
+      <ng-container matColumnDef="departure">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header role="columnheader">Departure</th>
+        <td mat-cell *matCellDef="let reservation" role="gridcell">
+          {{ formatDateTime(reservation.checkOutDate) }}
+        </td>
+      </ng-container>
+
+      <!-- Created Column (Apoleo) -->
+      <ng-container matColumnDef="created">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header role="columnheader">Created</th>
+        <td mat-cell *matCellDef="let reservation" role="gridcell">
+          {{ reservation.createdDate }}
+        </td>
+      </ng-container>
+
+      <!-- Channel Column (Apoleo) -->
+      <ng-container matColumnDef="channel">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header role="columnheader">Channel</th>
+        <td mat-cell *matCellDef="let reservation" role="gridcell">
+          {{ reservation.channel }}
+        </td>
+      </ng-container>
+
+      <!-- Unit Column (Apoleo) -->
+      <ng-container matColumnDef="unit">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header role="columnheader">Unit</th>
+        <td mat-cell *matCellDef="let reservation" role="gridcell">
+          <div class="unit-info">
+            <mat-icon class="unit-icon">door_front</mat-icon>
+            {{ reservation.unit }}
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Guarantee Column (Apoleo) -->
+      <ng-container matColumnDef="guarantee">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header role="columnheader">Guarantee</th>
+        <td mat-cell *matCellDef="let reservation" role="gridcell">
+          {{ reservation.guarantee }}
+        </td>
+      </ng-container>
+
+      <!-- Balance Column (Apoleo) -->
+      <ng-container matColumnDef="balance">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header role="columnheader">Balance</th>
+        <td mat-cell *matCellDef="let reservation" [ngClass]="getBalanceClass(reservation.balance)" role="gridcell">
+          {{ formatBalance(reservation.balance) }}
+        </td>
+      </ng-container>
+
+      <!-- Check-in Date Column -->
+      <ng-container matColumnDef="checkInDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header
+            role="columnheader"
+            [attr.aria-sort]="getSortDirection('checkInDate')"
+            aria-label="Check-in date, sortable column">
+          Check-in
+        </th>
+        <td mat-cell *matCellDef="let reservation" role="gridcell">
+          <time [attr.datetime]="reservation.checkInDate">
+            {{ formatDate(reservation.checkInDate) }}
+          </time>
+        </td>
+      </ng-container>
+
+      <!-- Check-out Date Column -->
+      <ng-container matColumnDef="checkOutDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header
+            role="columnheader"
+            [attr.aria-sort]="getSortDirection('checkOutDate')"
+            aria-label="Check-out date, sortable column">
+          Check-out
+        </th>
+        <td mat-cell *matCellDef="let reservation" role="gridcell">
+          <time [attr.datetime]="reservation.checkOutDate">
+            {{ formatDate(reservation.checkOutDate) }}
+          </time>
+        </td>
+      </ng-container>
+
+      <!-- Nights Column -->
+      <ng-container matColumnDef="nights">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header
+            role="columnheader"
+            [attr.aria-sort]="getSortDirection('nights')"
+            aria-label="Number of nights, sortable column">
+          Nights
+        </th>
+        <td mat-cell *matCellDef="let reservation" role="gridcell">
+          <span [attr.aria-label]="calculateNights(reservation.checkInDate, reservation.checkOutDate) + ' nights'">
+            {{ calculateNights(reservation.checkInDate, reservation.checkOutDate) }}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Guest Count Column -->
+      <ng-container matColumnDef="guestCount">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header
+            role="columnheader"
+            [attr.aria-sort]="getSortDirection('guestCount')"
+            aria-label="Number of guests, sortable column">
+          Guests
+        </th>
+        <td mat-cell *matCellDef="let reservation" role="gridcell">
+          <span [attr.aria-label]="reservation.guestCount + ' guests'">
+            {{ reservation.guestCount }}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Status Column -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header
+            role="columnheader"
+            [attr.aria-sort]="getSortDirection('status')"
+            aria-label="Reservation status, sortable column">
+          Status
+        </th>
+        <td mat-cell *matCellDef="let reservation" role="gridcell">
+          <mat-chip [color]="getStatusChipColor(reservation.status)"
+                    [attr.aria-label]="'Status: ' + (reservation.status | titlecase)"
+                    role="status">
+            {{ reservation.status | titlecase }}
+          </mat-chip>
+        </td>
+      </ng-container>
+
+      <!-- Total Amount Column -->
+      <ng-container matColumnDef="totalAmount">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header
+            role="columnheader"
+            [attr.aria-sort]="getSortDirection('totalAmount')"
+            aria-label="Total amount, sortable column">
+          Total
+        </th>
+        <td mat-cell *matCellDef="let reservation" class="amount" role="gridcell">
+          <span [attr.aria-label]="'Total amount: ' + formatCurrency(reservation.totalAmount)">
+            {{ formatCurrency(reservation.totalAmount) }}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Actions Column (Apoleo style with three-dot menu + chevron) -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef role="columnheader">Actions</th>
+        <td mat-cell *matCellDef="let reservation" class="actions-apoleo" role="gridcell">
+          <button mat-icon-button [matMenuTriggerFor]="actionMenu"
+                  [attr.aria-label]="'Open actions menu for reservation ' + reservation.reservationId"
+                  [attr.title]="'Actions menu'">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <button mat-icon-button (click)="viewReservationDetails(reservation)"
+                  [attr.aria-label]="'View details for reservation ' + reservation.reservationId"
+                  [attr.title]="'View details'">
+            <mat-icon>chevron_right</mat-icon>
+          </button>
+          
+          <mat-menu #actionMenu="matMenu">
+            <button mat-menu-item (click)="viewReservationDetails(reservation)">
+              <mat-icon>visibility</mat-icon>
+              <span>View Details</span>
+            </button>
+            <button mat-menu-item (click)="editReservation(reservation)">
+              <mat-icon>edit</mat-icon>
+              <span>Edit</span>
+            </button>
+            <mat-divider></mat-divider>
+            <button mat-menu-item>
+              <mat-icon>print</mat-icon>
+              <span>Print Confirmation</span>
+            </button>
+            <button mat-menu-item>
+              <mat-icon>email</mat-icon>
+              <span>Send Email</span>
+            </button>
+          </mat-menu>
+        </td>
+      </ng-container>
+
+      <!-- Expandable Detail Row -->
+      <ng-container matColumnDef="expandedDetail">
+        <td mat-cell *matCellDef="let reservation" [attr.colspan]="displayedColumns().length">
+          <div class="expanded-detail" 
+               [@detailExpand]="isRowExpanded(reservation.id) ? 'expanded' : 'collapsed'">
+            <div class="detail-content">
+              <div class="detail-section">
+                <h4>Reservation Details</h4>
+                <div class="detail-grid">
+                  <div class="detail-item">
+                    <span class="detail-label">Reservation ID:</span>
+                    <span class="detail-value">{{ reservation.reservationId }}</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">Guest Count:</span>
+                    <span class="detail-value">{{ reservation.guestCount }} guests</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">Room Type:</span>
+                    <span class="detail-value">{{ reservation.roomType || 'Standard Room' }}</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">Rate Plan:</span>
+                    <span class="detail-value">{{ reservation.ratePlan || 'Standard Rate' }}</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="detail-section">
+                <h4>Stay Information</h4>
+                <div class="detail-grid">
+                  <div class="detail-item">
+                    <span class="detail-label">Check-in:</span>
+                    <span class="detail-value">{{ formatDate(reservation.checkInDate) }}</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">Check-out:</span>
+                    <span class="detail-value">{{ formatDate(reservation.checkOutDate) }}</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">Nights:</span>
+                    <span class="detail-value">{{ calculateNights(reservation.checkInDate, reservation.checkOutDate) }}</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">Status:</span>
+                    <span class="detail-value">
+                      <mat-chip [color]="getStatusChipColor(reservation.status)">
+                        {{ reservation.status | titlecase }}
+                      </mat-chip>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="detail-section">
+                <h4>Pricing</h4>
+                <div class="detail-grid">
+                  <div class="detail-item">
+                    <span class="detail-label">Room Rate:</span>
+                    <span class="detail-value">{{ formatCurrency(reservation.totalAmount * 0.8) }}</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">Taxes & Fees:</span>
+                    <span class="detail-value">{{ formatCurrency(reservation.totalAmount * 0.2) }}</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">Total Amount:</span>
+                    <span class="detail-value total-amount">{{ formatCurrency(reservation.totalAmount) }}</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="detail-actions">
+                <button mat-raised-button color="primary" (click)="viewReservationDetails(reservation)">
+                  <mat-icon>visibility</mat-icon>
+                  View Full Details
+                </button>
+                <button mat-raised-button (click)="editReservation(reservation)">
+                  <mat-icon>edit</mat-icon>
+                  Edit Reservation
+                </button>
+              </div>
+            </div>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns()"></tr>
+      <tr mat-row 
+          *matRowDef="let row; columns: displayedColumns();" 
+          data-testid="reservation-row"
+          [class.warning-row]="row.hasWarnings"
+          [class.selected-row]="isReservationSelected(row.id)"
+          [class.expanded-row]="isRowExpanded(row.id)"></tr>
+      <tr mat-row 
+          *matRowDef="let row; columns: ['expandedDetail']; when: isRowExpandedPredicate" 
+          class="detail-row"></tr>
+      
+      <!-- Warning Message Row (Task 12.1: Expandable) -->
+      <tr mat-row 
+          *ngFor="let row of paginatedReservations().items"
+          [class.warning-message-row]="row.hasWarnings && isWarningExpanded(row.id)"
+          [@warningExpand]="row.hasWarnings && isWarningExpanded(row.id) ? 'expanded' : 'collapsed'">
+        <td [attr.colspan]="displayedColumns().length" 
+            class="warning-message-cell" 
+            *ngIf="row.hasWarnings && isWarningExpanded(row.id)">
+          <div class="warning-message">
+            <mat-icon class="warning-icon" 
+                      [class.warning-high]="getWarningSeverity(row) === 'high'"
+                      [class.warning-medium]="getWarningSeverity(row) === 'medium'">
+              error
+            </mat-icon>
+            <span class="warning-text">{{ row.warningMessage }}</span>
+            <!-- Task 12.2: Warning dismissal button -->
+            <button mat-icon-button 
+                    class="dismiss-warning-btn"
+                    (click)="dismissWarning(row, $event)"
+                    matTooltip="Dismiss this warning"
+                    aria-label="Dismiss warning">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    <!-- No Data Message -->
+    <div class="no-data-message" data-testid="empty-state" *ngIf="paginatedReservations().items.length === 0">
+      <mat-icon>inbox</mat-icon>
+      <h3>No reservations found</h3>
+      <p *ngIf="hasActiveFilters()">
+        Try adjusting your search criteria or 
+        <button mat-button (click)="clearAllFilters()">clear all filters</button>
+      </p>
+      <p *ngIf="!hasActiveFilters()">
+        No reservations have been created yet.
+      </p>
+    </div>
+  </div>
+
+  <!-- Virtual Scrolling Table (Alternative view for large datasets) -->
+  <div class="virtual-scroll-container" *ngIf="!loading() && shouldUseVirtualScrolling()" role="region" aria-labelledby="virtual-table-title">
+    <h3 id="virtual-table-title" class="sr-only">Virtual Scrolling Reservations List</h3>
+    
+    <div class="virtual-scroll-info">
+      <mat-icon>info</mat-icon>
+      <span>Virtual scrolling enabled for optimal performance with {{ totalFilteredCount() }} items</span>
+      
+      <!-- Performance Metrics Display -->
+      <div class="performance-metrics" *ngIf="showPerformanceMetrics()">
+        <span class="metric-item">
+          <mat-icon>speed</mat-icon>
+          {{ performanceMetrics().renderTime.toFixed(1) }}ms
+        </span>
+        <span class="metric-item">
+          <mat-icon>memory</mat-icon>
+          {{ performanceMetrics().memoryUsageKB }}KB
+        </span>
+        <span class="metric-item">
+          <mat-icon>view_list</mat-icon>
+          {{ performanceMetrics().itemsRendered }} items
+        </span>
+      </div>
+    </div>
+    
+    <cdk-virtual-scroll-viewport 
+      [itemSize]="virtualScrollItemSize()" 
+      [minBufferPx]="virtualScrollMinBufferPx()"
+      [maxBufferPx]="virtualScrollMaxBufferPx()"
+      [style.height]="getVirtualScrollHeight()"
+      class="virtual-scroll-viewport"
+      role="table"
+      [attr.aria-label]="'Virtual scrolling list of ' + totalFilteredCount() + ' reservations'"
+      [attr.aria-rowcount]="totalFilteredCount()">
+      
+      <div *cdkVirtualFor="let reservation of virtualScrollData(); 
+                          trackBy: trackByReservationId; 
+                          let i = index" 
+           class="virtual-row"
+           [class.selected-row]="isReservationSelected(reservation.id)"
+           role="row"
+           [attr.aria-rowindex]="i + 2"
+           [attr.aria-selected]="isReservationSelected(reservation.id)">
+        
+        <!-- Selection Checkbox -->
+        <div class="virtual-cell selection-cell" role="gridcell">
+          <mat-checkbox 
+            [checked]="isReservationSelected(reservation.id)"
+            (change)="onReservationSelectionChange(reservation.id, $event.checked)"
+            [attr.aria-label]="'Select reservation ' + reservation.id">
+          </mat-checkbox>
+        </div>
+        
+        <!-- Guest Name -->
+        <div class="virtual-cell guest-cell" role="gridcell">
+          <span class="cell-label">Guest:</span>
+          <span class="cell-value primary-text">{{ reservation.guestName }}</span>
+        </div>
+        
+        <!-- Check-in/Check-out -->
+        <div class="virtual-cell dates-cell" role="gridcell">
+          <span class="cell-label">Dates:</span>
+          <div class="cell-value">
+            <div class="date-range">
+              <span>{{ formatDate(reservation.checkInDate) }}</span>
+              <mat-icon class="date-separator">arrow_forward</mat-icon>
+              <span>{{ formatDate(reservation.checkOutDate) }}</span>
+            </div>
+            <span class="nights-count">{{ calculateNights(reservation.checkInDate, reservation.checkOutDate) }} nights</span>
+          </div>
+        </div>
+        
+        <!-- Status -->
+        <div class="virtual-cell status-cell" role="gridcell">
+          <span class="cell-label">Status:</span>
+          <mat-chip class="status-chip" 
+                    [attr.data-status]="reservation.status"
+                    [style.color]="getStatusChipColor(reservation.status)">
+            {{ reservation.status | titlecase }}
+          </mat-chip>
+        </div>
+        
+        <!-- Total Amount -->
+        <div class="virtual-cell amount-cell" role="gridcell" *ngIf="!isMobile()">
+          <span class="cell-label">Amount:</span>
+          <span class="cell-value amount">{{ formatCurrency(reservation.totalAmount || 0) }}</span>
+        </div>
+        
+        <!-- Actions -->
+        <div class="virtual-cell actions-cell" role="gridcell">
+          <div class="action-buttons">
+            <button mat-icon-button 
+                    (click)="viewReservationDetails(reservation)"
+                    [attr.aria-label]="'View details for reservation ' + reservation.id"
+                    matTooltip="View Details">
+              <mat-icon>visibility</mat-icon>
+            </button>
+            <button mat-icon-button 
+                    (click)="editReservation(reservation)"
+                    [attr.aria-label]="'Edit reservation ' + reservation.id"
+                    matTooltip="Edit Reservation">
+              <mat-icon>edit</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </cdk-virtual-scroll-viewport>
+
+    <!-- No Data Message for Virtual Scroll -->
+    <div class="no-data-message" *ngIf="virtualScrollData().length === 0">
+      <mat-icon>inbox</mat-icon>
+      <h3>No reservations found</h3>
+      <p *ngIf="hasActiveFilters()">
+        Try adjusting your search criteria or 
+        <button mat-button (click)="clearAllFilters()">clear all filters</button>
+      </p>
+      <p *ngIf="!hasActiveFilters()">
+        No reservations have been created yet.
+      </p>
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  <div class="pagination-container" *ngIf="!shouldUseVirtualScrolling()">
+    <!-- Pagination Loading Indicator -->
+    <div *ngIf="paginationLoading()" class="pagination-loading">
+      <mat-progress-bar mode="indeterminate" aria-label="Loading page data"></mat-progress-bar>
+      <span class="pagination-loading-text">Loading page...</span>
+    </div>
+    
+    <mat-paginator 
+      *ngIf="totalFilteredCount() > 0"
+      [length]="totalFilteredCount()"
+      [pageSize]="pageSize()"
+      [pageIndex]="currentPage() - 1"
+      [pageSizeOptions]="pageSizeOptions"
+      [showFirstLastButtons]="true"
+      [disabled]="paginationLoading()"
+      (page)="onPageChange($event.pageIndex)"
+      (page)="onPageSizeChange($event.pageSize)"
+      role="navigation"
+      [attr.aria-label]="'Pagination for reservations. Page ' + currentPage() + ' of ' + getTotalPages()">
+    </mat-paginator>
+  </div>
+
+  <!-- Bulk Actions FAB -->
+  <button mat-fab 
+          class="bulk-actions-fab"
+          *ngIf="selectedReservations().size > 0"
+          [matMenuTriggerFor]="bulkActionsMenu">
+    <mat-icon>more_vert</mat-icon>
+  </button>
+
+  <!-- Bulk Actions Menu -->
+  <mat-menu #bulkActionsMenu="matMenu">
+    <button mat-menu-item (click)="bulkStatusUpdate(ReservationStatus.CONFIRMED)">
+      <mat-icon>check_circle</mat-icon>
+      <span>Mark as Confirmed</span>
+    </button>
+    <button mat-menu-item (click)="bulkStatusUpdate(ReservationStatus.CANCELLED)">
+      <mat-icon>cancel</mat-icon>
+      <span>Mark as Cancelled</span>
+    </button>
+    <mat-divider></mat-divider>
+    <button mat-menu-item (click)="exportSelectedReservations()">
+      <mat-icon>download</mat-icon>
+      <span>Export Selected</span>
+    </button>
+    <button mat-menu-item (click)="clearSelection()">
+      <mat-icon>clear_all</mat-icon>
+      <span>Clear Selection</span>
+    </button>
+  </mat-menu>
+</div>

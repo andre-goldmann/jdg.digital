@@ -1,0 +1,811 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Integration API",
+    "description": "The Integration API allows apps to ...",
+    "version": "v1"
+  },
+  "paths": {
+    "/integration/v1/ui-integrations": {
+      "get": {
+        "tags": [
+          "UiIntegrations"
+        ],
+        "description": "<br>You must have this scope: 'integration:ui-integrations.manage'.",
+        "operationId": "IntegrationUi-integrationsGet",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/UiIntegrationListModel"
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "401": {
+            "description": "You are unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "500": {
+            "description": "An unexpected error occurred."
+          },
+          "503": {
+            "description": "The server is currently unavailable. Please try later."
+          },
+          "422": {
+            "description": "Validation errors in the request body or query params.",
+            "schema": {
+              "$ref": "#/definitions/MessageItemCollection"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "integration:ui-integrations.admin",
+              "integration:ui-integrations.manage"
+            ]
+          }
+        ]
+      }
+    },
+    "/integration/v1/ui-integrations/{target}/{id}": {
+      "get": {
+        "tags": [
+          "UiIntegrations"
+        ],
+        "description": "<br>You must have this scope: 'integration:ui-integrations.manage'.",
+        "operationId": "IntegrationUi-integrationsByTargetByIdGet",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "target",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "DashboardPropertyContext",
+              "DashboardAccountContext",
+              "ReservationDetailsTab",
+              "BookingDetailsTab",
+              "GuestDetailsDialog",
+              "PropertyMenuReports",
+              "PropertyMenuApps",
+              "AccountMenuApps",
+              "CompanyDetailsTab"
+            ]
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/UiIntegrationItemModel"
+            }
+          },
+          "404": {
+            "description": "The Request-URI could not be found."
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "401": {
+            "description": "You are unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "500": {
+            "description": "An unexpected error occurred."
+          },
+          "503": {
+            "description": "The server is currently unavailable. Please try later."
+          },
+          "422": {
+            "description": "Validation errors in the request body or query params.",
+            "schema": {
+              "$ref": "#/definitions/MessageItemCollection"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "integration:ui-integrations.admin",
+              "integration:ui-integrations.manage"
+            ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "UiIntegrations"
+        ],
+        "description": "<br>You must have this scope: 'integration:ui-integrations.manage'.",
+        "operationId": "IntegrationUi-integrationsByTargetByIdPut",
+        "consumes": [
+          "application/json-patch+json",
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "target",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "DashboardPropertyContext",
+              "DashboardAccountContext",
+              "ReservationDetailsTab",
+              "BookingDetailsTab",
+              "GuestDetailsDialog",
+              "PropertyMenuReports",
+              "PropertyMenuApps",
+              "AccountMenuApps",
+              "CompanyDetailsTab"
+            ]
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ReplaceUiIntegrationModel"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "The Request-URI could not be found."
+          },
+          "415": {
+            "description": "Unsupported media type."
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "401": {
+            "description": "You are unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "500": {
+            "description": "An unexpected error occurred."
+          },
+          "503": {
+            "description": "The server is currently unavailable. Please try later."
+          },
+          "422": {
+            "description": "Validation errors in the request body or query params.",
+            "schema": {
+              "$ref": "#/definitions/MessageItemCollection"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "integration:ui-integrations.admin",
+              "integration:ui-integrations.manage"
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "UiIntegrations"
+        ],
+        "description": "<br>You must have this scope: 'integration:ui-integrations.manage'.",
+        "operationId": "IntegrationUi-integrationsByTargetByIdDelete",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "target",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "DashboardPropertyContext",
+              "DashboardAccountContext",
+              "ReservationDetailsTab",
+              "BookingDetailsTab",
+              "GuestDetailsDialog",
+              "PropertyMenuReports",
+              "PropertyMenuApps",
+              "AccountMenuApps",
+              "CompanyDetailsTab"
+            ]
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "The Request-URI could not be found."
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "401": {
+            "description": "You are unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "500": {
+            "description": "An unexpected error occurred."
+          },
+          "503": {
+            "description": "The server is currently unavailable. Please try later."
+          },
+          "422": {
+            "description": "Validation errors in the request body or query params.",
+            "schema": {
+              "$ref": "#/definitions/MessageItemCollection"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "integration:ui-integrations.admin",
+              "integration:ui-integrations.manage"
+            ]
+          }
+        ]
+      }
+    },
+    "/integration/v1/ui-integrations/{target}": {
+      "get": {
+        "tags": [
+          "UiIntegrations"
+        ],
+        "description": "<br>You must have this scope: 'integration:ui-integrations.manage'.",
+        "operationId": "IntegrationUi-integrationsByTargetGet",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "target",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "DashboardPropertyContext",
+              "DashboardAccountContext",
+              "ReservationDetailsTab",
+              "BookingDetailsTab",
+              "GuestDetailsDialog",
+              "PropertyMenuReports",
+              "PropertyMenuApps",
+              "AccountMenuApps",
+              "CompanyDetailsTab"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/UiIntegrationListModel"
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "401": {
+            "description": "You are unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "500": {
+            "description": "An unexpected error occurred."
+          },
+          "503": {
+            "description": "The server is currently unavailable. Please try later."
+          },
+          "422": {
+            "description": "Validation errors in the request body or query params.",
+            "schema": {
+              "$ref": "#/definitions/MessageItemCollection"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "integration:ui-integrations.admin",
+              "integration:ui-integrations.manage"
+            ]
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "UiIntegrations"
+        ],
+        "description": "<br>You must have this scope: 'integration:ui-integrations.manage'.",
+        "operationId": "IntegrationUi-integrationsByTargetPost",
+        "consumes": [
+          "application/json-patch+json",
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "target",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "DashboardPropertyContext",
+              "DashboardAccountContext",
+              "ReservationDetailsTab",
+              "BookingDetailsTab",
+              "GuestDetailsDialog",
+              "PropertyMenuReports",
+              "PropertyMenuApps",
+              "AccountMenuApps",
+              "CompanyDetailsTab"
+            ]
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateUiIntegrationModel"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/UiIntegrationCreatedModel"
+            }
+          },
+          "404": {
+            "description": "The Request-URI could not be found."
+          },
+          "415": {
+            "description": "Unsupported media type."
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "401": {
+            "description": "You are unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "500": {
+            "description": "An unexpected error occurred."
+          },
+          "503": {
+            "description": "The server is currently unavailable. Please try later."
+          },
+          "422": {
+            "description": "Validation errors in the request body or query params.",
+            "schema": {
+              "$ref": "#/definitions/MessageItemCollection"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "integration:ui-integrations.admin",
+              "integration:ui-integrations.manage"
+            ]
+          }
+        ]
+      }
+    },
+    "/integration/v1/ui-integrations/{target}/{id}/$test": {
+      "get": {
+        "tags": [
+          "UiIntegrations"
+        ],
+        "summary": "Tests a private source integration.",
+        "description": "Tests that the process of getting the public url from the provided url is done correctly.\r\nIf there are any errors with the process, it will provide information on what might have gone wrong.",
+        "operationId": "IntegrationUi-integrationsByTargetById$testGet",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "target",
+            "description": "Target for the integration",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "DashboardPropertyContext",
+              "DashboardAccountContext",
+              "ReservationDetailsTab",
+              "BookingDetailsTab",
+              "GuestDetailsDialog",
+              "PropertyMenuReports",
+              "PropertyMenuApps",
+              "AccountMenuApps",
+              "CompanyDetailsTab"
+            ]
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "description": "Id of the integration to be tested",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The result of the test",
+            "schema": {
+              "$ref": "#/definitions/UiIntegrationTestResultModel"
+            }
+          },
+          "404": {
+            "description": "The Request-URI could not be found."
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "401": {
+            "description": "You are unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "500": {
+            "description": "An unexpected error occurred."
+          },
+          "503": {
+            "description": "The server is currently unavailable. Please try later."
+          },
+          "422": {
+            "description": "The private integration could not be found or is a public integration",
+            "schema": {
+              "$ref": "#/definitions/MessageItemCollection"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "integration:ui-integrations.admin",
+              "integration:ui-integrations.manage"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "CreateUiIntegrationModel": {
+      "required": [
+        "label",
+        "sourceType",
+        "sourceUrl"
+      ],
+      "type": "object",
+      "properties": {
+        "code": {
+          "description": "Code to identify the current integration.\r\n            \r\nThe code can be any string of choosing.\r\n            \r\nIf no code is provided the integration target will be used as code.",
+          "type": "string"
+        },
+        "label": {
+          "description": "Label to be displayed as the name of your integration.\r\nFor example, this is the text that is displayed on your user's apps list.",
+          "minLength": 1,
+          "type": "string"
+        },
+        "labelTranslations": {
+          "description": "Different translations for the integration label.\r\nYou can provide as many translations as you want.\r\nYou should only provide the iso code of the language for example 'en' for english and 'de' for German. No need for the country.\r\nIf there is not a translation for a specific language, we will display the value of the Label as default.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "iconSource": {
+          "type": "string"
+        },
+        "sourceUrl": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "sourceType": {
+          "enum": [
+            "Private",
+            "Public"
+          ],
+          "type": "string"
+        },
+        "propertyIds": {
+          "description": "List of Ids for the properties for which the integration is configured\r\nIf the list is empty then the integration is configured for all properties\r\nRemark: Only applicable to non account level integrations",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "roles": {
+          "description": "List of Roles for which the integration is configured to be used\r\nIf the list is empty then the integration is configured for all roles",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false,
+      "example": "{\n  \"code\": \"MYINTEGRATIONWITHAPALEO\",\n  \"label\": \"My Integration\",\n  \"labelTranslations\": {\n    \"de\": \"Meine Integration\",\n    \"es\": \"Mi Integración\"\n  },\n  \"iconSource\": \"https://www.myintegrationiconsource.com\",\n  \"sourceUrl\": \"https://www.myintegration.com\",\n  \"sourceType\": \"Public\",\n  \"propertyIds\": [\n    \"BER\",\n    \"MUC\"\n  ],\n  \"roles\": [\n    \"PROPERTYADMIN\",\n    \"FRONTDESK\"\n  ]\n}"
+    },
+    "MessageItemCollection": {
+      "type": "object",
+      "properties": {
+        "messages": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "readOnly": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "ReplaceUiIntegrationModel": {
+      "required": [
+        "label",
+        "sourceType",
+        "sourceUrl"
+      ],
+      "type": "object",
+      "properties": {
+        "label": {
+          "description": "Label to be displayed as the name of your integration.\r\nFor example, this is the text that is displayed on your user's apps list.",
+          "minLength": 1,
+          "type": "string"
+        },
+        "labelTranslations": {
+          "description": "Different translations for the integration label.\r\nYou can provide as many translations as you want.\r\nYou should only provide the iso code of the language for example 'en' for english and 'de' for German. No need for the country.\r\nIf there is not a translation for a specific language, we will display the value of the Label as default.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "iconSource": {
+          "type": "string"
+        },
+        "sourceUrl": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "sourceType": {
+          "description": "Public source type means, that the browser can see the URL directly. This is true for instance, if you have Hybrid OAuth flow active.\r\n            \r\nPrivate source type means, that the server will request from that source URL a public URL, which is pre-authenticated and forward that to the client.",
+          "enum": [
+            "Private",
+            "Public"
+          ],
+          "type": "string"
+        },
+        "propertyIds": {
+          "description": "List of Ids for the properties for which the integration is configured\r\nIf the list is empty then the integration is configured for all properties\r\nRemark: Only applicable to non account level integrations",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "roles": {
+          "description": "List of Roles for which the integration is configured to be used\r\nIf the list is empty then the integration is configured for all roles",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false,
+      "example": "{\n  \"label\": \"My Integration\",\n  \"labelTranslations\": {\n    \"de\": \"Meine Integration\",\n    \"es\": \"Mi Integración\"\n  },\n  \"iconSource\": \"https://www.myintegrationiconsource.com\",\n  \"sourceUrl\": \"https://www.myintegration.com\",\n  \"sourceType\": \"Public\",\n  \"propertyIds\": [\n    \"BER\",\n    \"MUC\"\n  ],\n  \"roles\": [\n    \"PROPERTYADMIN\",\n    \"FRONTDESK\"\n  ]\n}"
+    },
+    "UiIntegrationCreatedModel": {
+      "required": [
+        "id"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "UiIntegrationItemModel": {
+      "required": [
+        "code",
+        "id",
+        "label",
+        "sourceType",
+        "sourceUrl",
+        "target"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "code": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "label": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "labelTranslations": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "iconSource": {
+          "type": "string"
+        },
+        "sourceUrl": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "propertyIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "roles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "sourceType": {
+          "description": "Public source type means, that the browser can see the URL directly. This is true for instance, if you have Hybrid OAuth flow active.\r\n            \r\nPrivate source type means, that the server will request from that source URL a public URL, which is pre-authenticated and forward that to the client.",
+          "enum": [
+            "Private",
+            "Public"
+          ],
+          "type": "string"
+        },
+        "target": {
+          "enum": [
+            "DashboardPropertyContext",
+            "DashboardAccountContext",
+            "ReservationDetailsTab",
+            "BookingDetailsTab",
+            "GuestDetailsDialog",
+            "PropertyMenuReports",
+            "PropertyMenuApps",
+            "AccountMenuApps",
+            "CompanyDetailsTab"
+          ],
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "UiIntegrationListModel": {
+      "required": [
+        "count",
+        "uiIntegrations"
+      ],
+      "type": "object",
+      "properties": {
+        "uiIntegrations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/UiIntegrationItemModel"
+          }
+        },
+        "count": {
+          "format": "int64",
+          "type": "integer"
+        }
+      },
+      "additionalProperties": false
+    },
+    "UiIntegrationTestResultModel": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "errorType": {
+          "enum": [
+            "HttpRequestToPrivateUrlError",
+            "ResponseDoesNotMeetJsonSchemaError",
+            "UrlIsNotValidError",
+            "ResponseContentFromPrivateUrlError"
+          ],
+          "type": "string"
+        },
+        "errorMessage": {
+          "type": "string"
+        },
+        "errorContent": {
+          "type": "string"
+        },
+        "receivedResponse": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "securityDefinitions": {
+    "oauth2": {
+      "type": "oauth2",
+      "flow": "implicit",
+      "authorizationUrl": "https://identity.apaleo.com/connect/authorize",
+      "scopes": {
+        "integration:ui-integrations.admin": "Create/Modify/Delete UI Integrations (Admin)"
+      }
+    }
+  }
+}
