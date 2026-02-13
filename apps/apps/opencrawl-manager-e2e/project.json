@@ -1,0 +1,9 @@
+{
+  "name": "opencrawl-manager-e2e",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/opencrawl-manager-e2e/src",
+  "implicitDependencies": ["opencrawl-manager"],
+  "// targets": "to see all targets run: nx show project opencrawl-manager-e2e --web",
+  "targets": {}
+}
