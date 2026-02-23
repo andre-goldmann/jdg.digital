@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   n8n:
     image: n8nio/n8n
@@ -14,9 +12,9 @@ services:
     volumes:
       - n8n_data:/home/node/.n8n
     ports:
-      - "5678:5678"
-    expose:
       - 5678:5678
+    #expose:
+    #  - 5678:5678
     networks:
       - ai-network
     depends_on:
@@ -37,10 +35,11 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./initdb:/docker-entrypoint-initdb.d
     networks:
       - ai-network
     expose:
-      - 5432:5432
+      - "5432"
 
   qdrant:
     container_name: qdrant
@@ -53,7 +52,7 @@ services:
     networks:
       - ai-network
     ports:
-      - "6333:6333"
+      - 6333:6333
 
   ollama:
     container_name: ollama
@@ -65,9 +64,11 @@ services:
     networks:
       - ai-network
     ports:
-      - "11434:11434"
+      - 11434:11434
     expose:
-      - "11434:11434"
+      - 11434
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     #deploy:
     #  resources:
     #    reservations:
@@ -78,7 +79,7 @@ services:
 
   elasticsearch:
     container_name: elasticsearch
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.13.0
+    image: docker.elastic.co/elasticsearch/elasticsearch:9.3.0
     environment:
       - discovery.type=single-node
       - ES_JAVA_OPTS=-Xms512m -Xmx512m
@@ -92,8 +93,8 @@ services:
     container_name: neo4j
     build: ./neo4j
     ports:
-      - "7474:7474"
-      - "7687:7687"
+      - 7474:7474
+      - 7687:7687
     environment:
       NEO4J_AUTH: "neo4j/your_password"
       NEO4J_apoc_export_file_enabled: "true"
@@ -126,13 +127,13 @@ services:
 
   minio:
     container_name: milvus-minio
-    image: minio/minio:RELEASE.2023-03-20T20-16-18Z
+    image: minio/minio:latest
     environment:
       MINIO_ACCESS_KEY: minioadmin
       MINIO_SECRET_KEY: minioadmin
     ports:
-      - "9001:9001"
-      - "9000:9000"
+      - 9001:9001
+      - 9000:9000
     volumes:
       - ${DOCKER_VOLUME_DIRECTORY:-.}/volumes/minio:/minio_data
     networks:
@@ -146,7 +147,7 @@ services:
 
   milvus:
     container_name: milvus-standalone
-    image: milvusdb/milvus:v2.5.10
+    image: milvusdb/milvus:latest
     command: [ "milvus", "run", "standalone" ]
     security_opt:
       - seccomp:unconfined
@@ -164,31 +165,11 @@ services:
       timeout: 20s
       retries: 3
     ports:
-      - "19530:19530"
-      - "9091:9091"
+      - 19530:19530
+      - 9091:9091
     depends_on:
       - "etcd"
       - "minio"
-
-  mindsdb_container:
-    container_name: mindsdb
-    image: mindsdb/mindsdb
-    restart: always
-    environment:
-      #- MINDSDB_APIS=postgresql,http,mcp,a2a
-      - MINDSDB_MCP_ACCESS_TOKEN=abc123
-      - MINDSDB_A2A_HOST=0.0.0.0
-    networks:
-      - ai-network
-    ports:
-      - "55432:55432"
-      - "47334:47334"
-      - "47335:47335"
-      - "47336:47336"
-      - "47337:47337"
-      - "47338:47338"
-    volumes:
-      - mdb_data:/mdb/storage
 
 volumes:
   n8n_data:
@@ -200,7 +181,6 @@ volumes:
   etcd:
   minio:
   milvus:
-  mdb_data:
 
 networks:
   ai-network:
