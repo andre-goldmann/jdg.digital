@@ -83,9 +83,56 @@ services:
     environment:
       - discovery.type=single-node
       - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - xpack.security.enabled=true
       - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
     volumes:
       - elasticsearch_data:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+    expose:
+      - "9200"
+    networks:
+      - ai-network
+
+  kibana:
+    container_name: kibana
+    image: docker.elastic.co/kibana/kibana:9.3.0
+    restart: on-failure
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - ELASTICSEARCH_SERVICEACCOUNTTOKEN=${KIBANA_SERVICE_TOKEN}
+      - XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY=${KIBANA_ENCRYPTION_KEY}
+    ports:
+      - "5601:5601"
+    expose:
+      - "5601"  
+    depends_on:
+      - elasticsearch
+    networks:
+      - ai-network
+
+  apm-server:
+    container_name: apm-server
+    image: docker.elastic.co/apm/apm-server:9.3.0
+    command: ["-e", "-c", "/usr/share/apm-server/apm-server.yml"]
+    ports:
+      - "8200:8200"
+    volumes:
+      - ./apm-server.yml:/usr/share/apm-server/apm-server.yml:ro
+    networks:
+      - ai-network
+
+  otel-collector:
+    container_name: otel-collector
+    image: otel/opentelemetry-collector-contrib:0.108.0
+    command: ["--config=/etc/otelcol/config.yaml"]
+    depends_on:
+      - apm-server
+    ports:
+      - "4317:4317"
+      - "4318:4318"
+    volumes:
+      - ./otel-collector.yaml:/etc/otelcol/config.yaml:ro
     networks:
       - ai-network
 
