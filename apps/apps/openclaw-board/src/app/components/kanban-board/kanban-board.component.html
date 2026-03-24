@@ -1,0 +1,68 @@
+<div class="kanban-board" cdkDropListGroup role="region" aria-label="Kanban board">
+  @for (column of columns; track column.id) {
+    <div
+      class="kanban-column"
+      cdkDropList
+      [cdkDropListData]="column.id"
+      (cdkDropListDropped)="onDrop($any($event))"
+    >
+      <div class="column-header">
+        <span class="column-icon" aria-hidden="true">{{ column.icon }}</span>
+        <h3 class="column-title" id="col-{{ column.id }}">{{ column.title }}</h3>
+        <span class="task-count" [attr.aria-label]="getColumnTasks(column.id).length + ' tasks'">
+          {{ getColumnTasks(column.id).length }}
+        </span>
+      </div>
+
+      <div class="tasks-list" role="list" [attr.aria-labelledby]="'col-' + column.id">
+        @for (task of getColumnTasks(column.id); track task.id) {
+          <mat-card
+            class="task-card"
+            [class.has-feature]="task.featureFile"
+            cdkDrag
+            [cdkDragData]="task"
+            role="listitem"
+          >
+            <mat-card-content>
+              <div class="task-title">{{ task.title }}</div>
+              @if (task.description) {
+                <div class="task-description">{{ task.description }}</div>
+              }
+              <div class="task-meta">
+                @if (task.priority) {
+                  <span class="task-priority" [class]="getPriorityClass(task.priority)">
+                    {{ task.priority }}
+                  </span>
+                }
+                @if (task.featureFile) {
+                  <span class="task-feature">
+                    <span aria-hidden="true">📄</span>
+                    {{ task.featureFile }}
+                  </span>
+                }
+                @if (task.date) {
+                  <span class="task-date">{{ task.date }}</span>
+                }
+              </div>
+            </mat-card-content>
+          </mat-card>
+        } @empty {
+          <div class="empty-state">Keine Aufgaben</div>
+        }
+      </div>
+
+      <div class="add-task-input">
+        <label [for]="'add-task-' + column.id" class="sr-only">Aufgabe zu {{ column.title }} hinzufugen</label>
+        <input
+          [id]="'add-task-' + column.id"
+          type="text"
+          class="task-input"
+          placeholder="Aufgabe hinzufügen..."
+          [value]="newTaskInputs()[column.id] || ''"
+          (input)="onInputChange(column.id, $event)"
+          (keydown)="onInputKeydown(column.id, $event)"
+        />
+      </div>
+    </div>
+  }
+</div>

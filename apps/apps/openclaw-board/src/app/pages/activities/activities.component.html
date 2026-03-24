@@ -1,0 +1,45 @@
+@if (loading()) {
+  <div class="activities-loading" role="status" aria-label="Aktivitaten werden geladen">
+    <mat-spinner diameter="40"></mat-spinner>
+    <span>Lade Aktivitaten...</span>
+  </div>
+} @else {
+  <div class="activities-page">
+    <header class="activities-header">
+      <h1>📜 Aktivitäten</h1>
+      <p>Alle Entwicklungstätigkeiten</p>
+    </header>
+
+    <div class="activities-timeline" role="list" aria-label="Aktivitatsliste">
+      @for (activity of activities(); track activity.id) {
+        <div class="timeline-item" role="listitem">
+          <div class="timeline-marker" aria-hidden="true"></div>
+          <mat-card class="timeline-content">
+            <mat-card-content>
+              <div class="timeline-header">
+                <span class="timeline-date">{{ formatDate(activity.timestamp) }}</span>
+                <span class="timeline-status" [class]="activity.status">{{ activity.status }}</span>
+              </div>
+              <div class="timeline-body">
+                <h3>{{ activity.title }}</h3>
+                <p>{{ activity.description }}</p>
+                @if (activity.metadata) {
+                  <div class="timeline-meta">
+                    @if (activity.metadata.projectName) {
+                      <span class="meta-tag">📁 {{ activity.metadata.projectName }}</span>
+                    }
+                    @if (activity.metadata.taskCount) {
+                      <span class="meta-tag">📋 {{ activity.metadata.taskCount }} Aufgaben</span>
+                    }
+                  </div>
+                }
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      } @empty {
+        <div class="no-activities">Keine Aktivitäten vorhanden</div>
+      }
+    </div>
+  </div>
+}

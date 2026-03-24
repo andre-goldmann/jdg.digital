@@ -1,0 +1,67 @@
+<div class="dashboard-page">
+  <header class="dashboard-header">
+    <h1>Dashboard</h1>
+    <p>Willkommen zurück!</p>
+  </header>
+
+  <section class="dashboard-stats" aria-label="Statistiken">
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-value">{{ projects().length }}</div>
+        <div class="stat-label">Projekte</div>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-value">{{ stats().totalTasks }}</div>
+        <div class="stat-label">Tasks</div>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-value">{{ stats().completedTasks }}</div>
+        <div class="stat-label">Erledigt</div>
+      </mat-card-content>
+    </mat-card>
+  </section>
+
+  <div class="dashboard-content">
+    <section class="dashboard-projects" aria-label="Projekte">
+      <h2>📁 Projekte</h2>
+      <div class="project-grid">
+        @for (project of projects(); track project.id) {
+          <mat-card class="project-card" [style.border-top-color]="project.color">
+            <mat-card-content>
+              <h3>{{ project.name }}</h3>
+              <p>{{ project.description || 'Keine Beschreibung' }}</p>
+              <div class="project-stats">
+                <span aria-hidden="true">📋</span>
+                {{ project.tasks.length || 0 }} Aufgaben
+              </div>
+            </mat-card-content>
+          </mat-card>
+        } @empty {
+          <p class="no-data">Keine Projekte</p>
+        }
+      </div>
+    </section>
+
+    <section class="dashboard-activity" aria-label="Letzte Aktivitaten">
+      <h2>📜 Letzte Aktivitäten</h2>
+      <div class="activity-list">
+        @for (activity of activities(); track activity.id) {
+          <div class="activity-item">
+            <div class="activity-time">{{ formatTimestamp(activity.timestamp) }}</div>
+            <div class="activity-content">
+              <div class="activity-title">{{ activity.title }}</div>
+              <div class="activity-description">{{ activity.description }}</div>
+            </div>
+            <span class="activity-status" [class]="activity.status">{{ activity.status }}</span>
+          </div>
+        } @empty {
+          <p class="no-data">Keine Aktivitäten vorhanden</p>
+        }
+      </div>
+    </section>
+  </div>
+</div>

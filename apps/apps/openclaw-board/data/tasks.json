@@ -1,0 +1,40 @@
+{
+  "projects": [
+    {
+      "id": "proj-invoice-export",
+      "name": "invoice-export",
+      "description": "Project folder scaffold only. No implementation yet.",
+      "docs": "",
+      "color": "#58a6ff",
+      "tasks": [],
+      "createdAt": "2026-03-23T00:00:00.000Z"
+    },
+    {
+      "id": "proj-website-scanner",
+      "name": "website-scanner",
+      "description": "Project folder scaffold only. No implementation yet.",
+      "docs": "",
+      "color": "#3fb950",
+      "tasks": [],
+      "createdAt": "2026-03-23T00:00:00.000Z"
+    },
+    {
+      "id": "proj-seo-content-audit-automation",
+      "name": "seo-content-audit-automation",
+      "description": "Project folder scaffold only. No implementation yet.",
+      "docs": "",
+      "color": "#d29922",
+      "tasks": [],
+      "createdAt": "2026-03-23T00:00:00.000Z"
+    },
+    {
+      "id": "proj-market-trend-monitoring-agent",
+      "name": "market-trend-monitoring-agent",
+      "description": "Project folder scaffold only. No implementation yet.",
+      "docs": "",
+      "color": "#f85149",
+      "tasks": [],
+      "createdAt": "2026-03-23T00:00:00.000Z"
+    }
+  ]
+}

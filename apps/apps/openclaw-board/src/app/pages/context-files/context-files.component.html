@@ -1,0 +1,100 @@
+<div class="context-files-page">
+  <div class="files-sidebar">
+    <div class="context-header">
+      <h2>🧠 Context-Speicher</h2>
+      <p>Agent-Konfiguration &amp; Memory</p>
+    </div>
+
+    <mat-nav-list>
+      @for (file of files(); track file.name) {
+        <a
+          mat-list-item
+          [class.active]="selectedFile()?.name === file.name"
+          [class.missing]="!file.exists"
+          (click)="selectFile(file)"
+          (keydown.enter)="selectFile(file)"
+          [attr.aria-current]="selectedFile()?.name === file.name ? 'page' : null"
+        >
+          <mat-icon matListItemIcon>
+            {{ file.exists ? 'description' : 'note_add' }}
+          </mat-icon>
+          <span matListItemTitle>{{ file.name }}</span>
+          <span matListItemLine class="file-meta">
+            @if (file.exists) {
+              {{ formatFileSize(file.size) }}
+            } @else {
+              nicht vorhanden
+            }
+          </span>
+          <span matListItemLine class="file-meta">{{ file.description }}</span>
+        </a>
+      }
+    </mat-nav-list>
+  </div>
+
+  <div class="file-content" role="region" aria-label="File content">
+    @if (selectedFile(); as file) {
+      <div class="content-header">
+        <div class="editor-title">
+          <h3>{{ file.name }}</h3>
+          <p>{{ file.description }}</p>
+        </div>
+        <div class="content-actions">
+          @if (isEditing()) {
+            <button mat-button (click)="cancelEditing()">
+              <mat-icon>close</mat-icon> Abbrechen
+            </button>
+            <button mat-flat-button color="primary" (click)="save()">
+              <mat-icon>save</mat-icon> Speichern
+            </button>
+          } @else {
+            @if (file.name.endsWith('.md')) {
+              <button mat-button (click)="togglePreview()">
+                <mat-icon>{{ showPreview() ? 'edit_note' : 'preview' }}</mat-icon>
+                {{ showPreview() ? 'Editor' : 'Vorschau' }}
+              </button>
+            }
+            @if (file.exists) {
+              <button mat-button (click)="startEditing()">
+                <mat-icon>edit</mat-icon> Bearbeiten
+              </button>
+            } @else {
+              <button mat-button (click)="save()">
+                <mat-icon>save</mat-icon> Speichern
+              </button>
+              <button mat-button (click)="startEditing()">
+                <mat-icon>note_add</mat-icon> Neue Datei
+              </button>
+            }
+          }
+        </div>
+      </div>
+
+      <div class="content-body">
+        @if (isEditing()) {
+          <label for="file-editor" class="sr-only">Edit {{ file.name }}</label>
+          <textarea
+            id="file-editor"
+            class="file-editor"
+            [ngModel]="editedContent()"
+            (ngModelChange)="onEditedContentChange($event)"
+            spellcheck="false">
+          </textarea>
+        } @else if (showPreview()) {
+          <div class="file-preview markdown-body">
+            <div [innerHTML]="previewHtml()"></div>
+          </div>
+        } @else if (!file.exists) {
+          <pre class="file-source"><code>Datei auswählen...</code></pre>
+        } @else {
+          <pre class="file-source"><code>{{ fileContent() }}</code></pre>
+        }
+      </div>
+    } @else {
+      <div class="empty-state">
+        <mat-icon>folder_open</mat-icon>
+        <p>Datei auswahlen</p>
+      </div>
+    }
+  </div>
+</div>

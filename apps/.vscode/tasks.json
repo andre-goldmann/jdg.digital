@@ -1,0 +1,22 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "build openclaw-board",
+			"type": "shell",
+			"command": "npx",
+			"args": [
+				"nx",
+				"build",
+				"openclaw-board",
+				"--configuration",
+				"development"
+			],
+			"isBackground": false,
+			"problemMatcher": [
+				"$tsc"
+			],
+			"group": "build"
+		}
+	]
+}

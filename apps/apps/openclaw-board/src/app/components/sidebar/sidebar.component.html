@@ -1,0 +1,53 @@
+<aside class="sidebar" role="complementary" aria-label="Main navigation sidebar">
+  <div class="sidebar-header">🦞 OpenClaw</div>
+
+  <nav class="nav-menu" aria-label="Primary navigation">
+    <a routerLink="/" class="nav-item" [class.active]="isActiveTab('/')">
+      <span class="nav-icon" aria-hidden="true">🏠</span>
+      <span class="nav-label">Dashboard</span>
+    </a>
+
+    <button
+      type="button"
+      class="nav-item section-label"
+      [class.active]="isActiveTab('/projects')"
+      [attr.aria-expanded]="projectsExpanded()"
+      aria-controls="projects-submenu"
+      (click)="toggleProjects()"
+    >
+      <span class="nav-icon" aria-hidden="true">📁</span>
+      <span class="nav-label">Projekte</span>
+    </button>
+
+    @if (projectsExpanded()) {
+      <div id="projects-submenu" class="nav-submenu">
+        <div class="projects-list">
+          @for (project of projectService.projects(); track project.id) {
+            <a
+              [routerLink]="['/projects', project.id]"
+              class="project-item"
+              [class.active]="projectService.activeProjectId() === project.id"
+              [style.border-left-color]="project.color"
+              (click)="selectProject(project.id)"
+            >
+              <span class="project-id">{{ project.id }}</span>
+              <span class="project-name">{{ project.name }}</span>
+            </a>
+          }
+        </div>
+
+        <button type="button" class="add-project-btn">+ Neues Projekt</button>
+      </div>
+    }
+
+    <a routerLink="/activities" class="nav-item" [class.active]="isActiveTab('/activities')">
+      <span class="nav-icon" aria-hidden="true">📜</span>
+      <span class="nav-label">Aktivitäten</span>
+    </a>
+
+    <a routerLink="/context" class="nav-item" [class.active]="isActiveTab('/context')">
+      <span class="nav-icon" aria-hidden="true">🧠</span>
+      <span class="nav-label">Context-Speicher</span>
+    </a>
+  </nav>
+</aside>

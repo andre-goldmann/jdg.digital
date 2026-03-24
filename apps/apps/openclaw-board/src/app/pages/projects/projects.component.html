@@ -1,0 +1,75 @@
+@if (projectService.activeProject(); as project) {
+  <header class="project-header">
+    <div class="project-header-info">
+      <h1>{{ project.name }}</h1>
+      @if (project.description) {
+        <p>{{ project.description }}</p>
+      }
+    </div>
+  </header>
+
+  <div class="project-tabs" role="tablist" aria-label="Projektbereiche">
+    <button
+      type="button"
+      class="tab"
+      role="tab"
+      [class.active]="activeTab() === 'board'"
+      [attr.aria-selected]="activeTab() === 'board'"
+      [attr.tabindex]="activeTab() === 'board' ? '0' : '-1'"
+      (click)="setActiveTab('board')"
+    >
+      <span aria-hidden="true">📋</span>
+      <span>Board</span>
+    </button>
+    <button
+      type="button"
+      class="tab"
+      role="tab"
+      [class.active]="activeTab() === 'files'"
+      [attr.aria-selected]="activeTab() === 'files'"
+      [attr.tabindex]="activeTab() === 'files' ? '0' : '-1'"
+      (click)="setActiveTab('files')"
+    >
+      <span aria-hidden="true">📁</span>
+      <span>Files</span>
+    </button>
+    <button
+      type="button"
+      class="tab"
+      role="tab"
+      [class.active]="activeTab() === 'context'"
+      [attr.aria-selected]="activeTab() === 'context'"
+      [attr.tabindex]="activeTab() === 'context' ? '0' : '-1'"
+      (click)="setActiveTab('context')"
+    >
+      <span aria-hidden="true">📚</span>
+      <span>Context</span>
+    </button>
+  </div>
+
+  @if (activeTab() === 'board') {
+      <app-kanban-board
+        [project]="project"
+        (taskAdd)="onTaskAdd($event)"
+        (taskUpdate)="onTaskUpdate($event)"
+      />
+  }
+
+  @if (activeTab() === 'files') {
+    <div class="placeholder-content">
+      <p>File Browser - Coming Soon</p>
+    </div>
+  }
+
+  @if (activeTab() === 'context') {
+    <div class="placeholder-content">
+      <p>Context View - Coming Soon</p>
+    </div>
+  }
+} @else {
+  <div class="no-project-selected">
+    <mat-icon class="empty-icon">folder_off</mat-icon>
+    <h2>Kein Projekt ausgewahlt</h2>
+    <p>Wahle ein Projekt aus der Seitenleiste aus</p>
+  </div>
+}
