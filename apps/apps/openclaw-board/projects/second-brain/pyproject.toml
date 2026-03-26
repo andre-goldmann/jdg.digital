@@ -1,0 +1,18 @@
+[project]
+name = "second-brain"
+version = "0.1.0"
+description = "Markdown-first second brain reference implementation"
+requires-python = ">=3.14"
+dependencies = [
+	"pymilvus>=2.6.10,<3",
+]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
